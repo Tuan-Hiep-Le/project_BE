@@ -1,11 +1,15 @@
 package com.example.project.service;
 
 import com.example.project.entity.Book;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.project.entity.BookDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ManagerBookService {
+    //Lấy toàn bộ sách
+    public Page<Book> getAllBook(Pageable pageable);
     //Thêm sách
     public Book addBook(Book book);
 
@@ -18,15 +22,14 @@ public interface ManagerBookService {
     //Chỉnh sửa sách
     public Book updateBook(Book book);
 
-    //Tìm kiếm sách theo tên sách
-    public Page<Book> findByNameBook(String nameBook, Pageable pageable);
-
-    //Tìm kiếm sách theo tên tác giả
+    //Phân loại sách theo tên tác giả
     public Page<Book> findByAuthor(String nameAuthor, Pageable  pageable);
 
-    //Tìm kiếm sách theo category
+    //Phân loại sách theo category
     public Page<Book> findByCategory(String nameCategory, Pageable pageable);
 
-    //Tìm kiếm sách theo topic
+    //Phân loại sách theo topic
     public Page<Book> findByTopic(String nameTopic, Pageable pageable);
+
+
 }
