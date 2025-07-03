@@ -1,26 +1,30 @@
 package com.example.project.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.example.project.entity.Book;
-import com.example.project.repository.elt.ManagerBookEltRepository;
-import com.example.project.repository.jpa.ManagerBookRepository;
+import com.example.project.repository.ManagerBookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
 @Service
-@EnableJpaRepositories(basePackages = "com.example.project.repository.jpa")
-@EnableElasticsearchRepositories(basePackages = "com.example.project.repository.elt")
 
 public class ManagerBookServiceImpl implements ManagerBookService {
     @Autowired
     private ManagerBookRepository managerBookRepository;
-    @Autowired
-    private ManagerBookEltRepository managerBookEltRepository;
+
+    //Lấy toàn bộ sách
+
+    @Override
+    public Page<Book> getAllBook(Pageable pageable) {
+        Page<Book> page =  managerBookRepository.findAll(pageable);
+        if (page.isEmpty()) {
+            return null;
+        }
+        return page;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
@@ -59,24 +63,23 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         return managerBookRepository.saveAndFlush(book);
     }
 
-    //Tìm kiếm sách bằng tên sách
-    @Override
-    public Page<Book> findByNameBook(String nameBook, Pageable pageable){
-        return managerBookEltRepository.findByNameBookContainingIgnoreCase(nameBook,pageable);
-    }
-
+    //Phân loại sách bằng tác giả
     @Override
     public Page<Book> findByAuthor(String nameAuthor, Pageable pageable) {
-        return managerBookRepository.findByNameAuthor(nameAuthor,pageable);
+        return managerBookRepository.findByAuthor(nameAuthor,pageable);
     }
+    //Phân loại sách bằng thể loại
 
     @Override
     public Page<Book> findByCategory(String nameCategory, Pageable pageable) {
-        return managerBookRepository.findByNameCategory(nameCategory,pageable);
+        return managerBookRepository.findByCategory(nameCategory,pageable);
     }
+    //Phân loại sách bằng chủ đề
 
     @Override
     public Page<Book> findByTopic(String nameTopic,Pageable pageable) {
-        return managerBookRepository.findByNameTopic(nameTopic, pageable);
+        return managerBookRepository.findByTopic(nameTopic, pageable);
     }
+
+
 }
