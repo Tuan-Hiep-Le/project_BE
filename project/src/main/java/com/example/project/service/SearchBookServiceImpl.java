@@ -2,6 +2,7 @@ package com.example.project.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.example.project.entity.Book;
 import com.example.project.entity.BookDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import java.util.Objects;
 public class SearchBookServiceImpl implements SearchBookService{
     @Autowired
     private ElasticsearchClient elasticsearchClient;
+    @Autowired
+    private ManagerBookServiceImpl managerBookService;
     @Override
     public List<BookDocument> searchBookByName(String nameBook)  {
         SearchResponse<BookDocument> response = null;
@@ -79,9 +82,13 @@ public class SearchBookServiceImpl implements SearchBookService{
 
     @Override
     public Page<BookDocument> searchBookByNameBookAndAuthorAndCategoryAndTopic(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isBlank()) {
+            return Page.empty(pageable);
+        }
+
         try {
             SearchResponse<BookDocument> response = elasticsearchClient.search(s-> s
-                    .index("book_document").query(q -> q.multiMatch(m -> m.query(keyword).fields("nameBook","nameAuthor","nameCategory","nameTopic").minimumShouldMatch("70%").fuzziness("Auto"))), BookDocument.class);
+                    .index("book_document").query(q -> q.multiMatch(m -> m.query(keyword).fields("nameBook^3","nameAuthor^2","nameCategory","nameTopic").minimumShouldMatch("80%").fuzziness("Auto"))), BookDocument.class);
 
             List<BookDocument> list = response.hits().hits().stream().map(hit -> hit.source()).filter(Objects::nonNull).toList();
             int start = (int) pageable.getOffset();
@@ -94,4 +101,34 @@ public class SearchBookServiceImpl implements SearchBookService{
             throw new RuntimeException(e);
         }
     }
+
+    //Hàm Mapping 2 Class Book và BookDocument
+    public BookDocument toDocument(Book book) {
+        return BookDocument.builder()
+                .bookId(book.getBookId())
+                .language(book.getLanguage())
+                .nameBook(book.getNameBook())
+                .nameAuthor(book.getNameAuthor())
+                .nameCategory(book.getNameCategory())
+                .nameTopic(book.getNameTopic())
+                .build();
+    }
+
+    //Hàm đồng bộ từ database lên Elastic
+    public void syncAllBooksToES(Pageable p) {
+        Page<Book> allBooks = managerBookService.getAllBook(p); // hoặc repository
+        for (Book book : allBooks) {
+            BookDocument doc = toDocument(book);
+            try {
+                elasticsearchClient.index(i -> i
+                        .index("book_document")
+                        .id(String.valueOf(doc.getBookId()))
+                        .document(doc));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
 }
