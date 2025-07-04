@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 
 public class ManagerBookServiceImpl implements ManagerBookService {
@@ -81,5 +84,18 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         return managerBookRepository.findByTopic(nameTopic, pageable);
     }
 
+    @Override
+    public List<String> getAllAuthor() {
+        return managerBookRepository.listAuthor();
+    }
 
+    @Override
+    public List<String> getAllCategory() {
+        return managerBookRepository.listCategory();
+    }
+
+    @Override
+    public List<String> getAllTopic() {
+        return managerBookRepository.listTopic();
+    }
 }
