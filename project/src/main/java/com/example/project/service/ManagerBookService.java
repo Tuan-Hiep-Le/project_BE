@@ -4,6 +4,7 @@ import com.example.project.entity.Book;
 import com.example.project.entity.BookDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -30,6 +31,12 @@ public interface ManagerBookService {
 
     //Phân loại sách theo topic
     public Page<Book> findByTopic(String nameTopic, Pageable pageable);
+    //Lấy tất cả tác giả
+   public List<String> getAllAuthor();
+   //Lấy tất cả thể loại
+   public List<String> getAllCategory();
+   //Lấy tất cả chủ đề
+   public List<String> getAllTopic();
 
 
 }

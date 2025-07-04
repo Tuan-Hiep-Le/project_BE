@@ -24,11 +24,11 @@ public class Book {
     @Column(name = "language")
     private Language language;
     @Column(name = "author",length = 50)
-    private String author;
+    private String nameAuthor;
     @Column(name = "category",length = 50)
-    private String category;
+    private String nameCategory;
     @Column(name = "topic",length = 50)
-    private String topic;
+    private String nameTopic;
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
     @Column(name = "quantity")

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+</head>
+<body>
+
+<!--Phần đầu của trang chứa tên hiệu sách và danh mục tìm kiếm-->
+<header class="d-flex justify-content-between align-items-center p-3 bg-light flex-wrap">
+    <h3 class="mb-0">Hiệu Sách Của Hiệp</h3>
+
+    <form th:action="@{/home/search}" method="get" class="d-flex gap-2" >
+        <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm sách bằng tên sách, tác giả, thể loại, chủ đề...">
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </form>
+
+    <div class="dropdown text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="/images/sach-anh-dep3.jpg" alt="Avatar" width="40" height="40" class="rounded-circle border border-light shadow-sm">
+        </a>
+        <ul class="dropdown-menu text-small">
+            <li><a class="dropdown-item" href="#">🧑‍💼 Trang cá nhân</a></li>
+            <li><a class="dropdown-item" href="#">Xác thực Email</a></li>
+            <li><a class="dropdown-item" href="#">Giỏ hàng</a></li>
+            <li><a class="dropdown-item" href="#">Lịch sử mua hàng</a></li>
+            <li><a class="dropdown-item" href="#">⚙️ Cài đặt</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#">🚪 Đăng xuất</a></li>
+        </ul>
+    </div>
+
+</header>
+
+
+<!--Thanh tiêu đề bao gồm Trang chủ, Thể loại, Tác giả, Chủ đề-->
+<nav class="d-flex align-items-center gap-3 flex-wrap p-3 bg-light">
+    <a href="#" class="text-decoration-none">🏠 Trang chủ</a>
+
+    <div>
+        <form th:action="@{/home/category}" method="get">
+            <label for="categorySelect">📚 Thể loại:</label>
+            <select name="category" id="categorySelect" required onchange="this.form.submit()">
+                <!-- Render bằng Thymeleaf -->
+                <option value="" disabled th:selected="${category == null}">-- Chọn thể loại --</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat}"
+                        th:text="${cat}"
+                        th:selected="${cat == category}">
+                </option>
+            </select>
+        </form>
+    </div>
+
+
+    <div>
+        <form th:action="@{home/author}" method="get">
+            <label for="authorSelect"> 👤 Tác giả:</label>
+            <select name="name_author" id="authorSelect" required onchange="this.form.submit()">
+                <option value="" disabled th:selected="${author == null}">-- Chọn tác giả --</option>
+                <option th:each="author : ${authors}"
+                        th:value="${author}"
+                        th:text="${author}"
+                        th:selected="${author == name_author}">
+
+                </option>
+            </select>
+        </form>
+    </div>
+
+    <div>
+        <form th:action="@{/home/topic}" method="get">
+            <label for="topicSelect" class="form-label mb-0">💡 Chủ đề:</label>
+            <select name="name_topic" id="topicSelect" required onchange="this.form.submit()" >
+                <option value="" disabled th:selected="${topic == null}">-- Chọn chủ đề --</option>
+
+                <option th:each="topic : ${topics}"
+                        th:value="${topic}"
+                        th:text="${topic}"
+                        th:selected="${topic == name_topic}">
+                </option>
+            </select>
+        </form>
+    </div>
+</nav>
+
+<!--Phần chính của trang web -->
+<main>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="book : ${books}">
+            <div class="card h-100 shadow-sm">
+                <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${book.nameBook}" class="card-img-top">
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.nameBook}">Tên sách</h5>
+                    <p class="card-text">👤 Tác giả: <span th:text="${book.nameAuthor}"></span></p>
+                    <p class="card-text"> Ngôn ngữ: <span th:text="${book.language}"></span></p>
+                    <p class="card-text">💡 Chủ đề: <span th:text="${book.nameTopic}"></span></p>
+                    <p class="card-text">📚 Thể loại: <span th:text="${book.nameCategory}"></span></p>
+                </div>
+
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Thêm vào giỏ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <p>© 2025 Hiệu Sách Hiệp. Mọi quyền được bảo lưu.</p>
+</footer>
+
+
+
+
+
+
+<script>
+    document.getElementById("customCategory").addEventListener("click", function(e) {
+      const list = document.getElementById("categoryList");
+      list.style.display = list.style.display === "none" ? "block" : "none";
+      list.style.top = e.pageY + "px";
+      list.style.left = e.pageX + "px";
+    });
+
+    function selectCustomCategory(name) {
+      document.getElementById("customCategory").innerHTML = "📚 Thể loại: <b>" + name + "</b> ⬇️";
+      document.getElementById("categorySelect").value = name;
+      document.getElementById("categoryList").style.display = "none";
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+</body>
+</html>
