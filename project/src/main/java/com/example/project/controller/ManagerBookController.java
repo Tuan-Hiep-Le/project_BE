@@ -34,7 +34,7 @@ public class ManagerBookController {
         return "redirect:/home";
     }
     //Trang Chủ
-    @GetMapping("/home")
+    @GetMapping("/homepage")
     public String getAllBookInStore(Pageable pageable, Model model){
         Page<Book> allProduct = managerBookService.getAllBook(pageable);
         List<String> listAuthor = managerBookService.getAllAuthor();
@@ -49,7 +49,7 @@ public class ManagerBookController {
     }
 
     //Tìm kiếm sách
-    @GetMapping("home/search")
+    @GetMapping("homepage/search")
     public String searchBookByKeyword(@RequestParam(value = "keyword",required = false) String key,Pageable pageable,Model model){
         Page<BookDocument> bookDocuments = searchBookService.searchBookByNameBookAndAuthorAndCategoryAndTopic(key,pageable);
         model.addAttribute("books",bookDocuments);
@@ -58,7 +58,7 @@ public class ManagerBookController {
     }
 
     //Phân loại sách theo thể loại
-    @GetMapping("home/category")
+    @GetMapping("homepage/category")
     public String classifyBookByCategory(@RequestParam("category") String nameCategory, Pageable pageable,Model model){
         Page<Book> listBook = managerBookService.findByCategory(nameCategory,pageable);
         List<String> listCategory = managerBookService.getAllCategory();
@@ -69,7 +69,7 @@ public class ManagerBookController {
     }
 
     //Phân loại Sách theo tác giả
-    @GetMapping("home/author")
+    @GetMapping("homepage/author")
     public String classifyBookByAuthor(@RequestParam("name_author") String nameAuthor, Pageable pageable, Model model){
         Page<Book> listBook = managerBookService.findByAuthor(nameAuthor,pageable);
         List<String> listAuthor = managerBookService.getAllAuthor();
@@ -80,7 +80,7 @@ public class ManagerBookController {
     }
 
     //Phân loại sách theo chủ đề
-    @GetMapping("home/topic")
+    @GetMapping("homepage/topic")
     public String classifyBookByTopic(@RequestParam("name_topic") String nameTopic, Pageable pageable, Model model){
         Page<Book> listBook = managerBookService.findByTopic(nameTopic,pageable);
         List<String> listTopic = managerBookService.getAllTopic();
