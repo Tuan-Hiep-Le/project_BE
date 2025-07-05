@@ -13,7 +13,7 @@
 <header class="d-flex justify-content-between align-items-center p-3 bg-light flex-wrap">
     <h3 class="mb-0">Hiệu Sách Của Hiệp</h3>
 
-    <form th:action="@{/home/search}" method="get" class="d-flex gap-2" >
+    <form th:action="@{/homepage/search}" method="get" class="d-flex gap-2" >
         <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm sách bằng tên sách, tác giả, thể loại, chủ đề...">
         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
     </form>
@@ -41,7 +41,7 @@
     <a href="#" class="text-decoration-none">🏠 Trang chủ</a>
 
     <div>
-        <form th:action="@{/home/category}" method="get">
+        <form th:action="@{/homepage/category}" method="get">
             <label for="categorySelect">📚 Thể loại:</label>
             <select name="category" id="categorySelect" required onchange="this.form.submit()">
                 <!-- Render bằng Thymeleaf -->
@@ -57,7 +57,7 @@
 
 
     <div>
-        <form th:action="@{home/author}" method="get">
+        <form th:action="@{homepage/author}" method="get">
             <label for="authorSelect"> 👤 Tác giả:</label>
             <select name="name_author" id="authorSelect" required onchange="this.form.submit()">
                 <option value="" disabled th:selected="${author == null}">-- Chọn tác giả --</option>
@@ -72,7 +72,7 @@
     </div>
 
     <div>
-        <form th:action="@{/home/topic}" method="get">
+        <form th:action="@{/homepage/topic}" method="get">
             <label for="topicSelect" class="form-label mb-0">💡 Chủ đề:</label>
             <select name="name_topic" id="topicSelect" required onchange="this.form.submit()" >
                 <option value="" disabled th:selected="${topic == null}">-- Chọn chủ đề --</option>
