@@ -5,6 +5,7 @@ CREATE TABLE users(
     first_name varchar(50) NOT NULL,
     email varchar(100) NOT NULL,
     phone_number varchar(10) NOT NULL,
+    `password` varchar(100)NOT NULL,
     avatar TEXT,
     role ENUM('USER','ADMIN'),
     status ENUM('BLOCK','ACTIVE','NOT_VERIFIED') DEFAULT 'NOT_VERIFIED'
@@ -20,7 +21,8 @@ CREATE TABLE users(
      category varchar(50) NOT NULL,
      topic varchar(50) NOT NULL,
      price DECIMAL(10,2) NOT NULL,
-     quantity int NOT NULL
+     quantity int NOT NULL,
+     book_detail TEXT NOT NULL
      )
 
  // Tạo bảng orders: Đơn hàng

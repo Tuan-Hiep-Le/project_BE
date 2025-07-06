@@ -92,9 +92,11 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="book : ${books}">
             <div class="card h-100 shadow-sm">
-                <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${book.nameBook}" class="card-img-top">
+                <a th:href="@{/homepage/information_book(bookid=${book.bookId})}" >
+                    <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${book.nameBook}" class="card-img-top">
+                </a>
+                <div class="card-body" >
 
-                <div class="card-body">
                     <h5 class="card-title" th:text="${book.nameBook}">Tên sách</h5>
                     <p class="card-text">👤 Tác giả: <span th:text="${book.nameAuthor}"></span></p>
                     <p class="card-text"> Ngôn ngữ: <span th:text="${book.language}"></span></p>

@@ -33,4 +33,6 @@ public class Book {
     private BigDecimal price;
     @Column(name = "quantity")
     private int quantity;
+    @Column(name = "book_detail")
+    private String bookDetail;
 }

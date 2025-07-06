@@ -2,8 +2,10 @@ package com.example.project.controller;
 
 import com.example.project.entity.Book;
 import com.example.project.entity.BookDocument;
-import com.example.project.service.ManagerBookServiceImpl;
-import com.example.project.service.SearchBookServiceImpl;
+import com.example.project.entity.Review;
+import com.example.project.service.review_service.ManagerReviewServiceImpl;
+import com.example.project.service.book_service.ManagerBookServiceImpl;
+import com.example.project.service.book_service.SearchBookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -26,12 +26,17 @@ public class ManagerBookController {
     @Autowired
     private ManagerBookServiceImpl managerBookService;
 
+    @Autowired
+    private ManagerReviewServiceImpl managerReviewService;
+
+
+
     //Đồng bộ data của Book cho BookDocument
     @GetMapping("/admin/sync-book")
     public String syncDataToElasticsearch(Model model,Pageable pageable) {
         searchBookService.syncAllBooksToES(pageable);
         model.addAttribute("message", "Đã đồng bộ dữ liệu lên Elasticsearch thành công!");
-        return "redirect:/home";
+        return "redirect:/homepage";
     }
     //Trang Chủ
     @GetMapping("/homepage")
@@ -89,6 +94,18 @@ public class ManagerBookController {
         model.addAttribute("topics",listTopic);
         return "home";
     }
+
+    @GetMapping("homepage/information_book")
+    public String informationBook(@RequestParam("bookid") Integer id_book, Model model){
+        Book book = managerBookService.getBookById(id_book);
+        model.addAttribute("product",book);
+        List<Review> list = managerReviewService.getUserAndCommentBook(id_book);
+        model.addAttribute("reviews",list);
+        model.addAttribute("id_book",id_book);
+        return "product_detail";
+    }
+
+
 
 
 

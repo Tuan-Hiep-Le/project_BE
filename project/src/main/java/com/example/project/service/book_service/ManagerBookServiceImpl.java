@@ -1,9 +1,8 @@
-package com.example.project.service;
+package com.example.project.service.book_service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.example.project.entity.Book;
-import com.example.project.entity.enum_entity.Language;
 import com.example.project.repository.ManagerBookRepository;
+import com.example.project.service.book_service.ManagerBookService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 
@@ -120,4 +119,11 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     public List<String> getAllTopic() {
         return managerBookRepository.listTopic();
     }
+
+    @Override
+    public Book getBookById(Integer id) {
+        return managerBookRepository.findByBookId(id);
+    }
+
+
 }

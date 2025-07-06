@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-5">📚 Thông Tin Chi Tiết Sách</h2>
+
+    <div class="row g-4">
+        <!-- Ảnh sách -->
+        <div class="col-md-4">
+            <div class="text-center">
+                <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Ảnh sách" class="img-fluid rounded shadow-sm">
+            </div>
+        </div>
+
+        <!-- Thông tin sách -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body" th:object="${product}">
+                    <h4 class="mb-3 text-uppercase text-primary fw-bold" th:text="*{nameBook}">Tên Sách</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Tác giả:</strong> <span th:text="*{nameAuthor}"></span></li>
+                        <li class="list-group-item"><strong>Ngôn ngữ:</strong> <span th:text="*{language}"></span></li>
+                        <li class="list-group-item"><strong>Mô tả:</strong> <span th:text="*{bookDetail}"></span></li>
+                        <li class="list-group-item"><strong>Thể loại:</strong> <span th:text="*{nameCategory}"></span></li>
+                        <li class="list-group-item"><strong>Chủ đề:</strong> <span th:text="*{nameTopic}"></span></li>
+                        <li class="list-group-item"><strong>Giá:</strong> <span class="text-danger fw-semibold" th:text="*{price} + '₫'"></span></li>
+                        <li class="list-group-item"><strong>Số lượng còn lại:</strong> <span th:text="*{quantity}"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Đánh giá người dùng -->
+    <div class="mt-5">
+        <h4 class="mb-4 text-secondary">🗨️ Đánh Giá Từ Người Dùng</h4>
+        <div th:each="review : ${reviews}">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="fw-semibold text-primary mb-1" th:text="${review.user.lastName + ' ' + review.user.firstName + ' - ' + review.reviewAt}">Tên người dùng</h6>
+                    <p class="mb-0" th:text="${review.comment}">Nội dung đánh giá</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form viết đánh giá -->
+    <div class="mt-4" th:if="${is_buy_book}">
+        <h5 class="text-success">✍️ Viết đánh giá của bạn:</h5>
+        <form method="post" th:action="@{/submit-review}" class="mt-3">
+            <textarea name="content" rows="3" class="form-control mb-3" placeholder="Viết đánh giá ở đây..." required></textarea>
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </form>
+    </div>
+
+    <!-- Thông báo nếu chưa mua sách -->
+    <div class="mt-4 text-muted" th:unless="${is_buy_book}">
+        <p class="fst-italic">⚠️ Bạn cần mua sách để có thể viết đánh giá.</p>
+    </div>
+
+    <!-- Nút hành động -->
+    <div class="mt-5 text-center">
+        <form method="post" th:action="@{/add-to-cart}">
+            <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
+            <button type="submit" class="btn btn-success">💳 Mua ngay</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
