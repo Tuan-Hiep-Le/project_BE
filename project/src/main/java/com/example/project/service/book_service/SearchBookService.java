@@ -1,6 +1,7 @@
-package com.example.project.service;
+package com.example.project.service.book_service;
 
 import com.example.project.entity.BookDocument;
+import com.example.project.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +18,5 @@ public interface SearchBookService {
     public Page<BookDocument> searchBookByNameTopic(String nameTopic, Pageable pageable);
     //Tìm kiếm theo cả tên sách, tác giả, loại, chủ đề
     public Page<BookDocument> searchBookByNameBookAndAuthorAndCategoryAndTopic(String keyword, Pageable pageable);
+
 }

@@ -1,15 +1,22 @@
 package com.example.project.repository;
 
 import com.example.project.entity.Book;
+import com.example.project.entity.Review;
+import com.example.project.entity.User;
 import com.example.project.entity.enum_entity.Language;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ManagerBookRepository extends JpaRepository<Book,Integer> {
+    Book findByBookId(Integer id);
 
     Page<Book> findByNameAuthor(String nameAuthor, Pageable pageable);
 
@@ -29,6 +36,7 @@ public interface ManagerBookRepository extends JpaRepository<Book,Integer> {
 
     @Query("SELECT DISTINCT b.nameTopic FROM Book b")
     public List<String> listTopic();
+
 
 
 }

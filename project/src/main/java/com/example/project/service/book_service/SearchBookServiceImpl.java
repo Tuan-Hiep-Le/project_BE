@@ -1,4 +1,4 @@
-package com.example.project.service;
+package com.example.project.service.book_service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class SearchBookServiceImpl implements SearchBookService{
+public class SearchBookServiceImpl implements SearchBookService {
     @Autowired
     private ElasticsearchClient elasticsearchClient;
     @Autowired

@@ -20,6 +20,7 @@ public class BookDocument {
     private String nameTopic;
     private BigDecimal price;
     private int quantity;
+    private String bookDetail;
 
 
 }
