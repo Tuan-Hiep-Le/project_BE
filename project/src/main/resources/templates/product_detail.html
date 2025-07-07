@@ -38,11 +38,27 @@
         </div>
     </div>
 
+    <!-- Nút hành động -->
+    <div class="mt-5 text-center">
+        <form method="post" th:action="@{/add-to-cart}">
+            <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
+            <button type="submit" class="btn btn-success">💳 Mua ngay</button>
+        </form>
+    </div>
+
     <!-- Đánh giá người dùng -->
     <div class="mt-5">
         <h4 class="mb-4 text-secondary">🗨️ Đánh Giá Từ Người Dùng</h4>
         <div th:each="review : ${reviews}">
             <div class="card border-0 shadow-sm mb-3">
+
+                <div class="mb-2">
+                    <span th:each="i : ${#numbers.sequence(1, review.starRate)}" class="text-warning">★</span>
+                    <span th:if="${review.starRate < 5}"
+                          th:each="i : ${#numbers.sequence(1, 5 - review.starRate)}"
+                          class="text-secondary">★</span>
+                </div>
+
                 <div class="card-body">
                     <h6 class="fw-semibold text-primary mb-1" th:text="${review.user.lastName + ' ' + review.user.firstName + ' - ' + review.reviewAt}">Tên người dùng</h6>
                     <p class="mb-0" th:text="${review.comment}">Nội dung đánh giá</p>
@@ -65,13 +81,7 @@
         <p class="fst-italic">⚠️ Bạn cần mua sách để có thể viết đánh giá.</p>
     </div>
 
-    <!-- Nút hành động -->
-    <div class="mt-5 text-center">
-        <form method="post" th:action="@{/add-to-cart}">
-            <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
-            <button type="submit" class="btn btn-success">💳 Mua ngay</button>
-        </form>
-    </div>
+
 </div>
 
 <!-- Bootstrap Scripts -->

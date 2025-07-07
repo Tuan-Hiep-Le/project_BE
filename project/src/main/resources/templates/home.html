@@ -104,8 +104,11 @@
                     <p class="card-text">📚 Thể loại: <span th:text="${book.nameCategory}"></span></p>
                 </div>
 
-                <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">Thêm vào giỏ</button>
+                <div class="mt-5 text-center">
+                    <form method="post" th:action="@{/add-to-cart}">
+                        <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
+                        <button type="submit" class="btn btn-success">💳 Mua ngay</button>
+                    </form>
                 </div>
             </div>
         </div>
