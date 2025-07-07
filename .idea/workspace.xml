@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="016cd3e9-6dc8-41ac-a2d6-be4e705f38ba" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/example/project/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/example/project/controller/ManagerUserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/example/project/service/user_service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/example/project/service/user_service/UserServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/static/images/book.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/static/images/fail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/static/images/success.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/home_after_login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/register_fail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/register_success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/example/project/repository/ManagerUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/example/project/repository/ManagerUserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/resources/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/templates/product_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/templates/product_detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,9 +33,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="HTML File" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -52,25 +65,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.WebBookstoreApplication.executor": "Run",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Maven.project [clean].executor": "Run",
-    "Maven.project [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/information__book",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "vcs.Git"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.WebBookstoreApplication.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Maven.project [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.project [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/login__register&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\HIEP\Documents\Project_BookStore\project_bookstore\project\src\main\resources\static\images" />
       <recent name="C:\Users\HIEP\Documents\Project_BookStore\project_bookstore\project\src\main\resources\static\image" />
     </key>
   </component>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng Ký</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .register-box {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="register-box w-100" style="max-width: 420px;">
+    <h3 class="text-center mb-4 text-success">📝 Đăng ký tài khoản</h3>
+
+    <form th:action="@{/register}" method="post" th:object="${user}" >
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Họ đệm</label>
+        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+
+      </div>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">Tên</label>
+        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required >
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" th:field="*{email}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">Số điện thoại</label>
+        <input type="text" class="form-control" id="phone" th:field="*{phoneNumber}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <input type="password" class="form-control" id="password" th:field="*{password}" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
+        <input type="password" class="form-control" id="confirmPassword" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">🎉 Đăng ký</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <small>Bạn đã có tài khoản? <a th:href="@{/login}" class="text-decoration-none">Đăng nhập</a></small>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

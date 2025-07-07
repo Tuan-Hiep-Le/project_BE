@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .login-box {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 0 16px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="login-box w-100" style="max-width: 400px;">
+    <h3 class="mb-4 text-center text-primary">🔐 Đăng nhập</h3>
+
+    <form th:action="@{/login}" method="post" >
+      <div class="mb-3">
+        <label for="exampleUser" class="form-label">Email</label>
+        <input type="email" name="email_user" class="form-control" id="exampleUser" placeholder="Nhập email"   required>
+      </div>
+
+      <div class="mb-3">
+        <label for="examplePassword" class="form-label">Mật khẩu</label>
+        <input type="password" name="password_user" class="form-control" id="examplePassword" placeholder="Nhập mật khẩu" required>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+      </div>
+
+      <!-- Modal trigger -->
+      <button type="submit" class="btn btn-primary w-100" >
+        Đăng nhập
+      </button>
+
+    </form>
+
+    <div class="text-center mt-3">
+      <a th:href="@{/register}" class="text-decoration-none">Chưa có tài khoản? <strong>Đăng ký</strong></a><br>
+      <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<!-- JS -->
+</body>
+</html>
