@@ -38,9 +38,10 @@
       </div>
 
       <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="rememberMe">
+        <input type="checkbox" name=remember_me class="form-check-input" id="rememberMe">
         <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
       </div>
+
 
       <!-- Modal trigger -->
       <button type="submit" class="btn btn-primary w-100" >
@@ -48,6 +49,9 @@
       </button>
 
     </form>
+    <div class="form-text text-danger" th:if="${isLoginSuccess == false}">
+      Email hoặc mật khẩu sai!
+    </div>
 
     <div class="text-center mt-3">
       <a th:href="@{/register}" class="text-decoration-none">Chưa có tài khoản? <strong>Đăng ký</strong></a><br>

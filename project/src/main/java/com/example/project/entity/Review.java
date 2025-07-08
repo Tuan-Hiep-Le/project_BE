@@ -17,7 +17,7 @@ public class Review {
     @Column(name = "id_review")
     private Integer idReview;
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user", nullable = false)
     private User user;
     @ManyToOne
     @JoinColumn(name = "id_book")

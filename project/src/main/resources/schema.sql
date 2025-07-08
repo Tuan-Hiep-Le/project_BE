@@ -7,7 +7,7 @@ CREATE TABLE users(
     phone_number varchar(10) NOT NULL,
     `password` varchar(100)NOT NULL,
     avatar TEXT,
-    role ENUM('USER','ADMIN'),
+    role ENUM('USER','ADMIN') default 'USER',
     status ENUM('BLOCK','ACTIVE','NOT_VERIFIED') DEFAULT 'NOT_VERIFIED'
     )
 
@@ -58,7 +58,7 @@ CREATE TABLE users(
      start_time DATE NOT NULL,
      end_time DATE NOT NULL,
      total_quantity INT NOT NULL,
-     curent_quantity INT NOT NULL
+     current_quantity INT NOT NULL
      )
 
  // Tạo bảng ship_costs: Chi phí vận chuyển
