@@ -1,8 +1,8 @@
-package com.example.project.service.book_service;
+package com.example.project.service.impl;
 
 import com.example.project.entity.Book;
 import com.example.project.repository.ManagerBookRepository;
-import com.example.project.service.book_service.ManagerBookService;
+import com.example.project.service.ManagerBookService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,11 +23,8 @@ public class ManagerBookServiceImpl implements ManagerBookService {
 
     @Override
     public Page<Book> getAllBook(Pageable pageable) {
-        Page<Book> page =  managerBookRepository.findAll(pageable);
-        if (page.isEmpty()) {
-            return null;
-        }
-        return page;
+        return managerBookRepository.findAll(pageable);
+
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -125,5 +122,8 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         return managerBookRepository.findByBookId(id);
     }
 
-
+    @Override
+    public List<Book> getAllBookList() {
+        return managerBookRepository.findAll();
+    }
 }

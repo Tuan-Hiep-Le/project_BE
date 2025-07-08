@@ -26,11 +26,12 @@
   <div class="register-box w-100" style="max-width: 420px;">
     <h3 class="text-center mb-4 text-success">📝 Đăng ký tài khoản</h3>
 
+
+
     <form th:action="@{/register}" method="post" th:object="${user}" >
       <div class="mb-3">
         <label for="lastName" class="form-label">Họ đệm</label>
         <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
-
       </div>
 
       <div class="mb-3">
@@ -41,11 +42,23 @@
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control" id="email" th:field="*{email}" required>
+        <div class="form-text text-muted">
+          Gmail có đuôi @gmail.com!
+        </div>
+      </div>
+      <div class="form-text text-danger" th:if="${isEmailExist}">
+        Email đã được sử dụng. Vui lòng thử email khác.
       </div>
 
       <div class="mb-3">
         <label for="phone" class="form-label">Số điện thoại</label>
-        <input type="text" class="form-control" id="phone" th:field="*{phoneNumber}" required>
+        <input type="text" class="form-control" id="phone"  th:field="*{phoneNumber}" required>
+        <div class="form-text text-muted">
+          Có 10 chữ số và bắt đầu bằng số 0!
+        </div>
+      </div>
+      <div class="form-text text-danger" th:if="${isNumberPhoneValid == false}">
+        Số điện thoại không hợp lệ.
       </div>
 
       <div class="mb-3">
@@ -55,15 +68,17 @@
 
       <div class="mb-4">
         <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
-        <input type="password" class="form-control" id="confirmPassword" required>
+        <input type="password" name="rePassword" class="form-control" id="confirmPassword" required>
       </div>
+      <div class="form-text text-danger" th:if="${isValidPassword == false}">
+        Mật khẩu không trùng khớp.
+      </div>
+       <button type="submit" class="btn btn-success w-100">🎉 Đăng ký</button>
 
-      <button type="submit" class="btn btn-success w-100">🎉 Đăng ký</button>
-    </form>
-
-    <div class="text-center mt-3">
+      <div class="text-center mt-3">
       <small>Bạn đã có tài khoản? <a th:href="@{/login}" class="text-decoration-none">Đăng nhập</a></small>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
 
