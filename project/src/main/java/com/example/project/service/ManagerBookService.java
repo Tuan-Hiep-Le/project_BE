@@ -1,4 +1,4 @@
-package com.example.project.service.book_service;
+package com.example.project.service;
 
 import com.example.project.entity.Book;
 import com.example.project.entity.BookDocument;
@@ -43,6 +43,9 @@ public interface ManagerBookService {
 
     //Lấy sách bằng Id
     public Book getBookById(Integer id);
+
+    //Lấy ra tất cả sachs
+    public List<Book> getAllBookList();
 
 
 

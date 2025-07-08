@@ -1,4 +1,4 @@
-package com.example.project.service.book_service;
+package com.example.project.service;
 
 import com.example.project.entity.BookDocument;
 import com.example.project.entity.Review;

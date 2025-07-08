@@ -1,4 +1,4 @@
-package com.example.project.service.review_service;
+package com.example.project.service;
 
 import com.example.project.entity.Review;
 

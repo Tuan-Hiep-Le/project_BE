@@ -1,7 +1,8 @@
-package com.example.project.service.review_service;
+package com.example.project.service.impl;
 
 import com.example.project.entity.Review;
 import com.example.project.repository.ReviewerRepository;
+import com.example.project.service.ManagerReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

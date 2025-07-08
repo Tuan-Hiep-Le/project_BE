@@ -1,9 +1,10 @@
-package com.example.project.service.book_service;
+package com.example.project.service.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.example.project.entity.Book;
 import com.example.project.entity.BookDocument;
+import com.example.project.service.SearchBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -115,8 +116,8 @@ public class SearchBookServiceImpl implements SearchBookService {
     }
 
     //Hàm đồng bộ từ database lên Elastic
-    public void syncAllBooksToES(Pageable p) {
-        Page<Book> allBooks = managerBookService.getAllBook(p); // hoặc repository
+    public void syncAllBooksToES() {
+        List<Book> allBooks = managerBookService.getAllBookList(); //
         for (Book book : allBooks) {
             BookDocument doc = toDocument(book);
             try {
