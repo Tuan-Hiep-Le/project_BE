@@ -6,18 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom Style -->
     <style>
+        body {
+          font-family: 'Poppins', sans-serif;
+        }
+        :root {
+          --primary-color: #6C63FF;
+          --secondary-color: #F8F9FA;
+          --accent-color: #FF6584;
+        }
+        .btn-primary {
+          background-color: var(--primary-color);
+          border: none;
+        }
+        header {
+          position: sticky;
+          top: 0;
+          z-index: 999;
+          background-color: var(--secondary-color);
+        }
+        .card {
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+          transition: transform 0.3s;
+        }
+        .card:hover {
+          transform: scale(1.02);
+        }
         .book-card img {
           object-fit: cover;
           height: 300px;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+          transition: filter 0.3s;
         }
-        footer {
-          background-color: #f8f9fa;
-          padding: 1rem 0;
-          text-align: center;
-          margin-top: 3rem;
+        .book-card img:hover {
+          filter: brightness(1.05);
+        }
+        .btn-sm {
+          border-radius: 20px;
+          font-weight: 600;
+          padding: 6px 16px;
+        }
+        .dropdown-menu {
+          box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+          border-radius: 8px;
+          transition: all 0.3s ease-in-out;
+        }
+        .page-link {
+          border-radius: 6px !important;
         }
     </style>
+
 </head>
 <body class="bg-white">
 
@@ -26,7 +70,7 @@
     <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap gap-3">
         <h3 class="mb-0">📚 Hiệu Sách Của Hiệp</h3>
 
-        <form th:action="@{/homepage/search}" method="get" class="d-flex flex-grow-1 mx-3" style="max-width: 600px;">
+        <form th:action="@{/home_after_user_begin/search}" method="get" class="d-flex flex-grow-1 mx-3" style="max-width: 600px;">
             <input type="text" name="keyword" class="form-control me-2" placeholder="Tìm sách theo tên, tác giả, thể loại...">
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </form>
@@ -55,7 +99,7 @@
     <div class="container-fluid d-flex gap-4 flex-wrap align-items-center">
         <a href="#" class="text-decoration-none">🏠 Trang chủ</a>
 
-        <form th:action="@{/homepage/category}" method="get">
+        <form th:action="@{/home_after_user_login/category}" method="get">
             <label for="categorySelect">📚 Thể loại:</label>
             <select name="category" id="categorySelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
                 <option value="" disabled th:selected="${category == null}">-- Chọn thể loại --</option>
@@ -63,7 +107,7 @@
             </select>
         </form>
 
-        <form th:action="@{/homepage/author}" method="get">
+        <form th:action="@{/home_after_user_login/author}" method="get">
             <label for="authorSelect">👤 Tác giả:</label>
             <select name="name_author" id="authorSelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
                 <option value="" disabled th:selected="${author == null}">-- Chọn tác giả --</option>
@@ -71,12 +115,25 @@
             </select>
         </form>
 
-        <form th:action="@{/homepage/topic}" method="get">
+        <form th:action="@{/home_after_user_login/topic}" method="get">
             <label for="topicSelect">💡 Chủ đề:</label>
             <select name="name_topic" id="topicSelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
                 <option value="" disabled th:selected="${topic == null}">-- Chọn chủ đề --</option>
                 <option th:each="topic : ${topics}" th:value="${topic}" th:text="${topic}" th:selected="${topic == name_topic}"></option>
             </select>
+        </form>
+
+        <form method="get" th:action="@{/home_user_after_login}">
+            <div class="dropdown">
+                <label>Hiển thị</label>
+                <select name="valueSize" onchange="this.form.submit()">
+                    <option th:value="10" th:text="10" th:selected="${valueSize == 10}"></option>
+                    <option th:value="5" th:text="5" th:selected="${valueSize == 5}"></option>
+                    <option th:value="15" th:text="15" th:selected="${valueSize == 15}"></option>
+                </select>
+            </div>
+            <!-- Giữ nguyên trang hiện tại -->
+            <input type="hidden" name="valuePage" th:value="${valuePage}" />
         </form>
     </div>
 </nav>
@@ -84,7 +141,10 @@
 <!-- 📘 MAIN CONTENT -->
 <main class="container my-4">
     <div class="row g-4">
-        <div class="col-md-4" th:each="book : ${books}">
+        <div th:if="${notFound}">
+            <p> Không tìm thấy cuốn sách nào! </p>
+        </div>
+        <div class="col-md-4" th:each="book : ${books.content}">
             <div class="card shadow-sm h-100 book-card">
                 <a th:href="@{/homepage/information_book(bookid=${book.bookId})}">
                     <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${book.nameBook}" class="card-img-top rounded-top">
@@ -107,26 +167,26 @@
     </div>
 </main>
 
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
+            <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage-1}, valueSize=${valueSize})}" >Previous</a>
+        </li>
+        <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
+            <a class="page-link" th:href="@{/home_user_after_login(valuePage=${p}, valueSize=${valueSize})}" th:text="${p+1}"  ></a>
+        </li>
+        <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
+            <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage+1}, valueSize=${valueSize})}">Next</a>
+        </li>
+    </ul>
+</nav>
+
 <!-- 📌 FOOTER -->
 <footer>
     <p class="text-muted mb-0">© 2025 Hiệu Sách Của Hiệp. Mọi quyền được bảo lưu.</p>
 </footer>
 
 <!-- JS -->
-<script>
-    document.getElementById("customCategory").addEventListener("click", function(e) {
-      const list = document.getElementById("categoryList");
-      list.style.display = list.style.display === "none" ? "block" : "none";
-      list.style.top = e.pageY + "px";
-      list.style.left = e.pageX + "px";
-    });
-
-    function selectCustomCategory(name) {
-      document.getElementById("customCategory").innerHTML = "📚 Thể loại: <b>" + name + "</b> ⬇️";
-      document.getElementById("categorySelect").value = name;
-      document.getElementById("categoryList").style.display = "none";
-    }
-</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
