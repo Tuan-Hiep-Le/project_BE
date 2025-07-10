@@ -34,7 +34,7 @@ CREATE TABLE users(
       voucher_code INT NOT NULL,
       payment_method ENUM('CASH','TRANSFER')NOT NULL DEFAULT 'CASH',
       status_order ENUM('APPROVING','APPROVED','DELIVERING','DELIVERED', 'CANCELED') NOT NULL,
-      handle_order ENUM('ACCEPT','CANCEL') NOT NULL,
+      handle_order ENUM('ACCEPT','CANCEL'),
       payment DECIMAL(10,2) NOT NULL,
       order_at DATETIME NOT NULL
       )
@@ -114,6 +114,16 @@ CREATE TABLE users(
       id_cart int NOT NULL,
       quantity int NOT NULL,
       is_selected BOOLEAN NOT NULL DEFAULT FALSE
+      )
+
+  //Tạo bảng users_voucher: CHo biết số voucher của từng người dùng
+  CREATE TABLE users_voucher(
+      id_user_voucher INT PRIMARY KEY AUTO_INCREMENT,
+      id_user INT NOT NULL,
+      voucher_code INT NOT NULL,
+      quantity INT NOT NULL,
+      quantity_user INT NOT NULL,
+      date_received DATE NOT NULL
       )
 
  // Nhập dữ liệu bảng ship_costs cố định

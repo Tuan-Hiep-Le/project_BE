@@ -3,7 +3,7 @@ package com.example.project.service.impl;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.example.project.entity.Book;
-import com.example.project.entity.BookDocument;
+import com.example.project.entity.elastic.BookDocument;
 import com.example.project.service.SearchBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

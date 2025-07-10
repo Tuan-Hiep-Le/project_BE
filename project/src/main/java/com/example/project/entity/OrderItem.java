@@ -1,10 +1,16 @@
 package com.example.project.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 @Entity
 @Table(name = "order_items")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
