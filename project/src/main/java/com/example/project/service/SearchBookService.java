@@ -1,7 +1,6 @@
 package com.example.project.service;
 
-import com.example.project.entity.BookDocument;
-import com.example.project.entity.Review;
+import com.example.project.entity.elastic.BookDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

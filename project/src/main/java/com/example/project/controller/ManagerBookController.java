@@ -1,12 +1,11 @@
 package com.example.project.controller;
 
 import com.example.project.entity.Book;
-import com.example.project.entity.BookDocument;
+import com.example.project.entity.elastic.BookDocument;
 import com.example.project.entity.Review;
 import com.example.project.service.impl.ManagerReviewServiceImpl;
 import com.example.project.service.impl.ManagerBookServiceImpl;
 import com.example.project.service.impl.SearchBookServiceImpl;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,9 +121,6 @@ public class ManagerBookController {
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("valueSize",valueSize);
         model.addAttribute("totalPage",allProduct.getTotalPages());
-        System.out.println("Tổng số sách: " + allProduct.getTotalElements());
-        System.out.println("Tổng số trang: " + allProduct.getTotalPages());
-        System.out.println("Số sách trong trang hiện tại: " + allProduct.getContent().size());
 
         return"home_after_login";
     }

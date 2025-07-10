@@ -1,4 +1,4 @@
-package com.example.project.entity;
+package com.example.project.entity.elastic;
 
 import com.example.project.entity.enum_entity.Language;
 import lombok.*;

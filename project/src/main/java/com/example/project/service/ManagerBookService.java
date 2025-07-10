@@ -1,15 +1,10 @@
 package com.example.project.service;
 
 import com.example.project.entity.Book;
-import com.example.project.entity.BookDocument;
-import com.example.project.entity.Review;
-import com.example.project.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ManagerBookService {
     //Lấy toàn bộ sách

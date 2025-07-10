@@ -159,8 +159,9 @@
                 <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
                     <form method="post" th:action="@{/add-to-cart}">
                         <button type="submit" class="btn btn-outline-primary btn-sm">🛒 Thêm vào giỏ</button>
-                        <button type="submit" class="btn btn-success btn-sm">💳 Mua ngay</button>
                     </form>
+                    <a th:href="@{/home_after_user_login/switch_buy_now(bookId=${book.bookId})}"  class="btn btn-success btn-sm">💳 Mua ngay</a>
+
                 </div>
             </div>
         </div>
