@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Table(name = "users_voucher")
 @NoArgsConstructor
@@ -17,10 +19,10 @@ public class UserVoucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user_voucher")
     private Integer idUserVoucher;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "voucher_code")
     private Voucher voucher;
     @Column(name = "quantity")

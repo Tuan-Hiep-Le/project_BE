@@ -1,19 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mua ngay</title>
+    <title>Mua Ngay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <input type="text" name="where" placeholder="Nhập địa chỉ giao hàng" class="form-control mb-3">
-    <div>
-        <form>
-            <img th:src="@/images/sach-anh-dep3.jpg"  class="card-img-top">
-            <
-        </form>
-    </div>
+<body class="bg-light">
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">📚 Đặt mua sách ngay</h2>
+    <form th:action="@{/home_after_user_login/buy_now}" method="post" class="card p-4 shadow-sm">
+        <input type="hidden" name="bookId" th:value="${bookId}" />
+
+        <div class="mb-3">
+            <label class="form-label">Địa chỉ giao hàng</label>
+            <input th:type="text" name="where" placeholder="Nhập địa chỉ" class="form-control">
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <img th:src="@{/images/sach-anh-dep3.jpg}"  class="img-fluid rounded">
+            </div>
+            <div class="col-md-8">
+                <p><strong>Tên sách:</strong> <span th:text="${bookBuy.nameBook}"></span></p>
+                <p><strong>Tác giả:</strong> <span th:text="${bookBuy.nameAuthor}"></span></p>
+                <p><strong>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
+                <p><strong>Giá:</strong> <span th:text="${bookBuy.price}"></span></p>
+                <div class="mb-3">
+                    <label for="quantityBuy" class="form-label">Số lượng mua</label>
+                    <input type="number"
+                           id="quantityBuy"
+                           name="quantityBuy"
+                           class="form-control"
+                           th:value="1"
+                           min="1"
+                           step="1"
+                           required>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span></p>
+            <p><strong>Tiền Ship:</strong> <span th:text="${moneyShip}"></span></p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">🎟 Voucher Giảm giá</label>
+            <select name="valueVoucherDiscount" class="form-select" >
+                <option th:each="voucherDiscount : ${listVoucherDiscount}"
+                        th:value="${voucherDiscount[0]}"
+                        th:text="'Voucher: ' + ${voucherDiscount[0]} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">📦 Voucher Vận chuyển</label>
+            <select name="valueVoucherTransfer" class="form-select" >
+                <option th:each="voucherTransfer : ${listVoucherTransfer}"
+                        th:value="${voucherTransfer[0]}"
+                        th:text="'Voucher: ' + ${voucherTransfer[0]} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">💳 Phương thức thanh toán</label>
+            <select name="paymentMethod" class="form-select">
+                <option th:value="CASH">Thanh toán khi nhận hàng</option>
+                <option th:value="TRANSFER">Chuyển khoản</option>
+            </select>
+        </div>
+        <p class="fs-5 text-success"><strong>Tổng thanh toán:</strong> <span th:text="${#numbers.formatDecimal(payment, 0, 'COMMA', 2, 'POINT')}"></span></p>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5">Thanh toán</button>
+        </div>
+    </form>
+</div>
 
 
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
