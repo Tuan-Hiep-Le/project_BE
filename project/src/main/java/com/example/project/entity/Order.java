@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -47,4 +49,6 @@ public class Order {
     private HandlerOrder handlerOrder;
     @Column(name = "payment", precision = 10,scale = 2)
     private BigDecimal payment;
+    @Column(name = "order_at")
+    private LocalDateTime buyAt;
 }

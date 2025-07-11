@@ -18,14 +18,18 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.securityContext(securityContext -> securityContext.securityContextRepository(securityContextRepository())).exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login") ));
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/images/**","/css/**", "/js/**","/favicon.ico").permitAll()
-                .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","homepage/search","homepage/category","homepage/author","homepage/topic").permitAll()
+                .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","/homepage/search","/homepage/category","/homepage/author","/homepage/topic","/admin/sync-shipcost").permitAll()
                 .requestMatchers(HttpMethod.POST,"/login","/register").permitAll()
-                .requestMatchers(HttpMethod.GET,"/home_user_after_login","/homepage/information_book").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/home_user_after_login","/homepage/information_book","/home_after_user_login/switch_buy_now").hasRole("USER")
                 .anyRequest().authenticated()
         );
+        httpSecurity.securityContext(securityContext -> securityContext.securityContextRepository(securityContextRepository())).exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login") ));
+        httpSecurity
+                .securityContext(securityContext -> securityContext
+                        .securityContextRepository(new HttpSessionSecurityContextRepository())
+                );
 
         httpSecurity.formLogin(form -> form.disable()).csrf(csrf -> csrf.disable());
         return httpSecurity.build();

@@ -6,8 +6,11 @@ import com.example.project.entity.enum_entity.Status;
 import com.example.project.repository.ManagerUserRepository;
 import com.example.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,6 +57,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        return managerUserRepository.findByEmail(email).get();
+        Optional<User> optionalUser= managerUserRepository.findByEmail(email);
+        if (optionalUser.isPresent()) { // Kiểm tra xem Optional có chứa giá trị không
+            return optionalUser.get(); // Nếu có, lấy giá trị
+        } else {
+
+            throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);
+
+        }
     }
 }
