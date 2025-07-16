@@ -15,7 +15,7 @@
 
         <div class="mb-3">
             <label class="form-label">Địa chỉ giao hàng</label>
-            <input th:type="text" name="where" placeholder="Nhập địa chỉ" class="form-control">
+            <input th:type="text" name="where" placeholder="...- Tên Xã - Tên Tỉnh" id="addressUser" th:value="${where}" class="form-control">
         </div>
 
         <div class="row mb-4">
@@ -26,42 +26,47 @@
                 <p><strong>Tên sách:</strong> <span th:text="${bookBuy.nameBook}"></span></p>
                 <p><strong>Tác giả:</strong> <span th:text="${bookBuy.nameAuthor}"></span></p>
                 <p><strong>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
-                <p><strong>Giá:</strong> <span th:text="${bookBuy.price}"></span></p>
+                <p><strong>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 0, 'POINT', 2, 'COMMA')}" th:value="${bookBuy.price}" id = "price"></span></p>
                 <div class="mb-3">
-                    <label for="quantityBuy" class="form-label">Số lượng mua</label>
-                    <input type="number"
+                    <label for="quantityBuy" class="form-label">Số lượng mua <span class="text-muted">(Tối đa: <span id = "quantityMaxBook" th:text="${bookBuy.quantity}"></span>)</span></label>                    <input type="number"
                            id="quantityBuy"
                            name="quantityBuy"
                            class="form-control"
-                           th:value="1"
+                           th:value="${quantityBuy}"
                            min="1"
                            step="1"
+                           max="${bookBuy.quantity}"
                            required>
                 </div>
+
             </div>
         </div>
 
         <div class="mb-3">
-            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span></p>
-            <p><strong>Tiền Ship:</strong> <span th:text="${moneyShip}"></span></p>
+            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}" id = "totalPrice"></span></p>
+            <p><strong>Tiền Ship:</strong> <span th:text="${#numbers.formatDecimal(moneyShip, 0, 'POINT', 2, 'COMMA')}" id="moneyShip" th:value="${moneyShip}"></span></p>
         </div>
 
         <div class="mb-3">
             <label class="form-label">🎟 Voucher Giảm giá</label>
-            <select name="valueVoucherDiscount" class="form-select" >
+            <select name="valueVoucherDiscount" class="form-select" id="valueVoucherDiscount">
+                <option value="0">Không sử dụng voucher</option>
                 <option th:each="voucherDiscount : ${listVoucherDiscount}"
-                        th:value="${voucherDiscount[0]}"
-                        th:text="'Voucher: ' + ${voucherDiscount[0]} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
+                        th:value="${voucherDiscount[0].voucherCode}"
+                        th:attr="data-discount=${voucherDiscount[0].value}"
+                        th:text="'Voucher: ' + ${voucherDiscount[0].nameVoucher} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
                 </option>
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">📦 Voucher Vận chuyển</label>
-            <select name="valueVoucherTransfer" class="form-select" >
+            <select name="valueVoucherTransfer" class="form-select" id="valueVoucherTransfer">
+                <option value="0">Không sử dụng voucher</option>
                 <option th:each="voucherTransfer : ${listVoucherTransfer}"
-                        th:value="${voucherTransfer[0]}"
-                        th:text="'Voucher: ' + ${voucherTransfer[0]} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
+                        th:value="${voucherTransfer[0].voucherCode}"
+                        th:attr="data-transfer=${voucherTransfer[0].value}"
+                        th:text="'Voucher: ' + ${voucherTransfer[0].nameVoucher} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
                 </option>
             </select>
         </div>
@@ -73,12 +78,76 @@
                 <option th:value="TRANSFER">Chuyển khoản</option>
             </select>
         </div>
-        <p class="fs-5 text-success"><strong>Tổng thanh toán:</strong> <span th:text="${#numbers.formatDecimal(payment, 0, 'COMMA', 2, 'POINT')}"></span></p>
+        <p class="fs-5 text-success"><strong>Tổng thanh toán:</strong> <span  th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')}" id="lastPayment"></span></p>
         <div class="text-center">
             <button type="submit" class="btn btn-primary px-5">Thanh toán</button>
         </div>
     </form>
 </div>
+
+<script>
+    let currentShipCost = 0;
+    document.getElementById("addressUser").addEventListener("input",function(){
+        const address = this.value;
+        fetch(`/get_shipcost?where=${encodeURIComponent(address)}`)
+        .then(response => response.json())
+        .then(data => {
+            currentShipCost = parseFloat(data.cost);
+            document.getElementById("moneyShip").textContent = currentShipCost.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+            updateFinalPayment();
+
+        }).catch(error =>{
+            console.error('Error fetching shipping cost: ',error)
+            document.getElementById("moneyShip").textContent = 'Chưa hỗ trợ ship để tỉnh này';
+        });
+    });
+    document.getElementById("quantityBuy").addEventListener("change", updateFinalPayment);
+    document.getElementById("quantityBuy").addEventListener("input", function () {
+
+    const currentValue = parseInt(this.value);
+    if (currentValue > parseInt(document.getElementById("quantityMaxBook").textContent)) {
+        this.value = parseInt(document.getElementById("quantityMaxBook").textContent);
+    }
+    updateFinalPayment();
+    });
+    document.getElementById("quantityBuy").addEventListener("blur", updateFinalPayment);
+    document.getElementById("valueVoucherDiscount").addEventListener("change", updateFinalPayment);
+    document.getElementById("valueVoucherTransfer").addEventListener("change", updateFinalPayment);
+    const input = document.getElementById("quantityBuy");
+
+
+
+    function updateFinalPayment() {
+        const price = parseFloat(document.getElementById("price").textContent.replace(/\./g, '').replace(/,/g, '.'));
+        const quantity = parseInt(document.getElementById("quantityBuy").value);
+
+        const discountOption = document.getElementById("valueVoucherDiscount").selectedOptions[0];
+        const transferOption = document.getElementById("valueVoucherTransfer").selectedOptions[0];
+
+        const discountPercent = parseInt(discountOption.getAttribute("data-discount") || 0);
+        const transferPercent = parseInt(transferOption.getAttribute("data-transfer") || 0);
+
+
+        const totalBookPrice = price * quantity;
+        // Hiển thị tổng tiền sách
+        document.getElementById("totalPrice").textContent = totalBookPrice.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
+
+        const discountAmount = totalBookPrice * discountPercent / 100;
+        const transferDiscountAmount = currentShipCost * transferPercent / 100;
+
+        const finalPayment = totalBookPrice + currentShipCost - discountAmount - transferDiscountAmount;
+
+        // Hiển thị tổng tiền
+        document.getElementById("lastPayment").textContent = finalPayment.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' VND';
+
+
+    }
+
+
+</script>
 
 
 <!-- Bootstrap JS (optional) -->

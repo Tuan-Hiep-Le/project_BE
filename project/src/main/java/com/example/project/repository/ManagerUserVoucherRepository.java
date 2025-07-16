@@ -1,7 +1,6 @@
 package com.example.project.repository;
 
 import com.example.project.entity.UserVoucher;
-import com.example.project.entity.Voucher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
