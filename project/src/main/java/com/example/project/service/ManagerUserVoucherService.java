@@ -1,5 +1,7 @@
 package com.example.project.service;
 
+import com.example.project.entity.Voucher;
+
 import java.util.List;
 
 public interface ManagerUserVoucherService {
@@ -8,4 +10,5 @@ public interface ManagerUserVoucherService {
 
     //Lay ra cac voucher DISCOUNT của  user
     public List<Object[]> getAllVoucherDiscount(Integer id);
+
 }

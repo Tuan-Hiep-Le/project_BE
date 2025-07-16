@@ -39,11 +39,12 @@
     </div>
 
     <!-- Nút hành động -->
-    <div class="mt-5 text-center">
+    <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
         <form method="post" th:action="@{/add-to-cart}">
             <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
-            <button type="submit" class="btn btn-success">💳 Mua ngay</button>
         </form>
+        <a th:href="@{/home_after_user_login/switch_buy_now(bookId=${product.bookId})}"  class="btn btn-success">💳 Mua ngay</a>
+
     </div>
 
     <!-- Đánh giá người dùng -->

@@ -27,7 +27,7 @@ public class UserVoucher {
     private Voucher voucher;
     @Column(name = "quantity")
     private int quantity;
-    @Column(name = "quantity_user")
+    @Column(name = "quantity_used")
     private int quantityUsed;
     @Column(name = "date_received")
     private LocalDate dateReceived;
