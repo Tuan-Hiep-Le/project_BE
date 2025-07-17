@@ -44,7 +44,7 @@
 
         <div class="mb-3">
             <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}" id = "totalPrice"></span></p>
-            <p><strong>Tiền Ship:</strong> <span th:text="${#numbers.formatDecimal(moneyShip, 0, 'POINT', 2, 'COMMA')}" id="moneyShip" th:value="${moneyShip}"></span></p>
+            <p><strong>Tiền Ship:</strong> <span th:text="${moneyShip}" id="moneyShip" th:value="${moneyShip}"></span></p>
         </div>
 
         <div class="mb-3">
