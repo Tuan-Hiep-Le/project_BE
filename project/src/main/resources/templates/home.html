@@ -83,6 +83,8 @@
                     <p class="card-text mb-1">🌐 <strong>Ngôn ngữ:</strong> <span th:text="${book.language}"></span></p>
                     <p class="card-text mb-1">💡 <strong>Chủ đề:</strong> <span th:text="${book.nameTopic}"></span></p>
                     <p class="card-text mb-0">📚 <strong>Thể loại:</strong> <span th:text="${book.nameCategory}"></span></p>
+                    <p class="card-text mb-0">📚 <strong>Số lượng:</strong> <span th:text="${book.quantity}"></span></p>
+
                 </div>
                 <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
                     <form method="post" th:action="@{/add-to-cart}">

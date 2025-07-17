@@ -106,8 +106,6 @@ public class ManagerBookController {
     @GetMapping("/home_user_after_login")
     public String homeAfterLogin(@RequestParam(value = "valuePage",defaultValue = "0") int valuePage, @RequestParam(value = "valueSize",defaultValue = "10") int valueSize, Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Auth: " + auth);
-        System.out.println("Authorities: " + auth.getAuthorities());
 
         Pageable pageable = PageRequest.of(valuePage,valueSize);
         Page<Book> allProduct = managerBookService.getAllBook(pageable);

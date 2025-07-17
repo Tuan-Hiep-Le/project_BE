@@ -97,7 +97,7 @@
 <!-- 🔗 NAVIGATION -->
 <nav class="bg-white border-bottom py-3">
     <div class="container-fluid d-flex gap-4 flex-wrap align-items-center">
-        <a href="#" class="text-decoration-none">🏠 Trang chủ</a>
+        <a th:href="@{/home_user_after_login}" class="text-decoration-none">🏠 Trang chủ</a>
 
         <form th:action="@{/home_after_user_login/category}" method="get">
             <label for="categorySelect">📚 Thể loại:</label>

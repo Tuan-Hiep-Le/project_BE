@@ -112,6 +112,7 @@ public class SearchBookServiceImpl implements SearchBookService {
                 .nameAuthor(book.getNameAuthor())
                 .nameCategory(book.getNameCategory())
                 .nameTopic(book.getNameTopic())
+                .quantity(book.getQuantity())
                 .build();
     }
 

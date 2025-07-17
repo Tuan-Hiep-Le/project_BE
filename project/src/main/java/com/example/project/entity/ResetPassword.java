@@ -1,6 +1,4 @@
 package com.example.project.entity;
-
-import com.example.project.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +18,7 @@ public class ResetPassword {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
-    @Column(name = "reset_password_toke",length = 255)
+    @Column(name = "reset_password_token",length = 255)
     private String resetPasswordToken;
     @Column(name = "reset_token_expiry")
     private LocalDateTime resetTokenExpiry;
