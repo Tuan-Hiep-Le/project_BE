@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         Optional<User> optionalUser= managerUserRepository.findByEmail(email);
-        if (optionalUser.isPresent()) { // Kiểm tra xem Optional có chứa giá trị không
-            return optionalUser.get(); // Nếu có, lấy giá trị
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
         } else {
 
             throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);

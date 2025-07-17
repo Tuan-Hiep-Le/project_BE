@@ -28,7 +28,8 @@
                 <p><strong>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
                 <p><strong>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 0, 'POINT', 2, 'COMMA')}" th:value="${bookBuy.price}" id = "price"></span></p>
                 <div class="mb-3">
-                    <label for="quantityBuy" class="form-label">Số lượng mua <span class="text-muted">(Tối đa: <span id = "quantityMaxBook" th:text="${bookBuy.quantity}"></span>)</span></label>                    <input type="number"
+                    <label for="quantityBuy" class="form-label">Số lượng mua <span class="text-muted">(Tối đa: <span id = "quantityMaxBook" th:text="${bookBuy.quantity}"></span>)</span></label>
+                    <input type="number"
                            id="quantityBuy"
                            name="quantityBuy"
                            class="form-control"
@@ -93,15 +94,23 @@
         .then(response => response.json())
         .then(data => {
             currentShipCost = parseFloat(data.cost);
-            document.getElementById("moneyShip").textContent = currentShipCost.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+            if(!isNaN(currentShipCost)){
+                document.getElementById("moneyShip").textContent = currentShipCost.toLocaleString('vi-VN', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+            }else{
+                document.getElementById("moneyShip").textContent = "Chưa hỗ trợ chi phí ship ở tỉnh này";
+                currentShipCost = 0;
+            }
             updateFinalPayment();
 
         }).catch(error =>{
             console.error('Error fetching shipping cost: ',error)
             document.getElementById("moneyShip").textContent = 'Chưa hỗ trợ ship để tỉnh này';
+            currentShipCost = 0;
+            updateFinalPayment();
         });
     });
+
     document.getElementById("quantityBuy").addEventListener("change", updateFinalPayment);
     document.getElementById("quantityBuy").addEventListener("input", function () {
 
@@ -122,24 +131,27 @@
         const price = parseFloat(document.getElementById("price").textContent.replace(/\./g, '').replace(/,/g, '.'));
         const quantity = parseInt(document.getElementById("quantityBuy").value);
 
+        //Tính số tiền voucher
+        const totalBookPrice = price * quantity  ;
         const discountOption = document.getElementById("valueVoucherDiscount").selectedOptions[0];
         const transferOption = document.getElementById("valueVoucherTransfer").selectedOptions[0];
-
         const discountPercent = parseInt(discountOption.getAttribute("data-discount") || 0);
         const transferPercent = parseInt(transferOption.getAttribute("data-transfer") || 0);
-
-
-        const totalBookPrice = price * quantity;
-        // Hiển thị tổng tiền sách
-        document.getElementById("totalPrice").textContent = totalBookPrice.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
-
         const discountAmount = totalBookPrice * discountPercent / 100;
         const transferDiscountAmount = currentShipCost * transferPercent / 100;
 
-        const finalPayment = totalBookPrice + currentShipCost - discountAmount - transferDiscountAmount;
+        // Hiển thị tổng tiền sách
+        const totalBookPriceAfterUseVoucher = totalBookPrice - discountAmount;
+        document.getElementById("totalPrice").textContent = totalBookPriceAfterUseVoucher.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
 
-        // Hiển thị tổng tiền
+        // Hiển thị tiền ship
+        const shipCostAfterUseVoucher = currentShipCost - transferDiscountAmount;
+        document.getElementById("moneyShip").textContent = shipCostAfterUseVoucher.toLocaleString('vi-VN', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+
+        // Hiển thị tổng tiền cần thanh toán
+        const finalPayment = totalBookPriceAfterUseVoucher + shipCostAfterUseVoucher ;
         document.getElementById("lastPayment").textContent = finalPayment.toLocaleString('vi-VN', {
             minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' VND';
 
