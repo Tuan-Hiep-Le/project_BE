@@ -1,8 +1,11 @@
 package com.example.project.controller;
 
 import com.example.project.entity.Book;
+import com.example.project.entity.CartItem;
+import com.example.project.entity.User;
 import com.example.project.entity.elastic.BookDocument;
 import com.example.project.entity.Review;
+import com.example.project.service.impl.ManagerCartItemServiceImpl;
 import com.example.project.service.impl.ManagerReviewServiceImpl;
 import com.example.project.service.impl.ManagerBookServiceImpl;
 import com.example.project.service.impl.SearchBookServiceImpl;
@@ -29,6 +32,8 @@ public class ManagerBookController {
 
     @Autowired
     private ManagerReviewServiceImpl managerReviewService;
+    @Autowired
+    private ManagerCartItemServiceImpl managerCartItemService;
 
 
 
@@ -105,13 +110,15 @@ public class ManagerBookController {
     //Trang Chủ Sau Khi Đăng Nhập
     @GetMapping("/home_user_after_login")
     public String homeAfterLogin(@RequestParam(value = "valuePage",defaultValue = "0") int valuePage, @RequestParam(value = "valueSize",defaultValue = "10") int valueSize, Model model){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Pageable pageable = PageRequest.of(valuePage,valueSize);
         Page<Book> allProduct = managerBookService.getAllBook(pageable);
         List<String> listAuthor = managerBookService.getAllAuthor();
         List<String> listCategory = managerBookService.getAllCategory();
         List<String> listTopic = managerBookService.getAllTopic();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        List<CartItem> list = managerCartItemService.getAllCTByUserId(user.getUserId());
+        int countCartItem = list.size();
         model.addAttribute("books",allProduct);
         model.addAttribute("authors",listAuthor);
         model.addAttribute("categories",listCategory);
@@ -119,6 +126,7 @@ public class ManagerBookController {
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("valueSize",valueSize);
         model.addAttribute("totalPage",allProduct.getTotalPages());
+        model.addAttribute("countCartItem",countCartItem);
 
         return"home_after_login";
     }
@@ -151,6 +159,7 @@ public class ManagerBookController {
         model.addAttribute("valuePage", valuePage);
         model.addAttribute("valueSize", valueSize);
         model.addAttribute("totalPage", listBook.getTotalPages());
+
 
         return "home_after_login";
     }

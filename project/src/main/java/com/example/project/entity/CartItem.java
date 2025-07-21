@@ -3,6 +3,8 @@ package com.example.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "cart_items")
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class CartItem {
     private Cart cart;
     @Column(name = "quantity")
     private int quantity;
-    @Column(name = "id_selected")
-    private Boolean idSelected;
+    @Column(name = "is_selected")
+    private Boolean isSelected;
+    @Column(name = "time_add")
+    private LocalDateTime timeAdd;
 }

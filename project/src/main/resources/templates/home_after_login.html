@@ -8,59 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-    <!-- Custom Style -->
-    <style>
-        body {
-          font-family: 'Poppins', sans-serif;
-        }
-        :root {
-          --primary-color: #6C63FF;
-          --secondary-color: #F8F9FA;
-          --accent-color: #FF6584;
-        }
-        .btn-primary {
-          background-color: var(--primary-color);
-          border: none;
-        }
-        header {
-          position: sticky;
-          top: 0;
-          z-index: 999;
-          background-color: var(--secondary-color);
-        }
-        .card {
-          border-radius: 12px;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-          transition: transform 0.3s;
-        }
-        .card:hover {
-          transform: scale(1.02);
-        }
-        .book-card img {
-          object-fit: cover;
-          height: 300px;
-          border-top-left-radius: 12px;
-          border-top-right-radius: 12px;
-          transition: filter 0.3s;
-        }
-        .book-card img:hover {
-          filter: brightness(1.05);
-        }
-        .btn-sm {
-          border-radius: 20px;
-          font-weight: 600;
-          padding: 6px 16px;
-        }
-        .dropdown-menu {
-          box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-          border-radius: 8px;
-          transition: all 0.3s ease-in-out;
-        }
-        .page-link {
-          border-radius: 6px !important;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{css/style.css}">
 
 </head>
 <body class="bg-white">
@@ -80,14 +28,22 @@
                 <a href="#" class="d-block dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="40" height="40" class="rounded-circle border">
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">🧑‍💼 Trang cá nhân</a></li>
-                    <li><a class="dropdown-item" href="#">Xác thực Email</a></li>
-                    <li><a class="dropdown-item" href="#">Giỏ hàng</a></li>
-                    <li><a class="dropdown-item" href="#">Lịch sử mua hàng</a></li>
-                    <li><a class="dropdown-item" href="#">⚙️ Cài đặt</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="#">🚪 Đăng xuất</a></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
+                    <li><a class="dropdown-item py-2" href="#">👤 Trang cá nhân</a></li>
+                    <li><a class="dropdown-item py-2" href="#">📧 Xác thực Email</a></li>
+                    <li>
+                        <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">
+                            🛒 Giỏ hàng
+                            <span class="badge bg-danger rounded-pill ms-1" th:text="${countCartItem}">
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </a>
+
+                    </li>
+                    <li><a class="dropdown-item py-2" href="#">🧾 Lịch sử mua hàng</a></li>
+                    <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
+                    <li><hr class="dropdown-divider my-2"></li>
+                    <li><a class="dropdown-item text-danger py-2" href="#">🚪 Đăng xuất</a></li>
                 </ul>
             </div>
         </div>
@@ -158,7 +114,7 @@
                     <p class="card-text mb-0">📚 <strong>Số lượng:</strong> <span th:text="${book.quantity}"></span></p>
                 </div>
                 <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
-                    <form method="post" th:action="@{/add-to-cart}">
+                    <form method="post" th:action="@{/home_after_user_login/add_cart_item(bookBuyId=${book.bookId})}">
                         <button type="submit" class="btn btn-outline-primary btn-sm">🛒 Thêm vào giỏ</button>
                     </form>
                     <a th:href="@{/home_after_user_login/switch_buy_now(bookId=${book.bookId})}"  class="btn btn-success btn-sm">💳 Mua ngay</a>
