@@ -22,6 +22,13 @@
     .cart-item img:hover {
       transform: scale(1.05);
     }
+    .sticky-cart-bar {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background-color: #fff;
+    }
+
 
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -40,7 +47,7 @@
   <div th:if="${listCartItems.isEmpty()}" class="text-center p-5 bg-white rounded shadow">
     <h3>🛒 Giỏ hàng của bạn đang trống!</h3>
     <a th:href="@{/home_user_after_login}" class="btn btn-outline-primary d-inline-block px-3 py-2">
-       Quay về trang chủ
+      Quay về trang chủ
     </a>
   </div>
 
@@ -53,30 +60,31 @@
     </div>
 
     <!-- Tổng tiền và chọn tất cả -->
-    <div class="sticky-top bg-white py-3 border-bottom">
-      <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="selectAllCheckbox">
-          <label class="form-check-label" for="selectAllCheckbox">Chọn tất cả</label>
-        </div>
-
-        <span class="fw-semibold text-danger fs-5">
-      Tổng tiền: <span th:text="${totalPrice}"></span> VNĐ
-    </span>
-
-        <a href="#" class="btn btn-success px-4">🧾 Thanh toán</a>
+    <div class="bg-white rounded p-3 mb-4 d-flex justify-content-between align-items-center shadow-sm flex-wrap gap-2 sticky-cart-bar">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="selectAllCheckbox">
+        <label class="form-check-label" for="selectAllCheckbox">Chọn tất cả</label>
       </div>
+      <div class="fs-5 text-danger fw-semibold" id="totalPrice">
+        💰 Tổng tiền: <span th:text="${totalPrice}"></span> VNĐ
+      </div>
+      <button class="btn btn-success">
+        <i class="bi bi-receipt me-1"></i>Thanh toán
+      </button>
     </div>
-
 
     <!-- Sản phẩm trong giỏ -->
     <div th:each="item : ${listCartItems}" class="card mb-3 shadow-sm border-0 cart-item">
       <div class="row g-0 align-items-center p-2">
         <!-- Cột ảnh và checkbox -->
+
         <div class="col-md-2 text-center">
-          <input type="checkbox" name="selectedProduct" value="itemId" class="form-check-input mb-2">
-          <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${item.book.nameBook}" class="img-fluid">
+          <input type="checkbox" name="selectedProduct" value="itemId"  th:attr="data-price=${item.book.price}"class="form-check-input mb-2">
+          <a th:href="@{/homepage/information_book(bookid=${item.book.bookId})}">
+            <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${item.book.nameBook}" class="img-fluid">
+          </a>
         </div>
+
 
         <!-- Cột chi tiết sản phẩm -->
         <div class="col-md-8">
@@ -91,14 +99,14 @@
             <p class="mb-1">💲 Giá: <span th:text="${item.book.price}"></span> VNĐ</p>
             <div class="input-group mt-2" style="max-width: 160px;">
               <button type="button" class="btn btn-outline-secondary decrease-btn">−</button>
-              <input type="number"
-                     name="quantityInCart"
-                     class="form-control text-center"
-                     th:value="${item.quantity}"
-                     min="1"
-                     step="1"
-                     th:max="${item.book.quantity}"
-                     required>
+              <input  type="number"
+                      name="quantityInCart"
+                      class="form-control text-center"
+                      th:value="${item.quantity}"
+                      min="1"
+                      step="1"
+                      th:max="${item.book.quantity}"
+                      required>
               <button type="button" class="btn btn-outline-secondary increase-btn">+</button>
             </div>
           </div>
@@ -130,13 +138,19 @@
 
       decreaseBtn.addEventListener("click", () => {
         let current = parseInt(quantityInput.value);
-        if (current > 1) quantityInput.value = current - 1;
+        if (current > 1) {
+          quantityInput.value = current - 1;
+          updatePrice();
+        }
       });
 
       increaseBtn.addEventListener("click", () => {
         let current = parseInt(quantityInput.value);
         let max = parseInt(quantityInput.max);
-        if (current < max) quantityInput.value = current + 1;
+        if (current < max) {
+          quantityInput.value = current + 1;
+          updatePrice();
+        }
       });
     });
 
@@ -146,8 +160,31 @@
 
     selectAll.addEventListener("change", function () {
       checkboxes.forEach(cb => cb.checked = this.checked);
+      updatePrice();
     });
+    updatePrice();
   });
+  updatePrice();
+  document.querySelectorAll('input[name="selectedProduct"]').forEach(checkbox => {
+  checkbox.addEventListener("change", updatePrice); });
+
+
+  function updatePrice() {
+    let totalPrice = 0;
+    const checkboxes = document.getElementsByName("selectedProduct");
+
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        const cartItem = checkbox.closest(".cart-item");
+        const quantityInput = cartItem.querySelector('input[name="quantityInCart"]');
+        const price = parseFloat(checkbox.dataset.price);
+        const quantity = parseInt(quantityInput.value);
+        totalPrice += quantity * price;
+      }
+    });
+    document.getElementById("totalPrice").textContent = "💰 Tổng tiền: " + totalPrice.toLocaleString() + " VNĐ";
+    }
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
