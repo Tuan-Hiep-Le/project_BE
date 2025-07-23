@@ -1,14 +1,9 @@
 package com.example.project.controller;
 
-import com.example.project.entity.Book;
-import com.example.project.entity.CartItem;
-import com.example.project.entity.User;
+import com.example.project.entity.*;
 import com.example.project.entity.elastic.BookDocument;
-import com.example.project.entity.Review;
-import com.example.project.service.impl.ManagerCartItemServiceImpl;
-import com.example.project.service.impl.ManagerReviewServiceImpl;
-import com.example.project.service.impl.ManagerBookServiceImpl;
-import com.example.project.service.impl.SearchBookServiceImpl;
+import com.example.project.service.ManagerOrderService;
+import com.example.project.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +29,8 @@ public class ManagerBookController {
     private ManagerReviewServiceImpl managerReviewService;
     @Autowired
     private ManagerCartItemServiceImpl managerCartItemService;
+    @Autowired
+    private ManagerOrderServiceImpl managerOrderService;
 
 
 
@@ -195,17 +192,25 @@ public class ManagerBookController {
     }
 
     @GetMapping("/homepage/information_book")
-    public String informationBook(@RequestParam("bookid") Integer id_book, Model model){
-        Book book = managerBookService.getBookById(id_book);
+    public String informationBook(@RequestParam("bookid") Integer idBook, Model model){
+        Book book = managerBookService.getBookById(idBook);
         model.addAttribute("product",book);
-        List<Review> list = managerReviewService.getUserAndCommentBook(id_book);
+        List<Review> list = managerReviewService.getUserAndCommentBook(idBook);
         if(list.isEmpty()){
             model.addAttribute("noReview",true);
         }else {
             model.addAttribute("noReview",false);
         }
         model.addAttribute("reviews",list);
-        model.addAttribute("id_book",id_book);
+        model.addAttribute("id_book",idBook);
+        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        Order order = managerOrderService.getOrderByCondition(user.getUserId(), idBook);
+        if (order != null && order.getReview() != null && order.getReview().getComment() != null){
+            model.addAttribute("is_review_book",true);
+        } else {
+            model.addAttribute("is_review_book",false);
+        }
         return "product_detail";
     }
 

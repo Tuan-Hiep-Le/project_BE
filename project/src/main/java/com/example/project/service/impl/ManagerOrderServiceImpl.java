@@ -15,4 +15,9 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
     public Order addOrder(Order order) {
         return managerOrderRepository.saveAndFlush(order);
     }
+
+    @Override
+    public Order getOrderByCondition(Integer userId, Integer idBook) {
+        return managerOrderRepository.getOrderBuyBookLates(userId,idBook);
+    }
 }

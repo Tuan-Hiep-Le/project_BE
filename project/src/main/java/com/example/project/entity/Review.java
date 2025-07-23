@@ -26,5 +26,9 @@ public class Review {
     private int starRate;
     @Column(name = "comment",length = 255)
     private String comment;
+    @Column(name = "reviewAt")
     private LocalDateTime reviewAt;
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

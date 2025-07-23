@@ -126,15 +126,13 @@ public class ManagerOrderController {
         Order order ;
         if(handlerOrder == null) {
              order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).handlerOrder(null).payment(payment).buyAt(LocalDateTime.now()).build();
-
-            //managerOrderService.addOrder(order);
+             //managerOrderService.addOrder(order);
         }else {
             StatusOrder statusOrder = (handlerOrder==HandlerOrder.ACCEPT)? StatusOrder.APPROVED: StatusOrder.CANCELED;
              order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(statusOrder).handlerOrder(handlerOrder).payment(payment).buyAt(LocalDateTime.now()).build();
             managerOrderService.addOrder(order);
         }
         OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
-
         //managerOrderItemService.addOrder(orderItem);
         model.addAttribute("bookId",id);
         model.addAttribute("valueVoucherTransfer",idTransfer);

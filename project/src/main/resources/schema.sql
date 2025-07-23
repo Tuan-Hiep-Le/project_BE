@@ -104,7 +104,8 @@ CREATE TABLE users(
      id_book INT NOT NULL,
      star_rate INT,
      `comment` varchar(255),
-     review_at DATETIME NOT NULL
+     review_at DATETIME NOT NULL,
+     order_id INT NOT NULL
      )
 
   //Tạo bảng cart_items: Chi tiết trong giỏ hàng
