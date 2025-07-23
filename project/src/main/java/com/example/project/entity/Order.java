@@ -51,4 +51,8 @@ public class Order {
     private BigDecimal payment;
     @Column(name = "order_at")
     private LocalDateTime buyAt;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+    @OneToOne(mappedBy = "order",cascade = CascadeType.ALL)
+    private Review review;
 }

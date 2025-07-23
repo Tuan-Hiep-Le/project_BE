@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sách</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+            font-size: 30px;
+            gap: 5px;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+    </style>
+
 </head>
 <body class="bg-light">
 
@@ -72,16 +98,25 @@
     </div>
 
     <!-- Form viết đánh giá -->
-    <div class="mt-4" th:if="${is_buy_book}">
+    <div class="mt-4" th:unless="${is_review_book}">
         <h5 class="text-success">✍️ Viết đánh giá của bạn:</h5>
-        <form method="post" th:action="@{/submit-review}" class="mt-3">
-            <textarea name="content" rows="3" class="form-control mb-3" placeholder="Viết đánh giá ở đây..." required></textarea>
+        <form method="post" th:action="@{/information_book/write_review}" class="mt-3">
+            <input type="hidden" name="bookId" th:value="${product.bookId}" />
+            <div class="star-rating">
+                <input type="radio" id="star5" name="reviewStar" value="5" required><label for="star5">★</label>
+                <input type="radio" id="star4" name="reviewStar" value="4"><label for="star4">★</label>
+                <input type="radio" id="star3" name="reviewStar" value="3"><label for="star3">★</label>
+                <input type="radio" id="star2" name="reviewStar" value="2"><label for="star2">★</label>
+                <input type="radio" id="star1" name="reviewStar" value="1"><label for="star1">★</label>
+            </div>
+            <textarea name="contentReview" rows="3" class="form-control mb-3" placeholder="Viết đánh giá ở đây..." required></textarea>
             <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+
         </form>
     </div>
 
     <!-- Thông báo nếu chưa mua sách -->
-    <div class="mt-4 text-muted" th:unless="${is_buy_book}">
+    <div class="mt-4 text-muted" th:if="${is_review_book}">
         <p class="fst-italic">⚠️ Bạn cần mua sách để có thể viết đánh giá.</p>
     </div>
 
