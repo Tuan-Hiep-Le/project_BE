@@ -1,0 +1,23 @@
+package com.project.service.impl;
+
+import com.project.entity.Order;
+import com.project.repository.ManagerOrderRepository;
+import com.project.service.ManagerOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ManagerOrderServiceImpl implements ManagerOrderService {
+    @Autowired
+    private ManagerOrderRepository managerOrderRepository;
+
+    @Override
+    public Order addOrder(Order order) {
+        return managerOrderRepository.saveAndFlush(order);
+    }
+
+    @Override
+    public Order getOrderByCondition(Integer userId, Integer idBook) {
+        return managerOrderRepository.getOrderBuyBookLates(userId,idBook);
+    }
+}
