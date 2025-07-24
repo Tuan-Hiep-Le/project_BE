@@ -1,6 +1,6 @@
-package com.example.project.entity;
+package com.project.entity;
 
-import com.example.project.entity.enum_entity.TypeVoucher;
+import com.project.entity.enum_entity.TypeVoucher;
 import jakarta.persistence.*;
 import lombok.*;
 
