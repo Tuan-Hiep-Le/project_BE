@@ -11,6 +11,7 @@ import com.project.service.ManagerOrderItemService;
 import com.project.service.impl.*;
 import com.project.service.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -76,7 +77,7 @@ public class ManagerOrderController {
     //Mua ngay san pham
     @PostMapping("/home_after_user_login/buy_now")
     public String createOrderItem(@RequestParam("bookId") Integer id, @RequestParam(value = "quantityBuy") int quantityBuy, @RequestParam("where") String address, @RequestParam(value = "valueVoucherTransfer",required = false) Integer idTransfer, @RequestParam(value = "valueVoucherDiscount",required = false) Integer idDiscount,
-                                  @RequestParam(value = "paymentMethod", defaultValue = "CASH")PaymentMethod paymentMethod, @RequestParam(value = "handleOrder",required = false) HandlerOrder handlerOrder, Model model, HttpServletRequest request){
+                                  @RequestParam(value = "paymentMethod", defaultValue = "CASH")PaymentMethod paymentMethod, @RequestParam(value = "handleOrder",required = false) HandlerOrder handlerOrder, Model model, HttpServletRequest request, HttpSession httpSession){
         Book book = managerBookService.getBookById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -124,23 +125,34 @@ public class ManagerOrderController {
                 }
             }
         }
-        if (paymentMethod == PaymentMethod.TRANSFER){
-//            ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
-////            if(handlerOrder == null) {
-////                order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).handlerOrder(null).payment(payment).buyAt(LocalDateTime.now()).build();
-////                managerOrderService.addOrder(order);
-////            }else {
-////                StatusOrder statusOrder = (handlerOrder==HandlerOrder.ACCEPT)? StatusOrder.APPROVED: StatusOrder.CANCELED;
-////                order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(statusOrder).handlerOrder(handlerOrder).payment(payment).buyAt(LocalDateTime.now()).build();
-////                managerOrderService.addOrder(order);
-////            }
-//
-//            OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
-//            managerOrderItemService.addOrder(orderItem);
-            OrderItem orderItem = OrderItem.builder().book(book).quantityBuy(quantityBuy).build();
-            List<OrderItem> orderItems = new ArrayList<>();
-            orderItems.add(orderItem);
+        ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
+        Order order;
+        if(handlerOrder == null) {
+            order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).handlerOrder(null).payment(payment).buyAt(LocalDateTime.now()).build();
 
+        }else {
+            StatusOrder statusOrder = (handlerOrder==HandlerOrder.ACCEPT)? StatusOrder.APPROVED: StatusOrder.CANCELED;
+            order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(statusOrder).handlerOrder(handlerOrder).payment(payment).buyAt(LocalDateTime.now()).build();
+            managerOrderService.addOrder(order);
+        }
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+        List<Integer> quantityBuyList = new ArrayList<>();
+        quantityBuyList.add(quantityBuy);
+        httpSession.setAttribute("user",user);
+        httpSession.setAttribute("totalPrice",totalPrice);
+        httpSession.setAttribute("shipCost",shipCost);
+        httpSession.setAttribute("voucherList",voucherList);
+        httpSession.setAttribute("paymentMethod",paymentMethod);
+        httpSession.setAttribute("quantityBuys",quantityBuyList);
+        httpSession.setAttribute("books",books);
+        httpSession.setAttribute("payment",payment);
+        OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
+
+        if (paymentMethod == PaymentMethod.TRANSFER){
+            List<OrderItem> orderItems = new ArrayList<>();
+            OrderItem orderItemTemporary = OrderItem.builder().book(book).quantityBuy(quantityBuy).build();
+            orderItems.add(orderItemTemporary);
             String paymentURL = vnPayService.createPayment(request,payment,orderItems);
             return "redirect:"+paymentURL;
         }

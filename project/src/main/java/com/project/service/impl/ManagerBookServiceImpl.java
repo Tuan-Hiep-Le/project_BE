@@ -27,7 +27,6 @@ public class ManagerBookServiceImpl implements ManagerBookService {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
     @Transactional
     public Book addBook(Book book){
@@ -67,7 +66,6 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     }
     //Sửa sách
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public Book updateBook(Book book) {
         Book bookExist = managerBookRepository.findByNameBookAndNameAuthorAndLanguage(book.getNameBook(), book.getNameAuthor(), book.getLanguage());
@@ -77,7 +75,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         bookExist.setNameBook(book.getNameBook());
         bookExist.setNameAuthor(book.getNameAuthor());
         bookExist.setLanguage(book.getLanguage());
-        bookExist.setQuantity(bookExist.getQuantity() +book.getQuantity());
+        bookExist.setQuantity(book.getQuantity());
         bookExist.setNameCategory(book.getNameCategory());
         bookExist.setPrice(book.getPrice());
         bookExist.setNameTopic(book.getNameTopic());

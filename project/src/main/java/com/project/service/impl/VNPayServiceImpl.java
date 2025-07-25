@@ -6,6 +6,7 @@ import com.project.response.VNPayResponse;
 import com.project.service.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.util.*;
 public class VNPayServiceImpl implements VNPayService {
     //Tạo thanh toán
     @Override
+    @Transactional
     public String createPayment(HttpServletRequest request, BigDecimal amount, List<OrderItem> orderItems) {
 
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
@@ -87,7 +89,7 @@ public class VNPayServiceImpl implements VNPayService {
 
     @Override
     public boolean isSuccess(VNPayResponse vnPayResponse) {
-        return vnPayResponse.getVnp_TransactionStatus().equals("00");
+        return vnPayResponse.getVnp_ResponseCode().equals("00");
 
     }
 }
