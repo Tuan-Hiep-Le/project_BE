@@ -12,7 +12,7 @@ public class ManagerOrderItemServiceImpl implements ManagerOrderItemService {
     private ManagerOrderItemRepository managerOrderRepository;
 
     @Override
-    public OrderItem addOrder(OrderItem orderItem) {
+    public OrderItem addOrderItem(OrderItem orderItem) {
         return managerOrderRepository.saveAndFlush(orderItem);
     }
 }

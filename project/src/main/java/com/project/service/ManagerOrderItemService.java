@@ -5,6 +5,6 @@ import com.project.entity.OrderItem;
 
 public interface ManagerOrderItemService {
     // Them don hang chi tiet
-    public OrderItem addOrder(OrderItem orderItem);
+    public OrderItem addOrderItem(OrderItem orderItem);
 
 }
