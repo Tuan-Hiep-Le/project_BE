@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sách</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
@@ -29,101 +34,266 @@
         .star-rating label:hover ~ label {
             color: #ffc107;
         }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-image {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .book-image:hover {
+            transform: scale(1.05);
+        }
+
+        .review-stars {
+            color: #ffc107;
+            text-shadow: 0 0 3px rgba(255, 193, 7, 0.3);
+        }
+
+        .review-stars-empty {
+            color: #e9ecef;
+        }
     </style>
-
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container py-5">
-    <h2 class="text-center text-primary mb-5">📚 Thông Tin Chi Tiết Sách</h2>
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6 shadow-lg">
+            <span class="text-3xl">📚</span>
+        </div>
+        <h2 class="text-4xl font-bold text-white mb-2">Thông Tin Chi Tiết Sách</h2>
+        <p class="text-blue-100">Khám phá thông tin đầy đủ về cuốn sách này</p>
+    </div>
 
-    <div class="row g-4">
-        <!-- Ảnh sách -->
-        <div class="col-md-4">
-            <div class="text-center">
-                <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Ảnh sách" class="img-fluid rounded shadow-sm">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Book Image -->
+        <div class="lg:col-span-4">
+            <div class="glass-effect rounded-2xl p-6 shadow-xl hover-lift transition-all duration-300">
+                <div class="text-center">
+                    <img th:src="@{/images/sach-anh-dep3.jpg}"
+                         alt="Ảnh sách"
+                         class="book-image w-full max-w-sm mx-auto rounded-xl shadow-lg">
+                </div>
             </div>
         </div>
 
-        <!-- Thông tin sách -->
-        <div class="col-md-8">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body" th:object="${product}">
-                    <h4 class="mb-3 text-uppercase text-primary fw-bold" th:text="*{nameBook}">Tên Sách</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Tác giả:</strong> <span th:text="*{nameAuthor}"></span></li>
-                        <li class="list-group-item"><strong>Ngôn ngữ:</strong> <span th:text="*{language}"></span></li>
-                        <li class="list-group-item"><strong>Mô tả:</strong> <span th:text="*{bookDetail}"></span></li>
-                        <li class="list-group-item"><strong>Thể loại:</strong> <span th:text="*{nameCategory}"></span></li>
-                        <li class="list-group-item"><strong>Chủ đề:</strong> <span th:text="*{nameTopic}"></span></li>
-                        <li class="list-group-item"><strong>Giá:</strong> <span class="text-danger fw-semibold" th:text="*{price} + '₫'"></span></li>
-                        <li class="list-group-item"><strong>Số lượng còn lại:</strong> <span th:text="*{quantity}"></span></li>
-                    </ul>
+        <!-- Book Information -->
+        <div class="lg:col-span-8">
+            <div class="glass-effect rounded-2xl shadow-xl overflow-hidden hover-lift transition-all duration-300">
+                <div class="p-8" th:object="${product}">
+                    <h4 class="text-3xl font-bold text-gray-800 mb-6 text-center lg:text-left" th:text="*{nameBook}">Tên Sách</h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 rounded-xl p-4 hover:bg-blue-100 transition-colors duration-200">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">✍️</span>
+                                <div>
+                                    <p class="text-sm text-gray-600 font-medium">Tác giả</p>
+                                    <p class="text-lg font-semibold text-gray-800" th:text="*{nameAuthor}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 rounded-xl p-4 hover:bg-green-100 transition-colors duration-200">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🌐</span>
+                                <div>
+                                    <p class="text-sm text-gray-600 font-medium">Ngôn ngữ</p>
+                                    <p class="text-lg font-semibold text-gray-800" th:text="*{language}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-50 rounded-xl p-4 hover:bg-purple-100 transition-colors duration-200">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📖</span>
+                                <div>
+                                    <p class="text-sm text-gray-600 font-medium">Thể loại</p>
+                                    <p class="text-lg font-semibold text-gray-800" th:text="*{nameCategory}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-orange-50 rounded-xl p-4 hover:bg-orange-100 transition-colors duration-200">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🏷️</span>
+                                <div>
+                                    <p class="text-sm text-gray-600 font-medium">Chủ đề</p>
+                                    <p class="text-lg font-semibold text-gray-800" th:text="*{nameTopic}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3 mt-1">📝</span>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-600 font-medium mb-2">Mô tả</p>
+                                <p class="text-gray-700 leading-relaxed" th:text="*{bookDetail}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price and Quantity -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-xl p-6 border-2 border-red-200">
+                            <div class="flex items-center justify-center">
+                                <span class="text-3xl mr-3">💰</span>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600 font-medium">Giá bán</p>
+                                    <p class="text-2xl font-bold text-red-600" th:text="*{price} + '₫'"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+                            <div class="flex items-center justify-center">
+                                <span class="text-3xl mr-3">📦</span>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600 font-medium">Còn lại</p>
+                                    <p class="text-2xl font-bold text-green-600" th:text="*{quantity} + ' cuốn'"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <form method="post" th:action="@{/add-to-cart}" class="flex-1">
+                            <button type="submit" class="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-300 shadow-lg flex items-center justify-center">
+                                <span class="text-xl mr-3">🛒</span>
+                                Thêm vào giỏ
+                            </button>
+                        </form>
+                        <a th:href="@{/home_after_user_login/switch_buy_now(bookId=${product.bookId})}" class="flex-1">
+                            <button class="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transform hover:scale-105 transition-all duration-300 shadow-lg flex items-center justify-center">
+                                <span class="text-xl mr-3">💳</span>
+                                Mua ngay
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Nút hành động -->
-    <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
-        <form method="post" th:action="@{/add-to-cart}">
-            <button type="submit" class="btn btn-outline-primary me-2">🛒 Thêm vào giỏ</button>
-        </form>
-        <a th:href="@{/home_after_user_login/switch_buy_now(bookId=${product.bookId})}"  class="btn btn-success">💳 Mua ngay</a>
+    <!-- User Reviews Section -->
+    <div class="mt-12">
+        <div class="glass-effect rounded-2xl p-8 shadow-xl">
+            <h4 class="text-3xl font-bold text-gray-800 mb-8 flex items-center justify-center">
+                <span class="text-4xl mr-4">🗨️</span>
+                Đánh Giá Từ Người Dùng
+            </h4>
 
-    </div>
+            <!-- No Reviews State -->
+            <div th:if="${noReview}" class="text-center py-12">
+                <div class="text-6xl mb-4">📝</div>
+                <p class="text-xl text-gray-500 italic">Chưa có người nào đánh giá sách này.</p>
+                <p class="text-gray-400 mt-2">Hãy là người đầu tiên chia sẻ cảm nhận của bạn!</p>
+            </div>
 
-    <!-- Đánh giá người dùng -->
-    <div class="mt-5">
-        <h4 class="mb-4 text-secondary">🗨️ Đánh Giá Từ Người Dùng</h4>
-        <div th:if="${noReview}">
-            <p class="text-muted fst-italic">Chưa có người nào đánh giá.</p>
-        </div>
-        <div th:unless="${noReview}">
-            <div th:each="review : ${reviews}">
-                <div class="card border-0 shadow-sm mb-3">
-                    <div class="mb-2">
-                        <span th:each="i : ${#numbers.sequence(1, review.starRate)}" class="text-warning">★</span>
-                        <span th:if="${review.starRate < 5}"
-                              th:each="i : ${#numbers.sequence(1, 5 - review.starRate)}"
-                              class="text-secondary">★</span>
+            <!-- Reviews List -->
+            <div th:unless="${noReview}" class="space-y-6">
+                <div th:each="review : ${reviews}" class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    <!-- Star Rating Display -->
+                    <div class="flex items-center mb-4">
+                        <div class="flex mr-4">
+                            <span th:each="i : ${#numbers.sequence(1, review.starRate)}" class="review-stars text-2xl">★</span>
+                            <span th:if="${review.starRate < 5}"
+                                  th:each="i : ${#numbers.sequence(1, 5 - review.starRate)}"
+                                  class="review-stars-empty text-2xl">★</span>
+                        </div>
+                        <div class="bg-yellow-100 px-3 py-1 rounded-full">
+                            <span class="text-sm font-semibold text-yellow-800" th:text="${review.starRate} + '/5 sao'"></span>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h6 class="fw-semibold text-primary mb-1" th:text="${review.user.lastName + ' ' + review.user.firstName + ' - ' + review.reviewAt}">Tên người dùng</h6>
-                        <p class="mb-0" th:text="${review.comment}">Nội dung đánh giá</p>
+
+                    <!-- User Info -->
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg" th:text="${#strings.substring(review.user.firstName, 0, 1)}">U</span>
+                        </div>
+                        <div>
+                            <h6 class="font-bold text-gray-800 text-lg" th:text="${review.user.lastName + ' ' + review.user.firstName}">Tên người dùng</h6>
+                            <p class="text-sm text-gray-500" th:text="${review.reviewAt}">Ngày đánh giá</p>
+                        </div>
+                    </div>
+
+                    <!-- Review Content -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-gray-700 leading-relaxed" th:text="${review.comment}">Nội dung đánh giá</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Form viết đánh giá -->
-    <div class="mt-4" th:unless="${is_review_book}">
-        <h5 class="text-success">✍️ Viết đánh giá của bạn:</h5>
-        <form method="post" th:action="@{/information_book/write_review}" class="mt-3">
-            <input type="hidden" name="bookId" th:value="${product.bookId}" />
-            <div class="star-rating">
-                <input type="radio" id="star5" name="reviewStar" value="5" required><label for="star5">★</label>
-                <input type="radio" id="star4" name="reviewStar" value="4"><label for="star4">★</label>
-                <input type="radio" id="star3" name="reviewStar" value="3"><label for="star3">★</label>
-                <input type="radio" id="star2" name="reviewStar" value="2"><label for="star2">★</label>
-                <input type="radio" id="star1" name="reviewStar" value="1"><label for="star1">★</label>
-            </div>
-            <textarea name="contentReview" rows="3" class="form-control mb-3" placeholder="Viết đánh giá ở đây..." required></textarea>
-            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+    <!-- Write Review Form -->
+    <div class="mt-8" th:unless="${is_review_book}">
+        <div class="glass-effect rounded-2xl p-8 shadow-xl">
+            <h5 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center">
+                <span class="text-3xl mr-3">✍️</span>
+                Viết đánh giá của bạn
+            </h5>
 
-        </form>
+            <form method="post" th:action="@{/information_book/write_review}" class="space-y-6">
+                <input type="hidden" name="bookId" th:value="${product.bookId}" />
+
+                <!-- Star Rating Input -->
+                <div class="text-center">
+                    <p class="text-lg font-semibold text-gray-700 mb-4">Đánh giá sao:</p>
+                    <div class="star-rating justify-center">
+                        <input type="radio" id="star5" name="reviewStar" value="5" required><label for="star5">★</label>
+                        <input type="radio" id="star4" name="reviewStar" value="4"><label for="star4">★</label>
+                        <input type="radio" id="star3" name="reviewStar" value="3"><label for="star3">★</label>
+                        <input type="radio" id="star2" name="reviewStar" value="2"><label for="star2">★</label>
+                        <input type="radio" id="star1" name="reviewStar" value="1"><label for="star1">★</label>
+                    </div>
+                </div>
+
+                <!-- Review Content -->
+                <div>
+                    <label class="block text-lg font-semibold text-gray-700 mb-3">Nội dung đánh giá:</label>
+                    <textarea name="contentReview"
+                              rows="4"
+                              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200"
+                              placeholder="Chia sẻ cảm nhận của bạn về cuốn sách này..."
+                              required></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        <span class="mr-2">📤</span>
+                        Gửi đánh giá
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Thông báo nếu chưa mua sách -->
-    <div class="mt-4 text-muted" th:if="${is_review_book}">
-        <p class="fst-italic">⚠️ Bạn cần mua sách để có thể viết đánh giá.</p>
+    <!-- Purchase Required Message -->
+    <div class="mt-8" th:if="${is_review_book}">
+        <div class="glass-effect rounded-2xl p-8 shadow-xl text-center">
+            <div class="text-6xl mb-4">⚠️</div>
+            <p class="text-xl text-gray-600 italic">Bạn cần mua sách để có thể viết đánh giá.</p>
+            <p class="text-gray-500 mt-2">Hãy mua sách và trải nghiệm trước khi chia sẻ cảm nhận!</p>
+        </div>
     </div>
-
-
 </div>
 
-<!-- Bootstrap Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96587763a3e409ed',t:'MTc1MzU4MDgyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

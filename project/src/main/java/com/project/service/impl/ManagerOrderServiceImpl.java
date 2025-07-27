@@ -6,6 +6,8 @@ import com.project.service.ManagerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ManagerOrderServiceImpl implements ManagerOrderService {
     @Autowired
@@ -19,5 +21,18 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
     @Override
     public Order getOrderByCondition(Integer userId, Integer idBook) {
         return managerOrderRepository.getOrderBuyBookLates(userId,idBook);
+    }
+
+    @Override
+    public Order updateOrder(Order order) {
+        Optional<Order> orderOptional = managerOrderRepository.findById(order.getOrderId());
+        if (orderOptional.isPresent()) {
+            Order orderConstain = orderOptional.get();
+            orderConstain.setHandlerOrder(order.getHandlerOrder());
+            orderConstain.setStatusOrder(order.getStatusOrder());
+            managerOrderRepository.saveAndFlush(orderConstain);
+            return orderConstain;
+        }
+        throw new RuntimeException("Đơn hàng không tồn tại! ");
     }
 }
