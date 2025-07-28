@@ -1,11 +1,15 @@
 package com.project.service.impl;
 
 import com.project.entity.Order;
+import com.project.entity.User;
 import com.project.repository.ManagerOrderRepository;
 import com.project.service.ManagerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,5 +38,12 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
             return orderConstain;
         }
         throw new RuntimeException("Đơn hàng không tồn tại! ");
+    }
+
+    @Override
+    public List<Object[]> getHistoryBuyProduct() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return managerOrderRepository.findHistoryBuyProduct(user);
     }
 }

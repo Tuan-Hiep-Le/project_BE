@@ -36,7 +36,8 @@ CREATE TABLE users(
       status_order ENUM('APPROVING','APPROVED','DELIVERING','DELIVERED', 'CANCELED') NOT NULL,
       handle_order ENUM('ACCEPT','CANCEL'),
       payment DECIMAL(10,2) NOT NULL,
-      order_at DATETIME NOT NULL
+      order_at DATETIME NOT NULL,
+      address varchar(50)  NOT NULL
       )
 
   // Tạo bảng order_items: Đơn hàng chi tiết

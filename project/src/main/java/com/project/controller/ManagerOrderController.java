@@ -87,6 +87,7 @@ public class ManagerOrderController {
         String[] addressSplit = address.split("-");
         String addressShip = addressSplit[addressSplit.length - 1];
         ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
+        String addressDelivery = shipCostDocument.getNameCity();
         model.addAttribute("moneyShip",BigDecimal.valueOf(shipCostDocument.getCost()));
 
         List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
@@ -126,7 +127,7 @@ public class ManagerOrderController {
             }
         }
         ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
-        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).build();
+        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).address(addressDelivery).build();
         managerOrderService.addOrder(order);
         OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
         managerOrderItemService.addOrderItem(orderItem);
@@ -165,7 +166,7 @@ public class ManagerOrderController {
         model.addAttribute("quantityBuy", quantityBuy);
 
 
-        return "buy_book_now";
+        return "page_browsing";
     }
 
     @GetMapping("/get_shipcost")
@@ -182,6 +183,13 @@ public class ManagerOrderController {
             map.put("cost", "Not Found");
         }
         return map;
+    }
+
+    @GetMapping("/home_after_user_login/history_buy")
+    public String historyBuyOfUser(Model model){
+        List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
+        model.addAttribute("orderHistoryList",historyBuy);
+        return "page_history_buy";
     }
 
 }

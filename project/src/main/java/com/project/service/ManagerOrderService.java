@@ -1,7 +1,8 @@
 package com.project.service;
 
 import com.project.entity.Order;
-
+import com.project.entity.User;
+import java.util.List;
 
 public interface ManagerOrderService {
     // Them don hang
@@ -12,6 +13,9 @@ public interface ManagerOrderService {
 
     //Chỉnh sửa đơn hàng
     public Order updateOrder(Order order);
+
+    //Lấy ra lịch sử mua hàng của người dùng
+    public List<Object[]> getHistoryBuyProduct();
 
 
 }
