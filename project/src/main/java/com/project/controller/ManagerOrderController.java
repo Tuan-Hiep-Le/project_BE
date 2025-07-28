@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ManagerOrderController {
@@ -188,7 +186,11 @@ public class ManagerOrderController {
     @GetMapping("/home_after_user_login/history_buy")
     public String historyBuyOfUser(Model model){
         List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
-        model.addAttribute("orderHistoryList",historyBuy);
+        Map<Integer, List<Object[]>> groupedOrders = historyBuy.stream()
+                .collect(Collectors.groupingBy(order -> (Integer) order[0])); // order[0] là orderId
+
+        model.addAttribute("groupedOrders", groupedOrders);
+
         return "page_history_buy";
     }
 

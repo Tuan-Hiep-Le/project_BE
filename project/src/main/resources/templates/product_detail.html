@@ -5,66 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sách</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .star-rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-start;
-            font-size: 30px;
-            gap: 5px;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            color: #ccc;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #ffc107;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .hover-lift:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .book-image {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .book-image:hover {
-            transform: scale(1.05);
-        }
-
-        .review-stars {
-            color: #ffc107;
-            text-shadow: 0 0 3px rgba(255, 193, 7, 0.3);
-        }
-
-        .review-stars-empty {
-            color: #e9ecef;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body class="product-detail">
 
 <div class="container mx-auto px-4 py-8 max-w-7xl">
     <!-- Page Header -->
@@ -154,7 +97,7 @@
                                 <span class="text-3xl mr-3">💰</span>
                                 <div class="text-center">
                                     <p class="text-sm text-gray-600 font-medium">Giá bán</p>
-                                    <p class="text-2xl font-bold text-red-600" th:text="*{price} + '₫'"></p>
+                                    <p class="text-2xl font-bold text-red-600" th:text="*{#numbers.formatDecimal(price, 0, 'POINT', 2, 'COMMA')} + '₫'"></p>
                                 </div>
                             </div>
                         </div>

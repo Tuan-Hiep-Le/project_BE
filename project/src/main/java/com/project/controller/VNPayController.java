@@ -5,10 +5,8 @@ import com.project.entity.enum_entity.HandlerOrder;
 import com.project.entity.enum_entity.PaymentMethod;
 import com.project.entity.enum_entity.StatusOrder;
 import com.project.response.VNPayResponse;
-import com.project.service.impl.ManagerBookServiceImpl;
-import com.project.service.impl.ManagerOrderItemServiceImpl;
-import com.project.service.impl.ManagerOrderServiceImpl;
-import com.project.service.impl.VNPayServiceImpl;
+import com.project.service.SearchBookService;
+import com.project.service.impl.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +33,8 @@ public class VNPayController {
     private ManagerOrderItemServiceImpl managerOrderItemService;
     @Autowired
     private ManagerBookServiceImpl managerBookService;
+    @Autowired
+    private SearchBookServiceImpl service;
 
     @GetMapping("/checkout_after_payment")
     public String checkoutAfterPayment( @ModelAttribute VNPayResponse vnPayResponse, HttpSession httpSession, Model model){
@@ -69,7 +69,9 @@ public class VNPayController {
                 Book book = managerBookService.getBookById(oi.getBook().getBookId());
                 book.setQuantity(book.getQuantity() - oi.getQuantityBuy());
                 managerBookService.updateBook(book);
+
             }
+            service.syncAllBooksToES();
             httpSession.removeAttribute("order");
             httpSession.removeAttribute("orderItems");
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,7 @@ public class ManagerReviewController {
     @Autowired
     private ManagerOrderServiceImpl managerOrderService;
     @PostMapping("/information_book/write_review")
-    public String userWriteReview(@RequestParam("bookId") Integer bookId,@RequestParam("contentReview") String content, @RequestParam("reviewStar") int reviewStar, Model model){
+    public String userWriteReview(@RequestParam("bookId") Integer bookId,@RequestParam("contentReview") String content, @RequestParam("reviewStar") int reviewStar, Model model, RedirectAttributes redirectAttributes){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         Book book = managerBookService.getBookById(bookId);
@@ -34,8 +35,12 @@ public class ManagerReviewController {
         model.addAttribute("reviewStar",reviewStar);
         model.addAttribute("bookId",bookId);
         Order order = managerOrderService.getOrderByCondition(user.getUserId(), bookId);
-        Review review = Review.builder().user(user).book(book).starRate(reviewStar).comment(content).reviewAt(LocalDateTime.now()).order(order).build();
-        managerReviewService.addReview(review);
+        if (order != null && order.getReview() == null) {
+            Review review = Review.builder().user(user).book(book).starRate(reviewStar).comment(content).reviewAt(LocalDateTime.now()).order(order).build();
+            managerReviewService.addReview(review);
+        }else {
+            redirectAttributes.addFlashAttribute("is_review_book",true);
+        }
         return "redirect:/homepage/information_book?bookid=" + bookId;
     }
 }
