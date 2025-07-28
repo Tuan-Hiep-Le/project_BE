@@ -207,11 +207,13 @@ public class ManagerBookController {
         Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         Order order = managerOrderService.getOrderByCondition(user.getUserId(), idBook);
-        if (order != null && order.getReview() != null && order.getReview().getComment() != null){
-            model.addAttribute("is_review_book",true);
-        } else {
-            model.addAttribute("is_review_book",false);
+        boolean isReviewBook = true;
+
+        if (order != null && order.getReview() == null) {
+
+            isReviewBook = false;
         }
+        model.addAttribute("is_review_book", isReviewBook);
         return "product_detail";
     }
 

@@ -50,8 +50,11 @@ public class Order {
     private BigDecimal payment;
     @Column(name = "order_at")
     private LocalDateTime buyAt;
+    @Column(name= "address", length = 50)
+    private String address;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
     @OneToOne(mappedBy = "order",cascade = CascadeType.ALL)
     private Review review;
+
 }

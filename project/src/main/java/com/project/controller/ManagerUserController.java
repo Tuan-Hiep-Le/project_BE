@@ -88,6 +88,14 @@ public class ManagerUserController {
         return "register_success";
     }
 
+    //Đăng xuất
+    @GetMapping("/logout")
+    public String userLogOut(HttpServletRequest request){
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+        return "redirect:/login";
+    }
+
 
 
 

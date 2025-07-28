@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ManagerOrderController {
@@ -77,7 +75,7 @@ public class ManagerOrderController {
     //Mua ngay san pham
     @PostMapping("/home_after_user_login/buy_now")
     public String createOrderItem(@RequestParam("bookId") Integer id, @RequestParam(value = "quantityBuy") int quantityBuy, @RequestParam("where") String address, @RequestParam(value = "valueVoucherTransfer",required = false) Integer idTransfer, @RequestParam(value = "valueVoucherDiscount",required = false) Integer idDiscount,
-                                  @RequestParam(value = "paymentMethod", defaultValue = "CASH")PaymentMethod paymentMethod, @RequestParam(value = "handleOrder",required = false) HandlerOrder handlerOrder, Model model, HttpServletRequest request, HttpSession httpSession){
+                                  @RequestParam(value = "paymentMethod")PaymentMethod paymentMethod, Model model, HttpServletRequest request, HttpSession httpSession){
         Book book = managerBookService.getBookById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -87,6 +85,7 @@ public class ManagerOrderController {
         String[] addressSplit = address.split("-");
         String addressShip = addressSplit[addressSplit.length - 1];
         ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
+        String addressDelivery = shipCostDocument.getNameCity();
         model.addAttribute("moneyShip",BigDecimal.valueOf(shipCostDocument.getCost()));
 
         List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
@@ -126,33 +125,31 @@ public class ManagerOrderController {
             }
         }
         ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
-        Order order;
-        if(handlerOrder == null) {
-            order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).handlerOrder(null).payment(payment).buyAt(LocalDateTime.now()).build();
-
-        }else {
-            StatusOrder statusOrder = (handlerOrder==HandlerOrder.ACCEPT)? StatusOrder.APPROVED: StatusOrder.CANCELED;
-            order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(statusOrder).handlerOrder(handlerOrder).payment(payment).buyAt(LocalDateTime.now()).build();
-            managerOrderService.addOrder(order);
-        }
-        List<Book> books = new ArrayList<>();
-        books.add(book);
-        List<Integer> quantityBuyList = new ArrayList<>();
-        quantityBuyList.add(quantityBuy);
-        httpSession.setAttribute("user",user);
-        httpSession.setAttribute("totalPrice",totalPrice);
-        httpSession.setAttribute("shipCost",shipCost);
-        httpSession.setAttribute("voucherList",voucherList);
-        httpSession.setAttribute("paymentMethod",paymentMethod);
-        httpSession.setAttribute("quantityBuys",quantityBuyList);
-        httpSession.setAttribute("books",books);
-        httpSession.setAttribute("payment",payment);
+        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).address(addressDelivery).build();
+        managerOrderService.addOrder(order);
         OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
+        managerOrderItemService.addOrderItem(orderItem);
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem);
+        httpSession.setAttribute("order",order);
+        httpSession.setAttribute("orderItems",orderItems);
+
+//        List<Book> books = new ArrayList<>();
+//        books.add(book);
+//        List<Integer> quantityBuyList = new ArrayList<>();
+//        quantityBuyList.add(quantityBuy);
+//        httpSession.setAttribute("user",user);
+//        httpSession.setAttribute("totalPrice",totalPrice);
+//        httpSession.setAttribute("shipCost",shipCost);
+//        httpSession.setAttribute("voucherList",voucherList);
+//        httpSession.setAttribute("paymentMethod",paymentMethod);
+//        httpSession.setAttribute("quantityBuys",quantityBuyList);
+//        httpSession.setAttribute("books",books);
+//        httpSession.setAttribute("payment",payment);
+
+
 
         if (paymentMethod == PaymentMethod.TRANSFER){
-            List<OrderItem> orderItems = new ArrayList<>();
-            OrderItem orderItemTemporary = OrderItem.builder().book(book).quantityBuy(quantityBuy).build();
-            orderItems.add(orderItemTemporary);
             String paymentURL = vnPayService.createPayment(request,payment,orderItems);
             return "redirect:"+paymentURL;
         }
@@ -167,7 +164,7 @@ public class ManagerOrderController {
         model.addAttribute("quantityBuy", quantityBuy);
 
 
-        return "buy_book_now";
+        return "page_browsing";
     }
 
     @GetMapping("/get_shipcost")
@@ -184,6 +181,17 @@ public class ManagerOrderController {
             map.put("cost", "Not Found");
         }
         return map;
+    }
+
+    @GetMapping("/home_after_user_login/history_buy")
+    public String historyBuyOfUser(Model model){
+        List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
+        Map<Integer, List<Object[]>> groupedOrders = historyBuy.stream()
+                .collect(Collectors.groupingBy(order -> (Integer) order[0])); // order[0] là orderId
+
+        model.addAttribute("groupedOrders", groupedOrders);
+
+        return "page_history_buy";
     }
 
 }

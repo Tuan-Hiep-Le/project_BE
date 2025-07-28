@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
 </head>
-<body class="bg-white">
+<body class="book-after-login">
 
 <!-- 🧭 HEADER -->
 <header class="bg-light p-3 shadow-sm">
@@ -40,11 +40,11 @@
                         </a>
 
                     </li>
-                    <li><a class="dropdown-item py-2" href="#">🧾 Lịch sử mua hàng</a></li>
+                    <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/history_buy}">🧾 Lịch sử mua hàng</a></li>
                     <li><a class="dropdown-item py-2" href="#">🧾 Lịch sử giao dich</a></li>
                     <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
                     <li><hr class="dropdown-divider my-2"></li>
-                    <li><a class="dropdown-item text-danger py-2" href="#">🚪 Đăng xuất</a></li>
+                    <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">🚪 Đăng xuất</a></li>
                 </ul>
             </div>
         </div>
