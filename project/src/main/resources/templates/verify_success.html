@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực thành công</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+
+
+<div class="w-full max-w-lg relative z-10">
+    <div class="bg-white rounded-3xl p-12 card-shadow text-center relative">
+
+        <!-- Success Icon -->
+        <div class="relative mb-8">
+            <div class="w-32 h-32 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">
+            Xác thực thành công!
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+            Chúc mừng! Tài khoản của bạn đã được xác thực thành công.
+            <br>Bạn có thể bắt đầu sử dụng tất cả các tính năng ngay bây giờ.
+        </p>
+
+
+
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <button
+                    onclick="window.location.href='/home_user_after_login'"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 btn-hover text-lg"
+            >
+                 Đi đến Trang chủ
+            </button>
+
+        <!-- Additional Info -->
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <p class="text-sm text-gray-500">
+                🔐 Tài khoản của bạn đã được bảo mật và sẵn sàng sử dụng
+            </p>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    // Add some interactive celebration effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Play success sound (if available)
+        try {
+            // You can add audio here if needed
+            console.log('🎉 Verification successful!');
+        } catch (e) {
+            // Audio not supported, continue silently
+        }
+
+        // Add click celebration effect
+        document.addEventListener('click', function(e) {
+            createClickEffect(e.clientX, e.clientY);
+        });
+    });
+
+    function createClickEffect(x, y) {
+        const effect = document.createElement('div');
+        effect.className = 'absolute w-4 h-4 bg-green-400 rounded-full pointer-events-none';
+        effect.style.left = x + 'px';
+        effect.style.top = y + 'px';
+        effect.style.animation = 'ping 0.5s ease-out';
+        document.body.appendChild(effect);
+
+        setTimeout(() => {
+            effect.remove();
+        }, 500);
+    }
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966b7dbc72dc1082',t:'MTc1Mzc4MDMxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
