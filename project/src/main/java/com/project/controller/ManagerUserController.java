@@ -49,6 +49,7 @@ public class ManagerUserController {
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, request, response);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", context);
+        request.getSession().setAttribute("loggedUser",user);
         if (user.getRole().equals(Role.USER)){
             return "redirect:/home_user_after_login";
         }
