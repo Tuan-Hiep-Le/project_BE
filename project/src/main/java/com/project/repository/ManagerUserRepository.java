@@ -13,4 +13,7 @@ public interface ManagerUserRepository extends JpaRepository<User,Integer> {
     //Tìm kiếm người dùng bằng email
     public Optional<User> findByEmail(String email);
 
+    //Kiểm tra xem email đấy có tồn tại không
+
+
 }

@@ -66,4 +66,12 @@ public class UserServiceImpl implements UserService {
 
         }
     }
+
+    @Override
+    public User updatePassword(User user) {
+        Optional<User> optionalUser = managerUserRepository.findByEmail(user.getEmail());
+        User userCurrent = optionalUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userCurrent.setPassword(user.getPassword());
+        return managerUserRepository.saveAndFlush(userCurrent);
+    }
 }

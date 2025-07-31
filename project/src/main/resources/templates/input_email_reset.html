@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form th:action="@{/send_link}"  method="get">
+        <p> Nhập email </p>
+        <input type="email" name="emailReset" >
+        <button type="submit"> Tiếp tục</button>
+        <div th:if="${isExistEmail == false}">
+            <p> Email không chính xác </p>
+        </div>
+    </form>
+
+
+
+</body>
+</html>
