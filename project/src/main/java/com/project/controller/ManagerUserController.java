@@ -5,6 +5,7 @@ import com.project.entity.enum_entity.Role;
 import com.project.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -91,9 +92,10 @@ public class ManagerUserController {
 
     //Đăng xuất
     @GetMapping("/logout")
-    public String userLogOut(HttpServletRequest request){
+    public String userLogOut(HttpServletRequest request, HttpSession httpSession){
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
+        httpSession.invalidate();
         return "redirect:/login";
     }
 

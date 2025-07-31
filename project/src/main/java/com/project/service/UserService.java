@@ -16,4 +16,7 @@ public interface UserService {
 
     //Tìm kiếm người dùng bằng email
     public User getUserByEmail(String email);
+
+    //Đổi mật khẩu
+    public User updatePassword(User user);
 }

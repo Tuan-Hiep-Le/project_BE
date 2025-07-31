@@ -18,10 +18,11 @@ public class ManagerMailController {
     private ManagerEmailServiceImpl managerEmailService;
     @GetMapping("/send_email")
     public String sendEmailToVerify(HttpServletRequest request, Model model){
-        managerEmailService.sendVerifyEmail(request);
         User user = (User) request.getSession().getAttribute("loggedUser");
         if (managerEmailService.isUserVerified(user)){
             model.addAttribute("userVerified",true);
+        } else {
+            managerEmailService.sendVerifyEmail(request);
         }
 
         return "verify_email";
@@ -32,6 +33,7 @@ public class ManagerMailController {
         User user = (User) request.getSession().getAttribute("loggedUser");
         if (managerEmailService.isUserVerified(user)){
             model.addAttribute("userVerified",true);
+            return "verify_email";
         }
         VerifyEmail tokenVerify = managerEmailService.latestToken(user.getUserId());
         if ( !token.equals(tokenVerify.getVerificationTokenEmail())){
@@ -41,7 +43,7 @@ public class ManagerMailController {
         model.addAttribute("isVerify",true);
         model.addAttribute("tokenVerify",token);
         tokenVerify.setIsVerifiedEmail(true);
-        managerEmailService.saveVerifyEmail(tokenVerify);
+        managerEmailService.updateVerifiedEmail(tokenVerify);
         return "verify_success";
     }
 }
