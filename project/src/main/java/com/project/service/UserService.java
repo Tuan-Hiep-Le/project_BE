@@ -19,4 +19,10 @@ public interface UserService {
 
     //Đổi mật khẩu
     public User updatePassword(User user);
+
+    //Đổi trạng thái
+    public User updateStatus(User user);
+
+    //Update user
+    public User updateUser(User user);
 }

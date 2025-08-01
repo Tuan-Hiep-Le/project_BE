@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ResetPassword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rest_password")
+    @Column(name = "id_reset_password")
     private Integer idResetPassword;
     @ManyToOne
     @JoinColumn(name = "id_user")

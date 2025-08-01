@@ -187,7 +187,7 @@ public class ManagerOrderController {
     public String historyBuyOfUser(Model model){
         List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
         Map<Integer, List<Object[]>> groupedOrders = historyBuy.stream()
-                .collect(Collectors.groupingBy(order -> (Integer) order[0])); // order[0] là orderId
+                .collect(Collectors.groupingBy(order -> (Integer) order[0]));
 
         model.addAttribute("groupedOrders", groupedOrders);
 

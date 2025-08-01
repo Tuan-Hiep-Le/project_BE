@@ -36,12 +36,13 @@ public class ManagerPasswordServiceImpl implements ManagerPasswordService {
 
     @Override
     @Transactional
-    public ResetPassword sendLinkChangePassword(String email) {
+    public String sendLinkChangePassword(String email, HttpServletRequest request) {
         User user = userService.getUserByEmail(email);
+        managerPasswordRepository.removeByUser(user);
         String token = UUID.randomUUID().toString();
         ResetPassword resetPassword = ResetPassword.builder().user(user).resetPasswordToken(token).resetTokenExpiry(LocalDateTime.now().plusMinutes(15)).build();
         Context context = new Context();
-        String links = "http://localhost:8080/forgot_password?token="+token;
+        String links = request.getRequestURL().toString().replace(request.getRequestURI(),"")+"/forget_password?token="+token;
         context.setVariable("name",user.getFirstName());
         context.setVariable("linkToken",links);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -55,15 +56,37 @@ public class ManagerPasswordServiceImpl implements ManagerPasswordService {
         }catch (MessagingException ex){
             throw new RuntimeException("Gửi link thất bại" + ex);
         }
-        return managerPasswordRepository.saveAndFlush(resetPassword);
+        managerPasswordRepository.saveAndFlush(resetPassword);
+        return links;
+    }
+
+    @Override
+    public ResetPassword updateResetPassword(ResetPassword resetPassword) {
+        ResetPassword resetPasswordCurrent = managerPasswordRepository.findByResetPasswordToken(resetPassword.getResetPasswordToken());
+        resetPasswordCurrent.setResetTokenExpiry(resetPassword.getResetTokenExpiry());
+        return managerPasswordRepository.saveAndFlush(resetPasswordCurrent);
     }
 
     @Override
     public User getUserByToken(String resetPasswordToken) {
         ResetPassword resetPassword = managerPasswordRepository.findByResetPasswordToken(resetPasswordToken);
         if(resetPassword == null){
-            throw new RuntimeException("Không tìm thấy người dùng");
+            return null;
         }
         return resetPassword.getUser();
+    }
+
+    @Override
+    public boolean isTokenExpired(String resetPasswordToken) {
+        ResetPassword resetPassword = managerPasswordRepository.findByResetPasswordToken(resetPasswordToken);
+        if (resetPassword.getResetTokenExpiry().isBefore(LocalDateTime.now())){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ResetPassword getByToken(String token) {
+        return managerPasswordRepository.findByResetPasswordToken(token);
     }
 }
