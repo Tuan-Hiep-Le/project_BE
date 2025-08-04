@@ -39,25 +39,6 @@ public class VNPayController {
     @GetMapping("/checkout_after_payment")
     public String checkoutAfterPayment( @ModelAttribute VNPayResponse vnPayResponse, HttpSession httpSession, Model model){
         if (vnPayService.isSuccess(vnPayResponse)){
-//            User user = (User) httpSession.getAttribute("user");
-//            BigDecimal totalPrice = (BigDecimal) httpSession.getAttribute("totalPrice");
-//            ShipCost shipCost = (ShipCost) httpSession.getAttribute("shipCost");
-//            @SuppressWarnings("unchecked")
-//            List<Voucher> voucherList = (List<Voucher>) httpSession.getAttribute("voucherList");
-//            @SuppressWarnings("unchecked")
-//            List<Integer> quantityBuys = (List<Integer>) httpSession.getAttribute("quantityBuys");
-//            @SuppressWarnings("unchecked")
-//            List<Book> bookList = (List<Book>) httpSession.getAttribute("books");
-//            BigDecimal payment = (BigDecimal) httpSession.getAttribute("payment");
-//            Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(PaymentMethod.CASH).statusOrder(StatusOrder.APPROVED).handlerOrder(HandlerOrder.ACCEPT).payment(payment).buyAt(LocalDateTime.now()).build();
-//            managerOrderService.addOrder(order);
-//            for (int i = 0; i < bookList.size(); i++) {
-//                OrderItem orderItem = OrderItem.builder().order(order).book(bookList.get(i)).quantityBuy(quantityBuys.get(i)).totalPrice(totalPrice).build();
-//                bookList.get(i).setQuantity(bookList.get(i).getQuantity() - quantityBuys.get(i));
-//                managerBookService.updateBook(bookList.get(i));
-//                managerOrderItemService.addOrderItem(orderItem);
-//
-//            }
             Order order = (Order) httpSession.getAttribute("order");
             order.setStatusOrder(StatusOrder.APPROVED);
             order.setHandlerOrder(HandlerOrder.ACCEPT);

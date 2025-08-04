@@ -43,6 +43,8 @@ public class ManagerOrderController {
     private ManagerOrderItemService managerOrderItemService;
     @Autowired
     private VNPayServiceImpl vnPayService;
+    @Autowired
+    private ManagerCartItemServiceImpl managerCartItemService;
     @GetMapping("/admin/sync-shipcost")
     public String syncDataShipCostToElasticsearch(Model model) {
         searchShipCostService.syncShipCost();
@@ -82,6 +84,7 @@ public class ManagerOrderController {
 
         BigDecimal totalPrice = book.getPrice().multiply(BigDecimal.valueOf(quantityBuy));
         model.addAttribute("totalPrice",totalPrice);
+
         String[] addressSplit = address.split("-");
         String addressShip = addressSplit[addressSplit.length - 1];
         ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
@@ -110,13 +113,13 @@ public class ManagerOrderController {
         BigDecimal payment = totalPrice.add(BigDecimal.valueOf(shipCostDocument.getCost()));
         if (!voucherList.isEmpty() ){
             for (Voucher voucher : voucherList) {
-                if(voucher.getTypeVoucher().equals(TypeVoucher.DISCOUNT)){
+                if(voucher.getTypeVoucher().equals(TypeVoucher.TRANSPORT)){
                     BigDecimal cost = BigDecimal.valueOf(shipCostDocument.getCost());
                     BigDecimal discountPercent = BigDecimal.valueOf(voucher.getValue()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     BigDecimal discountAmount = cost.multiply(discountPercent);
                     payment = payment.subtract(discountAmount);
 
-                }else if (voucher.getTypeVoucher().equals(TypeVoucher.TRANSPORT)){
+                }else if (voucher.getTypeVoucher().equals(TypeVoucher.DISCOUNT)){
                     BigDecimal discountTransportPercent = BigDecimal.valueOf(voucher.getValue())
                             .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     BigDecimal discountTransport = totalPrice.multiply(discountTransportPercent);
@@ -133,21 +136,6 @@ public class ManagerOrderController {
         orderItems.add(orderItem);
         httpSession.setAttribute("order",order);
         httpSession.setAttribute("orderItems",orderItems);
-
-//        List<Book> books = new ArrayList<>();
-//        books.add(book);
-//        List<Integer> quantityBuyList = new ArrayList<>();
-//        quantityBuyList.add(quantityBuy);
-//        httpSession.setAttribute("user",user);
-//        httpSession.setAttribute("totalPrice",totalPrice);
-//        httpSession.setAttribute("shipCost",shipCost);
-//        httpSession.setAttribute("voucherList",voucherList);
-//        httpSession.setAttribute("paymentMethod",paymentMethod);
-//        httpSession.setAttribute("quantityBuys",quantityBuyList);
-//        httpSession.setAttribute("books",books);
-//        httpSession.setAttribute("payment",payment);
-
-
 
         if (paymentMethod == PaymentMethod.TRANSFER){
             String paymentURL = vnPayService.createPayment(request,payment,orderItems);
@@ -166,6 +154,145 @@ public class ManagerOrderController {
 
         return "page_browsing";
     }
+    @GetMapping("home_after_user_login/checkout_buy_many_product")
+    public String getCheckoutPaymentManyProduct(@RequestParam("cartItemIds") List<Integer> cartItemIds, @RequestParam Map<String, String> quantityInCart, Model model, HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        List<CartItem>cartItemList = new ArrayList<>();
+        for (Integer id : cartItemIds) {
+            CartItem cartItem = managerCartItemService.getCartItemById(id);
+
+            // Lấy số lượng từ quantityInCart["quantityInCart[ID]"]
+            String key = "quantityInCart[" + id + "]";
+            int quantity = Integer.parseInt(quantityInCart.getOrDefault(key, "1"));
+
+            cartItem.setQuantity(quantity);
+            cartItemList.add(cartItem);
+
+            BigDecimal itemTotal = cartItem.getBook().getPrice()
+                    .multiply(BigDecimal.valueOf(quantity));
+            totalPrice = totalPrice.add(itemTotal);
+        }
+        List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
+        List<Object[]> listVoucherDiscount = managerUserVoucherService.getAllVoucherDiscount(user.getUserId());
+        model.addAttribute("listVoucherTransfer",listVoucherTransfer);
+        model.addAttribute("listVoucherDiscount",listVoucherDiscount);
+        model.addAttribute("cartItemList",cartItemList);
+        model.addAttribute("moneyShip",0);
+        model.addAttribute("totalPrice",totalPrice);
+        model.addAttribute("payment",totalPrice);
+        return "buy_many_product";
+    }
+
+    @PostMapping("home_after_user_login/cart/buy_many_product")
+    public String paymentManyProduct(@RequestParam("cartItemIds") List<Integer> cartItemIds,
+                                     @RequestParam Map<String, String> quantityInCart,
+                                     @RequestParam("where") String address,
+                                     @RequestParam(value = "valueVoucherTransfer", required = false) Integer idTransfer,
+                                     @RequestParam(value = "valueVoucherDiscount", required = false) Integer idDiscount,
+                                     @RequestParam("paymentMethod") PaymentMethod paymentMethod,
+                                     HttpServletRequest request,
+                                     HttpSession session,
+                                     Model model) {
+
+        User user = (User) request.getSession().getAttribute("loggedUser");
+
+        // Lấy và xử lý địa chỉ
+        String[] addressSplit = address.split("-");
+        String addressShip = addressSplit[addressSplit.length - 1];
+        ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
+        String addressDelivery = shipCostDocument.getNameCity();
+        BigDecimal shipCostValue = BigDecimal.valueOf(shipCostDocument.getCost());
+        model.addAttribute("moneyShip",shipCostValue);
+
+        // Lấy CartItem và tính tổng tiền
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (Integer id : cartItemIds){
+            CartItem cartItem = managerCartItemService.getCartItemById(id);
+            String key = "quantityInCart[" + id + "]";
+            int quantity = Integer.parseInt(quantityInCart.getOrDefault(key, "1"));
+
+            BigDecimal itemTotal = cartItem.getBook().getPrice().multiply(BigDecimal.valueOf(quantity));
+            totalPrice = totalPrice.add(itemTotal);
+            OrderItem orderItem = OrderItem.builder().book(cartItem.getBook()).quantityBuy(quantity).totalPrice(itemTotal).build();
+            orderItems.add(orderItem);
+        }
+
+        // Áp dụng voucher
+
+        List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
+        List<Object[]> listVoucherDiscount = managerUserVoucherService.getAllVoucherDiscount(user.getUserId());
+
+        List<Voucher> voucherList = new ArrayList<>();
+        for (Object[] voucher : listVoucherTransfer){
+            Voucher voucherTransfer = (Voucher) voucher[0];
+            if (voucherTransfer.getVoucherCode().equals(idTransfer)){
+                voucherList.add(voucherTransfer);
+            }
+        }
+
+        for (Object[] voucher : listVoucherDiscount){
+            Voucher voucherDiscount = (Voucher) voucher[0];
+            if (voucherDiscount.getVoucherCode().equals(idDiscount)){
+                voucherList.add(voucherDiscount);
+            }
+        }
+
+        BigDecimal payment = totalPrice.add(shipCostValue);
+        for (Voucher voucher : voucherList) {
+            if (voucher.getTypeVoucher().equals(TypeVoucher.TRANSPORT)) {
+                BigDecimal discountAmount = shipCostValue.multiply(BigDecimal.valueOf(voucher.getValue())
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                payment = payment.subtract(discountAmount);
+            } else if (voucher.getTypeVoucher().equals(TypeVoucher.DISCOUNT)) {
+                BigDecimal discountTransport = totalPrice.multiply(BigDecimal.valueOf(voucher.getValue())
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                payment = payment.subtract(discountTransport);
+            }
+        }
+
+        // Lưu Order
+        ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
+        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost(shipCost).voucherList(voucherList).paymentMethod(paymentMethod)
+                .statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).address(addressDelivery).build();
+        managerOrderService.addOrder(order);
+
+        for (OrderItem item : orderItems) {
+            item.setOrder(order);
+            managerOrderItemService.addOrderItem(item);
+        }
+
+        // Xóa cart item đã mua
+        for (Integer id : cartItemIds) {
+            managerCartItemService.removeCartItem(id);
+        }
+        model.addAttribute("cartItemIds", cartItemIds);
+        model.addAttribute("valueVoucherTransfer",idTransfer);
+        model.addAttribute("valueVoucherDiscount",idDiscount);
+        session.setAttribute("order", order);
+        session.setAttribute("orderItems", orderItems);
+        model.addAttribute("totalPrice",totalPrice);
+        model.addAttribute("where",address);
+
+
+        // Thanh toán chuyển khoản
+        if (paymentMethod == PaymentMethod.TRANSFER) {
+            String url = vnPayService.createPayment(request, payment, orderItems);
+            return "redirect:" + url;
+        }
+
+        // Trả về trang duyệt đơn
+        model.addAttribute("payment", payment);
+        model.addAttribute("address", address);
+        model.addAttribute("paymentMethod", paymentMethod);
+        return "page_browsing";
+    }
+
+
+
+
 
     @GetMapping("/get_shipcost")
     @ResponseBody

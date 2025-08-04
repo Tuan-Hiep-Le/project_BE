@@ -18,4 +18,7 @@ public interface ManagerCartItemService {
     //Xóa sản phẩm ra khỏi giỏ hàng
     public void removeCartItem(Integer cartItemId);
 
+    //Lấy ra CartItem bằng Id
+    public CartItem getCartItemById(Integer cartItemId);
+
 }

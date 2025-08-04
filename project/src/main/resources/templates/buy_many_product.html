@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mua nhiều sản phẩm từ giỏ hàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+<div class="max-w-4xl mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-shopping-cart text-blue-600 mr-3"></i>
+            Thanh toán đơn hàng
+        </h1>
+        <p class="text-gray-600">Xác nhận thông tin và hoàn tất đơn hàng của bạn</p>
+    </div>
+
+    <form th:action="@{/home_after_user_login/cart/buy_many_product}" method="post" class="space-y-6">
+        <!-- Địa chỉ giao hàng -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-map-marker-alt text-red-500 text-xl mr-3"></i>
+                <h2 class="text-xl font-semibold text-gray-800">Địa chỉ giao hàng</h2>
+            </div>
+            <input th:type="text"
+                   name="where"
+                   placeholder="Số nhà - Tên đường - Tên xã - Tên tỉnh"
+                   id="addressUser"
+                   th:value="${where}"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700">
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <i class="fas fa-book text-green-500 text-xl mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Sản phẩm trong giỏ hàng</h2>
+                    <span class="ml-3 bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full" th:text="${#lists.size(cartItemList)} + ' sản phẩm'"></span>
+                </div>
+                <button type="button" id="toggleProducts" class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center transition-colors duration-200" style="display: none;">
+                    <span id="toggleText">Xem tất cả</span>
+                    <i id="toggleIcon" class="fas fa-chevron-down ml-2"></i>
+                </button>
+            </div>
+
+            <div th:each="cartItem,iterStat : ${cartItemList}" class="product-item border-b border-gray-200 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0" th:classappend="${iterStat.index > 0} ? 'hidden-product' : ''">
+                <input type="hidden" name="cartItemIds" th:value="${cartItem.cartItemId}">
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Thông tin sách -->
+                    <div class="space-y-3">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-lg text-gray-800 mb-2" th:text="${cartItem.book.nameBook}"></h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <p><i class="fas fa-user text-blue-500 mr-2"></i><strong>Tác giả:</strong> <span th:text="${cartItem.book.nameAuthor}"></span></p>
+                                <p><i class="fas fa-language text-green-500 mr-2"></i><strong>Ngôn ngữ:</strong> <span th:text="${cartItem.book.language}"></span></p>
+                                <p><i class="fas fa-tag text-orange-500 mr-2"></i><strong>Giá:</strong>
+                                    <span class="font-semibold text-red-600" th:text="${#numbers.formatDecimal(cartItem.book.price, 0, 'POINT', 2, 'COMMA')}" th:value="${cartItem.book.price}" id="price_${cartItem.cartItemId}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Số lượng -->
+                    <div class="flex flex-col justify-center">
+                        <label for="quantityBuy_${cartItem.cartItemId}" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-sort-numeric-up text-purple-500 mr-2"></i>Số lượng mua
+                            <span class="text-gray-500 text-xs ml-1">(Tối đa: <span id="quantityMaxBook_${cartItem.cartItemId}" th:text="${cartItem.book.quantity}" class="font-semibold text-red-500"></span>)</span>
+                        </label>
+                        <input type="number"
+                               id="quantityBuy_${cartItem.cartItemId}"
+                               name="quantityInCart[${cartItem.cartItemId}]"
+                               class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center font-semibold"
+                               th:value="${cartItem.quantity}"
+                               min="1"
+                               step="1"
+                               max="${cartItem.book.quantity}"
+                               required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tổng tiền và phí ship -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-calculator text-blue-500 text-xl mr-3"></i>
+                <h2 class="text-xl font-semibold text-gray-800">Chi tiết thanh toán</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">Tổng tiền sách</p>
+                    <p class="text-xl font-bold text-blue-600">
+                        <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}" id="totalPrice"></span>
+                    </p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">Phí vận chuyển</p>
+                    <p class="text-xl font-bold text-green-600">
+                        <span th:text="${moneyShip}" id="moneyShip" th:value="${moneyShip}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voucher -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Voucher giảm giá -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <label class="flex items-center text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-ticket-alt text-yellow-500 text-xl mr-3"></i>
+                    Voucher Giảm giá
+                </label>
+                <select name="valueVoucherDiscount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200" id="valueVoucherDiscount">
+                    <option value="0">Không sử dụng voucher</option>
+                    <option th:each="voucherDiscount : ${listVoucherDiscount}"
+                            th:value="${voucherDiscount[0].voucherCode}"
+                            th:attr="data-discount=${voucherDiscount[0].value}"
+                            th:text="'Voucher: ' + ${voucherDiscount[0].nameVoucher} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Voucher vận chuyển -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <label class="flex items-center text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-shipping-fast text-blue-500 text-xl mr-3"></i>
+                    Voucher Vận chuyển
+                </label>
+                <select name="valueVoucherTransfer" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" id="valueVoucherTransfer">
+                    <option value="0">Không sử dụng voucher</option>
+                    <option th:each="voucherTransfer : ${listVoucherTransfer}"
+                            th:value="${voucherTransfer[0].voucherCode}"
+                            th:attr="data-transfer=${voucherTransfer[0].value}"
+                            th:text="'Voucher: ' + ${voucherTransfer[0].nameVoucher} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Phương thức thanh toán -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <label class="flex items-center text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-credit-card text-green-500 text-xl mr-3"></i>
+                Phương thức thanh toán
+            </label>
+            <select name="paymentMethod" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200">
+                <option th:value="CASH">💵 Thanh toán khi nhận hàng</option>
+                <option th:value="TRANSFER">🏦 Chuyển khoản</option>
+            </select>
+        </div>
+
+        <!-- Tổng thanh toán -->
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-money-bill-wave text-2xl mr-4"></i>
+                    <span class="text-xl font-semibold">Tổng thanh toán:</span>
+                </div>
+                <span class="text-3xl font-bold" th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')}" id="lastPayment"></span>
+            </div>
+        </div>
+
+        <!-- Nút thanh toán -->
+        <div class="text-center pt-4">
+            <button type="submit" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 text-lg">
+                <i class="fas fa-credit-card mr-3"></i>
+                Xác nhận thanh toán
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let currentShipCost = 0;
+    document.getElementById("addressUser").addEventListener("input",function(){
+        const address = this.value;
+        fetch(`/get_shipcost?where=${encodeURIComponent(address)}`)
+        .then(response => response.json())
+        .then(data => {
+            currentShipCost = parseFloat(data.cost);
+            if(!isNaN(currentShipCost)){
+                document.getElementById("moneyShip").textContent = currentShipCost.toLocaleString('vi-VN', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+            }else{
+                document.getElementById("moneyShip").textContent = "Chưa hỗ trợ chi phí ship ở tỉnh này";
+                currentShipCost = 0;
+            }
+            updateFinalPayment();
+
+        }).catch(error =>{
+            console.error('Error fetching shipping cost: ',error)
+            document.getElementById("moneyShip").textContent = 'Chưa hỗ trợ ship để tỉnh này';
+            currentShipCost = 0;
+            updateFinalPayment();
+        });
+    });
+
+    document.querySelectorAll('[id^="quantityBuy_"]').forEach(input => {
+        input.addEventListener("change", updateFinalPayment);
+        input.addEventListener("input", function () {
+            const cartItemId = input.id.split('_')[1];
+            const currentValue = parseInt(this.value);
+            const maxValue = parseInt(document.getElementById(`quantityMaxBook_${cartItemId}`).textContent);
+
+            if (currentValue > maxValue) {
+                this.value = maxValue;
+            }
+            updateFinalPayment();
+        });
+        input.addEventListener("blur", updateFinalPayment);
+    });
+
+    document.getElementById("valueVoucherDiscount").addEventListener("change", updateFinalPayment);
+    document.getElementById("valueVoucherTransfer").addEventListener("change", updateFinalPayment);
+
+    function updateFinalPayment() {
+        let totalBookPrice = 0;
+        document.querySelectorAll('[id^="price_"]').forEach(priceElement => {
+            const cartItemId = priceElement.id.split('_')[1];
+            // Lấy giá từ attribute th:value thay vì textContent
+            const price = parseFloat(priceElement.getAttribute('th:value') || priceElement.textContent.replace(/\./g, '').replace(/,/g, '.').replace(' VND', ''));
+            const quantityInput = document.getElementById(`quantityBuy_${cartItemId}`);
+            if (quantityInput) {
+                const quantity = parseInt(quantityInput.value) || 0;
+                totalBookPrice += price * quantity;
+            }
+        });
+
+        const discountOption = document.getElementById("valueVoucherDiscount").selectedOptions[0];
+        const transferOption = document.getElementById("valueVoucherTransfer").selectedOptions[0];
+        const discountPercent = parseInt(discountOption.getAttribute("data-discount") || 0);
+        const transferPercent = parseInt(transferOption.getAttribute("data-transfer") || 0);
+        const discountAmount = totalBookPrice * discountPercent / 100;
+        const transferDiscountAmount = currentShipCost * transferPercent / 100;
+
+        // Hiển thị tổng tiền sách
+        const totalBookPriceAfterUseVoucher = totalBookPrice - discountAmount;
+        document.getElementById("totalPrice").textContent = totalBookPriceAfterUseVoucher.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
+
+        // Hiển thị tiền ship
+        const shipCostAfterUseVoucher = currentShipCost - transferDiscountAmount;
+        document.getElementById("moneyShip").textContent = shipCostAfterUseVoucher.toLocaleString('vi-VN', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+
+        // Hiển thị tổng tiền cần thanh toán
+        const finalPayment = totalBookPriceAfterUseVoucher + shipCostAfterUseVoucher ;
+        document.getElementById("lastPayment").textContent = finalPayment.toLocaleString('vi-VN', {
+            minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' VND';
+    }
+
+    // Gọi tính toán lần đầu khi load trang
+    updateFinalPayment();
+
+    // Xử lý hiển thị/ẩn sản phẩm
+    document.addEventListener('DOMContentLoaded', function() {
+        const productItems = document.querySelectorAll('.product-item');
+        const toggleButton = document.getElementById('toggleProducts');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        // Chỉ hiển thị nút toggle nếu có nhiều hơn 1 sản phẩm
+        if (productItems.length > 1) {
+            toggleButton.style.display = 'flex';
+
+            // Ẩn các sản phẩm từ thứ 2 trở đi
+            productItems.forEach((item, index) => {
+                if (index > 0) {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        let isExpanded = false;
+
+        toggleButton.addEventListener('click', function() {
+            isExpanded = !isExpanded;
+
+            productItems.forEach((item, index) => {
+                if (index > 0) {
+                    if (isExpanded) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeIn 0.3s ease-in-out';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+
+            if (isExpanded) {
+                toggleText.textContent = 'Thu gọn';
+                toggleIcon.className = 'fas fa-chevron-up ml-2';
+            } else {
+                toggleText.textContent = 'Xem tất cả';
+                toggleIcon.className = 'fas fa-chevron-down ml-2';
+            }
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'969cc0d7a35bc7b9',t:'MTc1NDI5Njg2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
