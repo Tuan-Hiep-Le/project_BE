@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
         userCurrent.setFirstName(user.getFirstName());
         userCurrent.setPhoneNumber(user.getPhoneNumber());
         userCurrent.setEmail(user.getEmail());
-        userCurrent.setPassword(user.getPassword());
         userCurrent.setAvatar(user.getAvatar());
         return managerUserRepository.saveAndFlush(userCurrent);
     }
