@@ -29,7 +29,7 @@
                     <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="40" height="40" class="rounded-circle border">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
-                    <li><a class="dropdown-item py-2" href="#">👤 Trang cá nhân</a></li>
+                    <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/move_edit_personal}">👤 Trang cá nhân</a></li>
                     <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
                     <li>
                         <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">

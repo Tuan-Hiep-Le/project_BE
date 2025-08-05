@@ -18,7 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -98,6 +103,48 @@ public class ManagerUserController {
         httpSession.invalidate();
         return "redirect:/login";
     }
+
+    @GetMapping("/home_after_user_login/move_edit_personal")
+    public String moveToEditPersonal(HttpServletRequest request, Model model){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if(user.getAvatar() == null) {
+            model.addAttribute("hasAvatar",false);
+        }else {
+            model.addAttribute("hasAvatar",true);
+        }
+        model.addAttribute("user",user);
+        return "edit_personal";
+    }
+
+    @PostMapping("/home_after_user_login/edit_personal")
+    public String editPersonalInformation(@ModelAttribute User user){
+        userService.updateUser(user);
+        return "redirect:/home_after_user_login/move_edit_personal";
+    }
+
+    @PostMapping("/upload_avatar")
+    public String uploadAvatar(@RequestParam("avatar")MultipartFile multipartFile, HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        Path uploadPath = Paths.get("uploads");
+
+        if (!multipartFile.isEmpty()) {
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String fileName = "avatar_"+user.getUserId()+".jpg";
+                Path filePath = uploadPath.resolve(fileName); // nối đường dẫn đúng
+                Files.write(filePath,multipartFile.getBytes());
+                user.setAvatar("/uploads/"+fileName);
+                userService.updateUser(user);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return "redirect:/home_after_user_login/move_edit_personal";
+    }
+
+
 
 
 
