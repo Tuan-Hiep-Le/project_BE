@@ -35,6 +35,8 @@ public class VNPayController {
     private ManagerBookServiceImpl managerBookService;
     @Autowired
     private SearchBookServiceImpl service;
+    @Autowired
+    private ManagerCartItemServiceImpl managerCartItemService;
 
     @GetMapping("/checkout_after_payment")
     public String checkoutAfterPayment( @ModelAttribute VNPayResponse vnPayResponse, HttpSession httpSession, Model model){
@@ -51,6 +53,13 @@ public class VNPayController {
                 book.setQuantity(book.getQuantity() - oi.getQuantityBuy());
                 managerBookService.updateBook(book);
 
+            }
+            @SuppressWarnings("unchecked")
+            List<Integer> cartItemIds = (List<Integer>) httpSession.getAttribute("cartItemIds");
+            if  (cartItemIds != null && !cartItemIds.isEmpty() ){
+                for (Integer id : cartItemIds) {
+                managerCartItemService.removeCartItem(id);
+                }
             }
             service.syncAllBooksToES();
             httpSession.removeAttribute("order");

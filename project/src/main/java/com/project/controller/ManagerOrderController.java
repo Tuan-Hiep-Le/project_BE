@@ -151,11 +151,14 @@ public class ManagerOrderController {
         model.addAttribute("payment",payment);
         model.addAttribute("quantityBuy", quantityBuy);
 
-
         return "page_browsing";
     }
     @GetMapping("home_after_user_login/checkout_buy_many_product")
-    public String getCheckoutPaymentManyProduct(@RequestParam("cartItemIds") List<Integer> cartItemIds, @RequestParam Map<String, String> quantityInCart, Model model, HttpServletRequest request){
+    public String getCheckoutPaymentManyProduct(@RequestParam(value = "cartItemIds", required = false) List<Integer> cartItemIds, @RequestParam Map<String, String> quantityInCart, Model model, HttpServletRequest request){
+        if (cartItemIds == null || cartItemIds.isEmpty()) {
+            model.addAttribute("error", "Bạn chưa chọn sản phẩm nào để thanh toán.");
+            return "redirect:/home_after_user_login/move_cart";
+        }
         User user = (User) request.getSession().getAttribute("loggedUser");
         BigDecimal totalPrice = BigDecimal.ZERO;
         List<CartItem>cartItemList = new ArrayList<>();
@@ -185,7 +188,7 @@ public class ManagerOrderController {
     }
 
     @PostMapping("home_after_user_login/cart/buy_many_product")
-    public String paymentManyProduct(@RequestParam("cartItemIds") List<Integer> cartItemIds,
+    public String paymentManyProduct(@RequestParam(value = "cartItemIds", required = false) List<Integer> cartItemIds,
                                      @RequestParam Map<String, String> quantityInCart,
                                      @RequestParam("where") String address,
                                      @RequestParam(value = "valueVoucherTransfer", required = false) Integer idTransfer,
@@ -264,13 +267,10 @@ public class ManagerOrderController {
             managerOrderItemService.addOrderItem(item);
         }
 
-        // Xóa cart item đã mua
-        for (Integer id : cartItemIds) {
-            managerCartItemService.removeCartItem(id);
-        }
         model.addAttribute("cartItemIds", cartItemIds);
         model.addAttribute("valueVoucherTransfer",idTransfer);
         model.addAttribute("valueVoucherDiscount",idDiscount);
+        session.setAttribute("cartItemIds",cartItemIds);
         session.setAttribute("order", order);
         session.setAttribute("orderItems", orderItems);
         model.addAttribute("totalPrice",totalPrice);
@@ -283,10 +283,13 @@ public class ManagerOrderController {
             return "redirect:" + url;
         }
 
-        // Trả về trang duyệt đơn
         model.addAttribute("payment", payment);
         model.addAttribute("address", address);
         model.addAttribute("paymentMethod", paymentMethod);
+        // Xóa cart item đã mua
+        for (Integer id : cartItemIds) {
+            managerCartItemService.removeCartItem(id);
+        }
         return "page_browsing";
     }
 

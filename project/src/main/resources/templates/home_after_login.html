@@ -26,7 +26,13 @@
         <div class="d-flex align-items-center gap-3">
             <div class="dropdown">
                 <a href="#" class="d-block dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="40" height="40" class="rounded-circle border">
+                    <div th:if="${hasAvatar}">
+                        <img th:src="@{${avatar}}" width="40" height="40" class="rounded-circle border" alt="Avatar">
+                    </div>
+                    <div th:unless="${hasAvatar}">
+                        <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="40" height="40" class="rounded-circle border">
+                    </div>
+
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
                     <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/move_edit_personal}">👤 Trang cá nhân</a></li>
