@@ -4,10 +4,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-       registry.addResourceHandler("/uploads/**").addResourceLocations("file:uploads/");
+
+        String uploadPath = Paths.get("project/uploads").toAbsolutePath().toUri().toString();
+        System.out.println("Upload Path for static resource: " + uploadPath);
+
+        registry.addResourceHandler("/uploads/**").addResourceLocations(uploadPath);
     }
 }

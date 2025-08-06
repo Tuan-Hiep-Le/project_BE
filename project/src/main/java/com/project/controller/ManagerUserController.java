@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -125,15 +126,21 @@ public class ManagerUserController {
     @PostMapping("/upload_avatar")
     public String uploadAvatar(@RequestParam("avatar")MultipartFile multipartFile, HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("loggedUser");
-        Path uploadPath = Paths.get("uploads");
+        Path projectPath = Paths.get("").toAbsolutePath();
+        Path uploadPath = projectPath.resolve("project").resolve("uploads");
+
+        System.out.println("Đường dẫn upload: " + uploadPath.toAbsolutePath());
+
+
 
         if (!multipartFile.isEmpty()) {
             try {
+
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
-                String fileName = "avatar_"+user.getUserId()+".jpg";
-                Path filePath = uploadPath.resolve(fileName); // nối đường dẫn đúng
+                String fileName = "avatar_"+user.getUserId()+"_"+System.currentTimeMillis()+".jpg";
+                Path filePath = uploadPath.resolve(fileName);
                 Files.write(filePath,multipartFile.getBytes());
                 user.setAvatar("/uploads/"+fileName);
                 userService.updateUser(user);

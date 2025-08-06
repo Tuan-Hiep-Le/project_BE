@@ -117,6 +117,12 @@ public class ManagerBookController {
         User user = (User) authentication.getPrincipal();
         List<CartItem> list = managerCartItemService.getAllCTByUserId(user.getUserId());
         int countCartItem = list.size();
+        if (user.getAvatar() != null) {
+            model.addAttribute("hasAvatar",true);
+            model.addAttribute("avatar",user.getAvatar());
+        }else {
+            model.addAttribute("hasAvatar",false);
+        }
         model.addAttribute("books",allProduct);
         model.addAttribute("authors",listAuthor);
         model.addAttribute("categories",listCategory);

@@ -310,7 +310,6 @@
   </style>
 </head>
 <body>
-<form id="cartForm" action="/home_after_user_login/checkout_buy_many_product" method="get">
   <div class="container">
     <div class="main-container">
       <!-- Nếu giỏ hàng trống -->
@@ -334,20 +333,22 @@
         </div>
 
         <!-- Thanh tổng tiền -->
-        <div class="sticky-cart-bar d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input checkbox-custom" id="selectAllCheckbox">
-            <label class="form-check-label" for="selectAllCheckbox">
-              <i class="bi bi-check-all me-2"></i>Chọn tất cả
-            </label>
+        <form id="cartForm" th:action="@{/home_after_user_login/checkout_buy_many_product}" method="get">
+          <div class="sticky-cart-bar d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input checkbox-custom" id="selectAllCheckbox">
+              <label class="form-check-label" for="selectAllCheckbox">
+                <i class="bi bi-check-all me-2"></i>Chọn tất cả
+              </label>
+            </div>
+            <div id="totalPrice">
+              <i class="bi bi-currency-dollar me-2"></i>Tổng tiền: <span th:text="${totalPrice}"></span> VNĐ
+            </div>
+            <button type="submit" class="btn btn-checkout" id="checkoutBtn" disabled>
+              <i class="bi bi-credit-card me-2"></i>Thanh toán ngay
+            </button>
           </div>
-          <div id="totalPrice">
-            <i class="bi bi-currency-dollar me-2"></i>Tổng tiền: <span th:text="${totalPrice}"></span> VNĐ
-          </div>
-          <button type="submit" class="btn btn-checkout" id="checkoutBtn" disabled>
-            <i class="bi bi-credit-card me-2"></i>Thanh toán ngay
-          </button>
-        </div>
+        </form>
 
         <div class="cart-content">
           <!-- Danh sách sản phẩm -->
@@ -405,6 +406,7 @@
                     <input type="number"
                            th:name="${'quantityInCart[' + item.cartItemId + ']'}"
                            class="form-control"
+                           th:disabled="${item.book.quantity==0}"
                            th:value="${item.quantity}"
                            min="1"
                            step="1"
@@ -414,6 +416,9 @@
                       <i class="bi bi-plus"></i>
                     </button>
                   </div>
+                  <div th:if="${item.book.quantity == 0}" class="text-danger mt-2">
+                    Sách đã hết hàng. Vui lòng xóa khỏi giỏ hàng.
+                  </div>
                 </div>
               </div>
             </div>
@@ -422,7 +427,6 @@
       </div>
     </div>
   </div>
-</form>
 
 <!-- Script tăng giảm số lượng và cập nhật tổng tiền -->
 <script>
@@ -443,6 +447,7 @@
       const quantityInput = item.querySelector('input[type="number"]');
 
       decreaseBtn.addEventListener("click", () => {
+        if (quantityInput.disabled) return;
         let current = parseInt(quantityInput.value);
         if (current > 1) {
           quantityInput.value = current - 1;
@@ -451,6 +456,7 @@
       });
 
       increaseBtn.addEventListener("click", () => {
+        if (quantityInput.disabled) return;
         let current = parseInt(quantityInput.value);
         let max = parseInt(quantityInput.max);
         if (current < max) {
@@ -515,9 +521,33 @@
       // Disable nút thanh toán nếu không chọn sản phẩm nào
       checkoutBtn.disabled = !anySelected;
     }
+    document.getElementById("cartForm").addEventListener("submit", function (e) {
+    // Xóa input ẩn cũ nếu submit nhiều lần
+    this.querySelectorAll("input[type=hidden]").forEach(el => el.remove());
+
+    // Lấy các checkbox được chọn
+    const checkedItems = document.querySelectorAll('input[name="cartItemIds"]:checked');
+    checkedItems.forEach(cb => {
+      // Input ẩn cho cartItemIds
+      const hiddenId = document.createElement("input");
+      hiddenId.type = "hidden";
+      hiddenId.name = "cartItemIds";
+      hiddenId.value = cb.value;
+      this.appendChild(hiddenId);
+
+      // Input ẩn cho quantityInCart
+      const quantityInput = cb.closest(".cart-item").querySelector('input[type="number"]');
+      const hiddenQuantity = document.createElement("input");
+      hiddenQuantity.type = "hidden";
+      hiddenQuantity.name = `quantityInCart[${cb.value}]`;
+      hiddenQuantity.value = quantityInput.value;
+      this.appendChild(hiddenQuantity);
+      });
+    });
   });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'969d1ec783e9c8c3',t:'MTc1NDMwMDcwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'969d1ec783e9c8c3',t:'MTc1NDMwMDcwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>
