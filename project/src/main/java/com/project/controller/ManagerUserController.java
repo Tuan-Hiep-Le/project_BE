@@ -118,8 +118,9 @@ public class ManagerUserController {
     }
 
     @PostMapping("/home_after_user_login/edit_personal")
-    public String editPersonalInformation(@ModelAttribute User user){
-        userService.updateUser(user);
+    public String editPersonalInformation(@ModelAttribute User user, HttpServletRequest request){
+        User userUpdate = userService.updateUser(user);
+        request.getSession().setAttribute("loggedUser",userUpdate);
         return "redirect:/home_after_user_login/move_edit_personal";
     }
 
@@ -131,8 +132,6 @@ public class ManagerUserController {
 
         System.out.println("Đường dẫn upload: " + uploadPath.toAbsolutePath());
 
-
-
         if (!multipartFile.isEmpty()) {
             try {
 
@@ -143,12 +142,18 @@ public class ManagerUserController {
                 Path filePath = uploadPath.resolve(fileName);
                 Files.write(filePath,multipartFile.getBytes());
                 user.setAvatar("/uploads/"+fileName);
-                userService.updateUser(user);
+                User userUpdate = userService.updateUser(user);
+                request.getSession().setAttribute("loggedUser",userUpdate);
             }catch (IOException e){
                 e.printStackTrace();
             }
         }
         return "redirect:/home_after_user_login/move_edit_personal";
+    }
+
+    @GetMapping("/return_home")
+    public String returnHome(){
+        return "redirect:/home_user_after_login";
     }
 
 

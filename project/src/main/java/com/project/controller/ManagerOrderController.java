@@ -89,10 +89,17 @@ public class ManagerOrderController {
         String addressShip = addressSplit[addressSplit.length - 1];
         ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
         String addressDelivery = shipCostDocument.getNameCity();
+
+        StringBuilder addressBuilder = new StringBuilder();
+        for (int i = 0; i < addressSplit.length - 1; i++){
+            addressBuilder.append(addressSplit[i]+"-");
+        }
+        addressBuilder.append(addressDelivery);
         model.addAttribute("moneyShip",BigDecimal.valueOf(shipCostDocument.getCost()));
 
         List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
         List<Object[]> listVoucherDiscount = managerUserVoucherService.getAllVoucherDiscount(user.getUserId());
+
 
         List<Voucher> voucherList = new ArrayList<>();
         for (Object[] voucher : listVoucherTransfer){
@@ -128,7 +135,7 @@ public class ManagerOrderController {
             }
         }
         ShipCost shipCost = managerShipCostService.getShipCostById(shipCostDocument.getShipCostId());
-        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).address(addressDelivery).build();
+        Order order = Order.builder().user(user).totalPrice(totalPrice).shipCost( shipCost).voucherList(voucherList).paymentMethod(paymentMethod).statusOrder(StatusOrder.APPROVING).payment(payment).buyAt(LocalDateTime.now()).address(addressBuilder.toString()).build();
         managerOrderService.addOrder(order);
         OrderItem orderItem = OrderItem.builder().order(order).book(book).quantityBuy(quantityBuy).totalPrice(totalPrice).build();
         managerOrderItemService.addOrderItem(orderItem);
@@ -145,7 +152,7 @@ public class ManagerOrderController {
         model.addAttribute("bookId",id);
         model.addAttribute("valueVoucherTransfer",idTransfer);
         model.addAttribute("valueVoucherDiscount",idDiscount);
-        model.addAttribute("where",address);
+        model.addAttribute("where",addressDelivery);
         model.addAttribute("bookBuy",book);
         model.addAttribute("paymentMethod",paymentMethod);
         model.addAttribute("payment",payment);

@@ -79,10 +79,11 @@ public class ManagerPasswordServiceImpl implements ManagerPasswordService {
     @Override
     public boolean isTokenExpired(String resetPasswordToken) {
         ResetPassword resetPassword = managerPasswordRepository.findByResetPasswordToken(resetPasswordToken);
-        if (resetPassword.getResetTokenExpiry().isBefore(LocalDateTime.now())){
+        if (resetPassword == null) {
             return true;
         }
-        return false;
+        return resetPassword.getResetTokenExpiry().isBefore(LocalDateTime.now());
+
     }
 
     @Override
