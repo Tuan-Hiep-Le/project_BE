@@ -1,7 +1,9 @@
 package com.project.controller;
 
+import com.project.entity.LoginHistory;
 import com.project.entity.User;
 import com.project.entity.enum_entity.Role;
+import com.project.service.impl.ManagerHistoryLoginServiceImpl;
 import com.project.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +27,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ManagerUserController {
@@ -33,6 +37,8 @@ public class ManagerUserController {
     private UserServiceImpl userService;
     @Autowired
     private SecurityContextRepository securityContextRepository;
+    @Autowired
+    private ManagerHistoryLoginServiceImpl managerHistoryLoginService;
 
     @GetMapping("/login")
     public String userLogin(){
@@ -57,6 +63,8 @@ public class ManagerUserController {
         securityContextRepository.saveContext(context, request, response);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", context);
         request.getSession().setAttribute("loggedUser",user);
+        LoginHistory loginHistory = LoginHistory.builder().user(user).loginTime(LocalDateTime.now()).build();
+        managerHistoryLoginService.addLoginHistory(loginHistory);
         if (user.getRole().equals(Role.USER)){
             return "redirect:/home_user_after_login";
         }
@@ -154,6 +162,14 @@ public class ManagerUserController {
     @GetMapping("/return_home")
     public String returnHome(){
         return "redirect:/home_user_after_login";
+    }
+
+    @GetMapping("/histories_login")
+    public String moveHistoryLogin(HttpServletRequest request, Model model){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        List<Object[]>  list = managerHistoryLoginService.getAllHistoryLoginByUserId(user.getUserId());
+        model.addAttribute("listHistoryLogin",list);
+        return "history_login_page";
     }
 
 
