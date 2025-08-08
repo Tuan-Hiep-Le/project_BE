@@ -124,4 +124,30 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     public List<Book> getAllBookList() {
         return managerBookRepository.findAll();
     }
+
+    @Override
+    public Page<Book> filterBooks(String category, String author, String topic, Pageable pageable) {
+        boolean hasCategory = category != null && !category.isEmpty();
+        boolean hasAuthor = author != null && !author.isEmpty();
+        boolean hasTopic = topic != null && !topic.isEmpty();
+
+        if (hasCategory && hasTopic && hasAuthor) {
+            return managerBookRepository.findByNameAuthorAndNameTopicAndNameCategory(author, topic, category, pageable);
+        } else if (hasCategory && hasTopic) {
+            return managerBookRepository.findByNameCategoryAndNameTopic(category, topic, pageable);
+        } else if (hasAuthor && hasCategory) {
+            return managerBookRepository.findByNameAuthorAndNameCategory(author, category, pageable);
+        } else if (hasAuthor && hasTopic) {
+            return managerBookRepository.findByNameAuthorAndNameTopic(author, topic, pageable);
+        } else if (hasAuthor) {
+            return managerBookRepository.findByNameAuthor(author, pageable);
+        } else if (hasCategory) {
+            return managerBookRepository.findByNameCategory(category, pageable);
+        } else if (hasTopic) {
+            return managerBookRepository.findByNameTopic(topic, pageable);
+        } else {
+            return managerBookRepository.findAll(pageable);
+        }
+
+    }
 }

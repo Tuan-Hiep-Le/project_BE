@@ -18,6 +18,12 @@ public interface ManagerBookRepository extends JpaRepository<Book,Integer> {
 
     Page<Book> findByNameTopic(String nameTopic, Pageable pageable);
 
+    Page<Book> findByNameAuthorAndNameCategory(String  author,String category,Pageable pageable);
+    Page<Book> findByNameAuthorAndNameTopic(String  author,String topic,Pageable pageable);
+    Page<Book> findByNameCategoryAndNameTopic(String  category,String topic,Pageable pageable);
+
+    Page<Book> findByNameAuthorAndNameTopicAndNameCategory(String nameAuthor, String topic, String category, Pageable pageable);
+
     Book findByNameBookAndNameAuthorAndLanguage(String nameBook, String nameAuthor, Language language);
 
     //Lấy ra danh sách tác giả

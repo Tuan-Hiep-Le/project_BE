@@ -42,6 +42,9 @@ public interface ManagerBookService {
     //Lấy ra tất cả sachs
     public List<Book> getAllBookList();
 
+    //
+    public Page<Book> filterBooks(String category,String author, String topic,Pageable pageable);
+
 
 
 
