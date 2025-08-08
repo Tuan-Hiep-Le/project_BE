@@ -107,9 +107,10 @@ public class ManagerBookController {
 
     //Trang Chủ Sau Khi Đăng Nhập
     @GetMapping("/home_user_after_login")
-    public String homeAfterLogin(@RequestParam(value = "valuePage",defaultValue = "0") int valuePage, @RequestParam(value = "valueSize",defaultValue = "10") int valueSize, Model model){
+    public String homeAfterLogin(@RequestParam(value = "nameCategory",required = false) String category, @RequestParam(value = "nameAuthor", required = false) String nameAuthor, @RequestParam(value = "nameTopic",required = false) String nameTopic,@RequestParam(value = "valuePage",defaultValue = "0") int valuePage, @RequestParam(value = "valueSize",defaultValue = "10") int valueSize, Model model){
         Pageable pageable = PageRequest.of(valuePage,valueSize);
-        Page<Book> allProduct = managerBookService.getAllBook(pageable);
+        boolean isFiltering = (category != null && !category.isEmpty()) || (nameAuthor != null && !nameAuthor.isEmpty()) || (nameTopic != null && !nameTopic.isEmpty());
+        Page<Book> pageResult = isFiltering ? managerBookService.filterBooks(category, nameAuthor, nameTopic, pageable) : managerBookService.getAllBook(pageable);
         List<String> listAuthor = managerBookService.getAllAuthor();
         List<String> listCategory = managerBookService.getAllCategory();
         List<String> listTopic = managerBookService.getAllTopic();
@@ -123,14 +124,20 @@ public class ManagerBookController {
         }else {
             model.addAttribute("hasAvatar",false);
         }
-        model.addAttribute("books",allProduct);
+        model.addAttribute("books",pageResult);
         model.addAttribute("authors",listAuthor);
         model.addAttribute("categories",listCategory);
         model.addAttribute("topics",listTopic);
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("valueSize",valueSize);
-        model.addAttribute("totalPage",allProduct.getTotalPages());
+        model.addAttribute("totalPage",(pageResult.getTotalPages()));
         model.addAttribute("countCartItem",countCartItem);
+        model.addAttribute("nameCategory",category);
+        model.addAttribute("nameAuthor",nameAuthor);
+        model.addAttribute("nameTopic",nameTopic);
+
+
+
 
         return"home_after_login";
     }

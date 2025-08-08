@@ -326,7 +326,7 @@
 
             <div class="d-flex align-items-center gap-3">
                 <div class="dropdown">
-                    <a href="#" class="d-block dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="d-block " data-bs-toggle="dropdown" aria-expanded="false">
                         <div th:if="${hasAvatar}">
                             <img th:src="@{${avatar}}" width="60" height="60" class="rounded-circle border" alt="Avatar">
                         </div>
@@ -361,33 +361,39 @@
         <div class="container-fluid d-flex gap-4 flex-wrap align-items-center">
             <a th:href="@{/home_user_after_login}" class="text-decoration-none">🏠 Trang chủ</a>
 
-            <form th:action="@{/home_after_user_login/category}" method="get">
+            <form th:action="@{/home_user_after_login}" method="get">
                 <label for="categorySelect">📚 Thể loại:</label>
-                <select name="category" id="categorySelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
-                    <option value="" disabled th:selected="${category == null}">-- Chọn thể loại --</option>
-                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" th:selected="${cat == category}"></option>
+                <select name="nameCategory" id="categorySelect" class="form-select form-select-sm d-inline w-auto" >
+                    <option value="" th:selected="${nameCategory == null or nameCategory  == ''}">-- Chọn thể loại --</option>
+                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" th:selected="${cat == nameCategory}"></option>
                 </select>
-            </form>
 
-            <form th:action="@{/home_after_user_login/author}" method="get">
+
+
                 <label for="authorSelect">👤 Tác giả:</label>
-                <select name="name_author" id="authorSelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
-                    <option value="" disabled th:selected="${author == null}">-- Chọn tác giả --</option>
-                    <option th:each="author : ${authors}" th:value="${author}" th:text="${author}" th:selected="${author == name_author}"></option>
+                <select name="nameAuthor" id="authorSelect" class="form-select form-select-sm d-inline w-auto" >
+                    <option value="" th:selected="${nameAuthor == null or nameAuthor == ''}">-- Chọn tác giả --</option>
+                    <option th:each="author : ${authors}" th:value="${author}" th:text="${author}" th:selected="${author == nameAuthor}"></option>
                 </select>
+
+
+
+                <label for="topicSelect">💡 Chủ đề:</label>
+                <select name="nameTopic" id="topicSelect" class="form-select form-select-sm d-inline w-auto">
+                    <option value="" th:selected="${nameTopic == null or nameTopic == ''}">-- Chọn chủ đề --</option>
+                    <option th:each="topic : ${topics}" th:value="${topic}" th:text="${topic}" th:selected="${topic == nameTopic}"></option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm ms-2">Lọc</button>
             </form>
 
-            <form th:action="@{/home_after_user_login/topic}" method="get">
-                <label for="topicSelect">💡 Chủ đề:</label>
-                <select name="name_topic" id="topicSelect" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
-                    <option value="" disabled th:selected="${topic == null}">-- Chọn chủ đề --</option>
-                    <option th:each="topic : ${topics}" th:value="${topic}" th:text="${topic}" th:selected="${topic == name_topic}"></option>
-                </select>
-            </form>
 
             <form method="get" th:action="@{/home_user_after_login}">
                 <div class="dropdown">
                     <label>Hiển thị</label>
+                    <input type="hidden" name="valuePage" th:value="${valuePage}" />
+                    <input type="hidden" name="nameCategory" th:if="${nameCategory != null}" th:value="${nameCategory}" />
+                    <input type="hidden" name="nameAuthor" th:if="${nameAuthor != null}" th:value="${nameAuthor}" />
+                    <input type="hidden" name="nameTopic" th:if="${nameTopic != null}" th:value="${nameTopic}" />
                     <select name="valueSize" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
                         <option th:value="10" th:text="10" th:selected="${valueSize == 10}"></option>
                         <option th:value="5" th:text="5" th:selected="${valueSize == 5}"></option>
@@ -434,13 +440,13 @@
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage-1}, valueSize=${valueSize})}">Previous</a>
+                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage-1}, valueSize=${valueSize}, nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Previous</a>
             </li>
             <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${p}, valueSize=${valueSize})}" th:text="${p+1}"></a>
+                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${p}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}" th:text="${p+1}"></a>
             </li>
             <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage+1}, valueSize=${valueSize})}">Next</a>
+                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage+1}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Next</a>
             </li>
         </ul>
     </nav>

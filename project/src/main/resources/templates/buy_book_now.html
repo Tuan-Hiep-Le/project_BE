@@ -5,85 +5,333 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mua Ngay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: none;
+            overflow: hidden;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .book-info-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .book-image {
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .book-image:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-details p {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .book-details strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .price-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .price-label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .price-value {
+            font-weight: 700;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .final-payment {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px solid #81c784;
+            text-align: center;
+        }
+
+        .final-payment .price-value {
+            color: #2e7d32;
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .voucher-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .voucher-title {
+            color: #495057;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-method-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        .quantity-info {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            color: #22543d;
+            margin-top: 0.5rem;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 2rem 0;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .main-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+
+            .book-info-section {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
 <div class="container my-5">
-    <h2 class="text-center mb-4">📚 Đặt mua sách ngay</h2>
-    <form th:action="@{/home_after_user_login/buy_now}" method="post" class="card p-4 shadow-sm">
-        <input type="hidden" name="bookId" th:value="${bookId}" />
+    <div class="main-container p-4">
+        <h2 class="page-title text-center">
+            <i class="fas fa-book-open me-3"></i>Đặt mua sách ngay
+        </h2>
 
-        <div class="mb-3">
-            <label class="form-label">Địa chỉ giao hàng</label>
-            <input th:type="text" name="where" placeholder="...- Tên Xã - Tên Tỉnh" id="addressUser" th:value="${where}" class="form-control">
-        </div>
+        <form th:action="@{/home_after_user_login/buy_now}" method="post" class="form-card p-4">
+            <input type="hidden" name="bookId" th:value="${bookId}" />
 
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <img th:src="@{/images/sach-anh-dep3.jpg}"  class="img-fluid rounded">
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>Địa chỉ giao hàng
+                </label>
+                <input th:type="text" name="where" placeholder="Số nhà - Tên đường - Tên xã - Tên tỉnh" id="addressUser" th:value="${where}" class="form-control">
             </div>
-            <div class="col-md-8">
-                <p><strong>Tên sách:</strong> <span th:text="${bookBuy.nameBook}"></span></p>
-                <p><strong>Tác giả:</strong> <span th:text="${bookBuy.nameAuthor}"></span></p>
-                <p><strong>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
-                <p><strong>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 0, 'POINT', 2, 'COMMA')}" th:value="${bookBuy.price}" id = "price"></span></p>
-                <div class="mb-3">
-                    <label for="quantityBuy" class="form-label">Số lượng mua <span class="text-muted">(Tối đa: <span id = "quantityMaxBook" th:text="${bookBuy.quantity}"></span>)</span></label>
-                    <input type="number"
-                           id="quantityBuy"
-                           name="quantityBuy"
-                           class="form-control"
-                           th:value="${quantityBuy}"
-                           min="1"
-                           step="1"
-                           max="${bookBuy.quantity}"
-                           required>
+
+            <hr class="section-divider">
+
+            <div class="book-info-section">
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <img th:src="@{/images/sach-anh-dep3.jpg}" class="img-fluid book-image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="book-details">
+                            <p><strong><i class="fas fa-book me-2"></i>Tên sách:</strong> <span th:text="${bookBuy.nameBook}"></span></p>
+                            <p><strong><i class="fas fa-user-edit me-2"></i>Tác giả:</strong> <span th:text="${bookBuy.nameAuthor}"></span></p>
+                            <p><strong><i class="fas fa-language me-2"></i>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
+                            <p><strong><i class="fas fa-tag me-2"></i>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 0, 'POINT', 2, 'COMMA')}" th:value="${bookBuy.price}" id="price"></span></p>
+
+                            <div class="mb-3">
+                                <label for="quantityBuy" class="form-label">
+                                    <i class="fas fa-shopping-cart me-2"></i>Số lượng mua
+                                </label>
+                                <input type="number"
+                                       id="quantityBuy"
+                                       name="quantityBuy"
+                                       class="form-control"
+                                       th:value="${quantityBuy}"
+                                       min="1"
+                                       step="1"
+                                       max="${bookBuy.quantity}"
+                                       required>
+                                <div class="quantity-info">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Tối đa: <span id="quantityMaxBook" th:text="${bookBuy.quantity}"></span> cuốn
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-        </div>
 
-        <div class="mb-3">
-            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}" id = "totalPrice"></span></p>
-            <p><strong>Tiền Ship:</strong> <span th:text="${moneyShip}" id="moneyShip" th:value="${moneyShip}"></span></p>
-        </div>
+            <div class="price-section">
+                <div class="price-item">
+                    <span class="price-label"><i class="fas fa-calculator me-2"></i>Tổng tiền sách:</span>
+                    <span class="price-value" id="totalPrice" th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}"></span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label"><i class="fas fa-shipping-fast me-2"></i>Phí vận chuyển:</span>
+                    <span class="price-value" id="moneyShip" th:value="${moneyShip}" th:text="${moneyShip}"></span>
+                </div>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">🎟 Voucher Giảm giá</label>
-            <select name="valueVoucherDiscount" class="form-select" id="valueVoucherDiscount">
-                <option value="0">Không sử dụng voucher</option>
-                <option th:each="voucherDiscount : ${listVoucherDiscount}"
-                        th:value="${voucherDiscount[0].voucherCode}"
-                        th:attr="data-discount=${voucherDiscount[0].value}"
-                        th:text="'Voucher: ' + ${voucherDiscount[0].nameVoucher} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
-                </option>
-            </select>
-        </div>
+            <div class="voucher-section">
+                <div class="voucher-title">
+                    <i class="fas fa-ticket-alt"></i>
+                    Voucher Giảm giá
+                </div>
+                <select name="valueVoucherDiscount" class="form-select" id="valueVoucherDiscount">
+                    <option value="0">Không sử dụng voucher</option>
+                    <option th:each="voucherDiscount : ${listVoucherDiscount}"
+                            th:value="${voucherDiscount[0].voucherCode}"
+                            th:attr="data-discount=${voucherDiscount[0].value}"
+                            th:text="'Voucher: ' + ${voucherDiscount[0].nameVoucher} + ' (Số lượng: ' + ${voucherDiscount[1]} + ')'">
+                    </option>
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">📦 Voucher Vận chuyển</label>
-            <select name="valueVoucherTransfer" class="form-select" id="valueVoucherTransfer">
-                <option value="0">Không sử dụng voucher</option>
-                <option th:each="voucherTransfer : ${listVoucherTransfer}"
-                        th:value="${voucherTransfer[0].voucherCode}"
-                        th:attr="data-transfer=${voucherTransfer[0].value}"
-                        th:text="'Voucher: ' + ${voucherTransfer[0].nameVoucher} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
-                </option>
-            </select>
-        </div>
+            <div class="voucher-section">
+                <div class="voucher-title">
+                    <i class="fas fa-truck"></i>
+                    Voucher Vận chuyển
+                </div>
+                <select name="valueVoucherTransfer" class="form-select" id="valueVoucherTransfer">
+                    <option value="0">Không sử dụng voucher</option>
+                    <option th:each="voucherTransfer : ${listVoucherTransfer}"
+                            th:value="${voucherTransfer[0].voucherCode}"
+                            th:attr="data-transfer=${voucherTransfer[0].value}"
+                            th:text="'Voucher: ' + ${voucherTransfer[0].nameVoucher} + ' (Số lượng: ' + ${voucherTransfer[1]} + ')'">
+                    </option>
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">💳 Phương thức thanh toán</label>
-            <select name="paymentMethod" class="form-select">
-                <option th:value="CASH">Thanh toán khi nhận hàng</option>
-                <option th:value="TRANSFER">Chuyển khoản</option>
-            </select>
-        </div>
-        <p class="fs-5 text-success"><strong>Tổng thanh toán:</strong> <span  th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')}" id="lastPayment"></span></p>
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary px-5">Thanh toán</button>
-        </div>
-    </form>
+            <div class="payment-method-section">
+                <label class="form-label voucher-title">
+                    <i class="fas fa-credit-card"></i>
+                    Phương thức thanh toán
+                </label>
+                <select name="paymentMethod" class="form-select">
+                    <option th:value="CASH"><i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng</option>
+                    <option th:value="TRANSFER"><i class="fas fa-university"></i> Chuyển khoản</option>
+                </select>
+            </div>
+
+            <div class="final-payment">
+                <div class="price-item">
+                    <span class="price-label fs-4">
+                        <i class="fas fa-money-check-alt me-2"></i>Tổng thanh toán:
+                    </span>
+                    <div class="price-value" id="lastPayment" th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')}"></div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-5">
+                    <i class="fas fa-shopping-bag me-2"></i>Thanh toán ngay
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -157,12 +405,9 @@
 
 
     }
-
-
 </script>
-
 
 <!-- Bootstrap JS (optional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96be113802d208bc',t:'MTc1NDY0NjE4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
