@@ -66,9 +66,9 @@ public class ManagerUserController {
         LoginHistory loginHistory = LoginHistory.builder().user(user).loginTime(LocalDateTime.now()).build();
         managerHistoryLoginService.addLoginHistory(loginHistory);
         if (user.getRole().equals(Role.USER)){
-            return "redirect:/home_user_after_login";
+            return "redirect:/homepage";
         }
-        return "redirect:/homepage"; // hoặc bất kỳ trang mặc định nào
+        return "redirect:/admin";
 
     }
 

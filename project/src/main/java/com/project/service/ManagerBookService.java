@@ -45,6 +45,9 @@ public interface ManagerBookService {
     //
     public Page<Book> filterBooks(String category,String author, String topic,Pageable pageable);
 
+    //Lấy ra tổng số sách
+    public long getCountBook();
+
 
 
 

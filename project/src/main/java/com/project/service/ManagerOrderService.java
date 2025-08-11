@@ -2,6 +2,8 @@ package com.project.service;
 
 import com.project.entity.Order;
 import com.project.entity.User;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ManagerOrderService {
@@ -16,6 +18,12 @@ public interface ManagerOrderService {
 
     //Lấy ra lịch sử mua hàng của người dùng
     public List<Object[]> getHistoryBuyProduct();
+
+    //Lấy ra tổng số đơn hàng
+    public long countOrder();
+
+    //Lấy ra tổng doanh thu
+    public BigDecimal getTotalRevenue();
 
 
 }
