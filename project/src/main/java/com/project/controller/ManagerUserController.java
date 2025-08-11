@@ -110,10 +110,10 @@ public class ManagerUserController {
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
         httpSession.invalidate();
-        return "redirect:/login";
+        return "redirect:/home_user_after_login";
     }
 
-    @GetMapping("/home_after_user_login/move_edit_personal")
+    @GetMapping("/homepage/move_edit_personal")
     public String moveToEditPersonal(HttpServletRequest request, Model model){
         User user = (User) request.getSession().getAttribute("loggedUser");
         if(user.getAvatar() == null) {
@@ -125,7 +125,7 @@ public class ManagerUserController {
         return "edit_personal";
     }
 
-    @PostMapping("/home_after_user_login/edit_personal")
+    @PostMapping("/homepage/edit_personal")
     public String editPersonalInformation(@ModelAttribute User user, HttpServletRequest request){
         User userUpdate = userService.updateUser(user);
         request.getSession().setAttribute("loggedUser",userUpdate);

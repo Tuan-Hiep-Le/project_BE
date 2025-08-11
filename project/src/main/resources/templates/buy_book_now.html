@@ -217,7 +217,7 @@
             <i class="fas fa-book-open me-3"></i>Đặt mua sách ngay
         </h2>
 
-        <form th:action="@{/home_after_user_login/buy_now}" method="post" class="form-card p-4">
+        <form th:action="@{/homepage/buy_now}" method="post" class="form-card p-4">
             <input type="hidden" name="bookId" th:value="${bookId}" />
 
             <div class="mb-4">

@@ -18,7 +18,7 @@ import java.util.List;
 public class ManagerCartController {
     @Autowired
     private ManagerCartItemServiceImpl cartItemService;
-    @GetMapping("/home_after_user_login/move_cart")
+    @GetMapping("/homepage/move_cart")
     public String moveToCart(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user  =  (User) authentication.getPrincipal();
@@ -28,7 +28,7 @@ public class ManagerCartController {
         return "cart_page";
     }
 
-    @PostMapping("/home_after_user_login/move_cart/remove_out_cart")
+    @PostMapping("/homepage/move_cart/remove_out_cart")
     public String removeCartItem(@RequestParam("itemId") Integer cartItemId, Model model){
         cartItemService.removeCartItem(cartItemId);
         model.addAttribute("itemId",cartItemId);
