@@ -25,4 +25,7 @@ public interface UserService {
 
     //Update user
     public User updateUser(User user);
+
+    //Lấy tổng số người dùng
+    public long countUser();
 }

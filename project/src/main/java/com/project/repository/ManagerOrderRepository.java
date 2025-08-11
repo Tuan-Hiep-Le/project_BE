@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
@@ -25,5 +26,9 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
             "JOIN o.orderItems oi ON o.orderId = oi.order.orderId\n" +
             "WHERE o.user = :user")
     public List<Object[]> findHistoryBuyProduct(@Param("user") User user);
+
+    //Lấy ra tổng doanh thu
+    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.statusOrder != 'CANCELED' AND o.statusOrder != 'APPROVING' ")
+    public BigDecimal totalRevenue();
 
 }

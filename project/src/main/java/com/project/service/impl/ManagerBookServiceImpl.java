@@ -150,4 +150,9 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         }
 
     }
+
+    @Override
+    public long getCountBook() {
+        return managerBookRepository.count();
+    }
 }

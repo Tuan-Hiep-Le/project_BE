@@ -93,4 +93,9 @@ public class UserServiceImpl implements UserService {
         userCurrent.setAvatar(user.getAvatar());
         return managerUserRepository.saveAndFlush(userCurrent);
     }
+
+    @Override
+    public long countUser() {
+        return managerUserRepository.count();
+    }
 }
