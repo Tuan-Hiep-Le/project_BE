@@ -51,7 +51,7 @@ public class ManagerOrderController {
         model.addAttribute("message", "Đã đồng bộ dữ liệu phí vận chuyển lên Elasticsearch thành công!");
         return "redirect:/homepage";
     }
-    @GetMapping("/home_after_user_login/switch_buy_now")
+    @GetMapping("/homepage/switch_buy_now")
     public String switchToBuyNow(@RequestParam("bookId") Integer id,Model model){
         Book book = managerBookService.getBookById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,7 +75,7 @@ public class ManagerOrderController {
         return "buy_book_now";
     }
     //Mua ngay san pham
-    @PostMapping("/home_after_user_login/buy_now")
+    @PostMapping("/homepage/buy_now")
     public String createOrderItem(@RequestParam("bookId") Integer id, @RequestParam(value = "quantityBuy") int quantityBuy, @RequestParam("where") String address, @RequestParam(value = "valueVoucherTransfer",required = false) Integer idTransfer, @RequestParam(value = "valueVoucherDiscount",required = false) Integer idDiscount,
                                   @RequestParam(value = "paymentMethod")PaymentMethod paymentMethod, Model model, HttpServletRequest request, HttpSession httpSession){
         Book book = managerBookService.getBookById(id);
@@ -160,7 +160,7 @@ public class ManagerOrderController {
 
         return "page_browsing";
     }
-    @GetMapping("home_after_user_login/checkout_buy_many_product")
+    @GetMapping("homepage/checkout_buy_many_product")
     public String getCheckoutPaymentManyProduct(@RequestParam(value = "cartItemIds", required = false) List<Integer> cartItemIds, @RequestParam Map<String, String> quantityInCart, Model model, HttpServletRequest request){
         if (cartItemIds == null || cartItemIds.isEmpty()) {
             model.addAttribute("error", "Bạn chưa chọn sản phẩm nào để thanh toán.");
@@ -194,7 +194,7 @@ public class ManagerOrderController {
         return "buy_many_product";
     }
 
-    @PostMapping("home_after_user_login/cart/buy_many_product")
+    @PostMapping("/homepage/cart/buy_many_product")
     public String paymentManyProduct(@RequestParam(value = "cartItemIds", required = false) List<Integer> cartItemIds,
                                      @RequestParam Map<String, String> quantityInCart,
                                      @RequestParam("where") String address,
@@ -320,7 +320,7 @@ public class ManagerOrderController {
         return map;
     }
 
-    @GetMapping("/home_after_user_login/history_buy")
+    @GetMapping("/homepage/history_buy")
     public String historyBuyOfUser(Model model){
         List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
         Map<Integer, List<Object[]>> groupedOrders = historyBuy.stream()

@@ -319,38 +319,46 @@
         <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap gap-3">
             <h3 class="mb-0">📚 Hiệu Sách Của Hiệp</h3>
 
-            <form th:action="@{/home_after_user_login/search}" method="get" class="search-container d-flex flex-grow-1 mx-3" style="max-width: 600px;">
+            <form th:action="@{/homepage/search}" method="get" class="search-container d-flex flex-grow-1 mx-3" style="max-width: 600px;">
                 <input type="text" name="keyword" class="form-control me-2" placeholder="Tìm sách theo tên, tác giả, thể loại...">
                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
             </form>
+            <div th:unless="${isLogin}">
+                <div class="d-flex align-items-center gap-3">
+                    <a th:href="@{/login}"  class="btn btn-outline-secondary btn-sm">Đăng nhập</a>
+                    <a th:href="@{/register}"  class="btn btn-outline-secondary btn-sm">Đăng ký</a>
+                </div>
+            </div>
 
-            <div class="d-flex align-items-center gap-3">
-                <div class="dropdown">
-                    <a href="#" class="d-block " data-bs-toggle="dropdown" aria-expanded="false">
-                        <div th:if="${hasAvatar}">
-                            <img th:src="@{${avatar}}" width="60" height="60" class="rounded-circle border" alt="Avatar">
-                        </div>
-                        <div th:unless="${hasAvatar}">
-                            <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="60" height="60" class="rounded-circle border">
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
-                        <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/move_edit_personal}">👤 Trang cá nhân</a></li>
-                        <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
-                        <li>
-                            <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">
+            <div th:if="${isLogin}">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dropdown">
+                        <a href="#" class="d-block " data-bs-toggle="dropdown" aria-expanded="false">
+                            <div th:if="${hasAvatar}">
+                                <img th:src="@{${avatar}}" width="60" height="60" class="rounded-circle border" alt="Avatar">
+                            </div>
+                            <div th:unless="${hasAvatar}">
+                                <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" width="60" height="60" class="rounded-circle border">
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
+                            <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/move_edit_personal}">👤 Trang cá nhân</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
+                            <li>
+                                <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">
                                 🛒 Giỏ hàng
                                 <span class="badge bg-danger rounded-pill ms-1" th:text="${countCartItem}">
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                            </a>
-                        </li>
-                        <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/history_buy}">🧾 Lịch sử mua hàng</a></li>
-                        <li><a class="dropdown-item py-2" th:href="@{/histories_login}">🧾 Lịch sử đăng nhập</a></li>
-                        <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
-                        <li><hr class="dropdown-divider my-2"></li>
-                        <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">🚪 Đăng xuất</a></li>
-                    </ul>
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/history_buy}">🧾 Lịch sử mua hàng</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/histories_login}">🧾 Lịch sử đăng nhập</a></li>
+                            <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
+                            <li><hr class="dropdown-divider my-2"></li>
+                            <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">🚪 Đăng xuất</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -359,9 +367,9 @@
     <!-- 🔗 NAVIGATION -->
     <nav class="bg-white border-bottom py-3">
         <div class="container-fluid d-flex gap-4 flex-wrap align-items-center">
-            <a th:href="@{/home_user_after_login}" class="text-decoration-none">🏠 Trang chủ</a>
+            <a th:href="@{/homepage}" class="text-decoration-none">🏠 Trang chủ</a>
 
-            <form th:action="@{/home_user_after_login}" method="get">
+            <form th:action="@{/homepage}" method="get">
                 <label for="categorySelect">📚 Thể loại:</label>
                 <select name="nameCategory" id="categorySelect" class="form-select form-select-sm d-inline w-auto" >
                     <option value="" th:selected="${nameCategory == null or nameCategory  == ''}">-- Chọn thể loại --</option>
@@ -387,7 +395,7 @@
             </form>
 
 
-            <form method="get" th:action="@{/home_user_after_login}">
+            <form method="get" th:action="@{/homepage}">
                 <div class="dropdown">
                     <label>Hiển thị</label>
                     <input type="hidden" name="valuePage" th:value="${valuePage}" />
@@ -426,10 +434,10 @@
                         <p class="card-text mb-0">📦 <strong>Số lượng:</strong> <span th:text="${book.quantity}" class="fw-bold"></span></p>
                     </div>
                     <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
-                        <form method="post" th:action="@{/home_after_user_login/add_cart_item(bookBuyId=${book.bookId})}">
+                        <form method="post" th:action="@{/homepage/add_cart_item(bookBuyId=${book.bookId})}">
                             <button type="submit" class="btn btn-outline-primary btn-sm" th:disabled="${book.quantity==0}">🛒 Thêm vào giỏ</button>
                         </form>
-                        <a th:if="${book.quantity} > 0" th:href="@{/home_after_user_login/switch_buy_now(bookId=${book.bookId})}" class="btn btn-success btn-sm">💳 Mua ngay</a>
+                        <a th:if="${book.quantity} > 0" th:href="@{/homepage/switch_buy_now(bookId=${book.bookId})}" class="btn btn-success btn-sm">💳 Mua ngay</a>
                         <span th:if="${book.quantity == 0}" class="btn btn-secondary btn-sm disabled">💳 Hết hàng</span>
                     </div>
                 </div>
@@ -440,13 +448,13 @@
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage-1}, valueSize=${valueSize}, nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Previous</a>
+                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage-1}, valueSize=${valueSize}, nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Previous</a>
             </li>
             <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${p}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}" th:text="${p+1}"></a>
+                <a class="page-link" th:href="@{/homepage(valuePage=${p}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}" th:text="${p+1}"></a>
             </li>
             <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
-                <a class="page-link" th:href="@{/home_user_after_login(valuePage=${valuePage+1}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Next</a>
+                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage+1}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Next</a>
             </li>
         </ul>
     </nav>

@@ -20,9 +20,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/images/**","/css/**", "/js/**","/favicon.ico").permitAll()
-                .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","/homepage/search","/homepage/category","/homepage/author","/homepage/topic","/admin/sync-shipcost","/input_email_reset","/send_link","/forget_password").permitAll()
+                .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","/admin/sync-shipcost","/input_email_reset","/send_link",
+                        "/forget_password","/homepage/information_book","/homepage/search").permitAll()
                 .requestMatchers(HttpMethod.POST,"/login","/register","/input_new_password").permitAll()
-                .requestMatchers(HttpMethod.GET,"/home_user_after_login","/homepage/information_book","/home_after_user_login/switch_buy_now").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/homepage/switch_buy_now","/homepage/add_cart_item",
+                        "/homepage/switch_buy_now","/homepage/switch_buy_now").hasRole("USER")
                 .anyRequest().authenticated()
         );
         httpSecurity.securityContext(securityContext -> securityContext.securityContextRepository(securityContextRepository())).exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login") ));

@@ -29,7 +29,7 @@ public class ManagerCartItemController {
     private ManagerCartServiceImpl managerCartService;
 
     //Thêm vào giỏ hàng
-    @PostMapping("/home_after_user_login/add_cart_item")
+    @PostMapping("/homepage/add_cart_item")
     public String addCartItemInCart(@RequestParam("bookBuyId") Integer id, Model model){
         model.addAttribute("bookBuyId",id);
         Book book = managerBookService.getBookById(id);
@@ -55,7 +55,7 @@ public class ManagerCartItemController {
             CartItem cartItem = CartItem.builder().book(book).cart(cart).quantity(1).timeAdd(timeAdd).build();
             managerCartItemService.addCartItem(cartItem);
         }
-        return "redirect:/home_user_after_login";
+        return "redirect:/homepage";
     }
 
 
