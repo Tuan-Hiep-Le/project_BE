@@ -420,6 +420,10 @@
             <div th:if="${notFound}" class="not-found">
                 <p>📚 Không tìm thấy cuốn sách nào! Hãy thử tìm kiếm với từ khóa khác.</p>
             </div>
+            <div th:if="${isFindBook==false}">
+                <p> Không tìm thấy cuốn sách nào!</p>
+            </div>
+            
             <div class="col-md-4" th:each="book : ${books.content}">
                 <div class="card shadow-sm h-100 book-card">
                     <a th:href="@{/homepage/information_book(bookid=${book.bookId})}">

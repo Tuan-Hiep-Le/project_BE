@@ -3,598 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background: #f8f9fa;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-
-
-        /* Header Styling */
-        header {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-            animation: slideDown 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        header h3 {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-            font-size: 1.8rem;
-            text-shadow: none;
-        }
-
-        /* Avatar Styling */
-        .avatar-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border: 3px solid #667eea !important;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .avatar-img:hover {
-            transform: scale(1.1) rotate(5deg);
-            border-color: #764ba2 !important;
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
-        }
-
-        /* Dropdown Menu */
-        .dropdown-menu {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-            border-radius: 20px !important;
-            padding: 20px !important;
-            min-width: 250px;
-            animation: dropdownSlide 0.3s ease-out;
-        }
-
-        @keyframes dropdownSlide {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .dropdown-item {
-            border-radius: 12px !important;
-            margin: 5px 0 !important;
-            padding: 15px 20px !important;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .dropdown-item:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2) !important;
-            color: white !important;
-            transform: translateX(10px);
-        }
-
-        .dropdown-item.text-danger:hover {
-            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-            color: white !important;
-        }
-
-        /* Menu Toggle Button */
-        .menu-toggle {
-            position: fixed;
-            top: 100px;
-            left: 30px;
-            z-index: 1050;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            color: white;
-            border-radius: 20px;
-            padding: 15px 25px;
-            font-weight: 600;
-            font-size: 1rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-            animation: bounceIn 1s ease-out;
-            pointer-events: auto;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .menu-toggle:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-        }
-
-        .menu-toggle:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        /* Offcanvas Sidebar */
-        .offcanvas {
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%) !important;
-            border: none !important;
-            width: 320px !important;
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
-            z-index: 1045 !important;
-        }
-
-        .offcanvas-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-            padding: 30px 25px !important;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .offcanvas-title {
-            color: white !important;
-            font-weight: 800;
-            font-size: 1.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-close {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border-radius: 50% !important;
-            padding: 12px !important;
-            opacity: 1 !important;
-            transition: all 0.3s ease;
-        }
-
-        .btn-close:hover {
-            background: rgba(255, 255, 255, 0.3) !important;
-            transform: rotate(90deg) scale(1.1);
-        }
-
-        /* Sidebar Menu Items */
-        .offcanvas-body {
-            padding: 30px 25px !important;
-        }
-
-        .offcanvas-body a {
-            display: flex;
-            align-items: center;
-            padding: 18px 25px;
-            margin: 10px 0;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            border-radius: 18px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .offcanvas-body a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .offcanvas-body a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-            transform: translateX(15px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .offcanvas-body a:hover::before {
-            left: 100%;
-        }
-
-        .offcanvas-body a:active {
-            transform: translateX(10px) scale(0.98);
-        }
-
-        /* Menu Icons */
-        .menu-icon {
-            margin-right: 15px;
-            font-size: 1.2rem;
-            width: 25px;
-            text-align: center;
-        }
-
-        /* Main Content Area */
-        main {
-            margin-left: 0;
-            padding: 40px;
-            min-height: calc(100vh - 120px);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Content Message */
-        .content-message {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 500;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .menu-toggle {
-                top: 90px;
-                left: 20px;
-                padding: 12px 20px;
-                font-size: 0.9rem;
-            }
-
-            header h3 {
-                font-size: 1.4rem;
-            }
-
-            .avatar-img {
-                width: 50px;
-                height: 50px;
-            }
-
-            main {
-                padding: 25px 20px;
-            }
-
-            .offcanvas {
-                width: 280px !important;
-            }
-        }
-
-        /* Scrollbar Styling */
-        .offcanvas-body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .offcanvas-body::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        .offcanvas-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-        }
-
-        .offcanvas-body::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Dashboard Overview Styles */
-        .dashboard-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #2d3748;
-            margin-bottom: 40px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-card:hover::before {
-            left: 100%;
-        }
-
-        .stat-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover .stat-icon {
-            transform: rotate(10deg) scale(1.1);
-        }
-
-        .books-card .stat-icon {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .orders-card .stat-icon {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-        }
-
-        .users-card .stat-icon {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-
-        .revenue-card .stat-icon {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #718096;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #2d3748;
-            line-height: 1;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover .stat-value {
-            transform: scale(1.05);
-        }
-
-        .stat-description {
-            font-size: 0.9rem;
-            color: #a0aec0;
-            font-weight: 500;
-        }
-
-        .growth-indicator {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .growth-positive {
-            background: rgba(72, 187, 120, 0.1);
-            color: #48bb78;
-        }
-
-        .growth-neutral {
-            background: rgba(66, 153, 225, 0.1);
-            color: #4299e1;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Loading Animation */
-        .stat-value {
-            background: linear-gradient(90deg, #2d3748 25%, transparent 50%, #2d3748 75%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-            100% {
-                background-position: 200% 0;
-            }
-        }
-    </style>
+    <title>Trang Admin - Hiệu Sách Của Hiệp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/admin-home.css}">
+    <link rel="stylesheet" th:href="@{/css/overview.css}">
+    <link rel="stylesheet" th:href="@{/css/manage_book.css}">
 </head>
-<body>
+<body class="admin-home bg-gray-50 min-h-screen">
+<!-- Header -->
+<header class="gradient-bg shadow-lg relative z-40">
+    <div class="px-8 py-5">
+        <div class="flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-4">
+                <div class="bg-white bg-opacity-20 p-4 rounded-full">
+                    <i class="fas fa-book text-white text-2xl"></i>
+                </div>
+                <h1 class="text-white text-3xl font-bold">Hiệu Sách Của Hiệp</h1>
+            </div>
 
+            <!-- User Profile -->
+            <div class="relative">
+                <button id="profileToggle" class="flex items-center space-x-4 bg-white bg-opacity-20 rounded-full p-3 hover:bg-opacity-30 transition-all duration-300">
+                    <img th:src="@{/images/sach-anh-dep3.jpg}"
+                         alt="Avatar"
+                         class="w-14 h-14 rounded-full border-2 border-white object-cover">
+                    <span class="text-white font-medium text-lg">Admin</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </button>
 
-<header class="bg-light p-3 shadow-sm">
-    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <h3 class="mb-0">
-            <i class="fas fa-book-open me-2"></i>
-            Hiệu Sách Của Hiệp
-        </h3>
-        <div class="d-flex align-items-center gap-3">
-            <div class="dropdown">
-                <a href="#" class="d-block" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div th:if="${hasAvatar}">
-                        <img th:src="@{${avatar}}" class="rounded-circle border avatar-img" alt="Avatar">
+                <!-- Dropdown Menu -->
+                <div id="profileDropdown" class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border-0 py-2 hidden">
+                    <div class="px-4 py-3 border-b border-gray-100">
+                        <p class="text-sm font-medium text-gray-900">Xin chào, Admin!</p>
                     </div>
-                    <div th:unless="${hasAvatar}">
-                        <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" class="rounded-circle border avatar-img">
-                    </div>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
-                    <li><a class="dropdown-item py-2" th:href="@{/homepage/move_edit_personal}">
-                        <i class="fas fa-user me-2"></i> Trang cá nhân
-                    </a></li>
-                    <li><a class="dropdown-item py-2" href="#">
-                        <i class="fas fa-history me-2"></i> Lịch sử đăng nhập
-                    </a></li>
-                    <li><a class="dropdown-item py-2" href="#">
-                        <i class="fas fa-cog me-2"></i> Cài đặt
-                    </a></li>
-                    <li><hr class="dropdown-divider my-2"></li>
-                    <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">
-                        <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
-                    </a></li>
-                </ul>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-user mr-3 text-blue-500"></i>
+                        Trang cá nhân
+                    </a>
+                    <a th:href="@{/histories_login}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-history mr-3 text-green-500"></i>
+                        Lịch sử đăng nhập
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-cog mr-3 text-gray-500"></i>
+                        Cài đặt
+                    </a>
+                    <hr class="my-2">
+                    <a th:href="@{/logout}" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Đăng xuất
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Menu Toggle Button -->
-<button class="btn menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-    <i class="fas fa-bars me-2"></i> Menu Quản Trị
-</button>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-full w-72 gradient-bg z-30">
+    <div class="p-8 pt-32">
 
-<!-- Offcanvas Sidebar -->
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
-            <i class="fas fa-clipboard-list me-2"></i>
-            Menu Quản Trị
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div class="space-y-3">
+            <div class="text-white text-sm font-medium mb-6 opacity-75 uppercase tracking-wider">QUẢN LÝ</div>
+
+            <a th:href="@{/admin}" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                <i class="fas fa-book-open w-6 text-xl"></i>
+                <span>Tổng quan</span>
+            </a>
+
+            <a th:href="@{/admin/manage_book}" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                <i class="fas fa-book-open w-6 text-xl"></i>
+                <span>Quản lý sách</span>
+            </a>
+
+            <a href="#" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                <i class="fas fa-users w-6 text-xl"></i>
+                <span>Quản lý người dùng</span>
+            </a>
+
+            <a href="#" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                <i class="fas fa-shopping-cart w-6 text-xl"></i>
+                <span>Quản lý đơn hàng</span>
+            </a>
+
+            <a href="#" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                <i class="fas fa-ticket-alt w-6 text-xl"></i>
+                <span>Quản lý voucher</span>
+            </a>
+
+            <div class="pt-6">
+                <div class="text-white text-sm font-medium mb-6 opacity-75 uppercase tracking-wider">THỐNG KÊ</div>
+                <a href="#" class="sidebar-item flex items-center space-x-4 text-white p-4 rounded-xl text-lg">
+                    <i class="fas fa-chart-bar w-6 text-xl"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="offcanvas-body">
-        <a href="#" data-bs-dismiss="offcanvas">
-            <i class="fas fa-home menu-icon"></i>
-            Tổng quan
-        </a>
-        <a th:href="@{/admin/manage_book}">
-            <i class="fas fa-book menu-icon"></i>
-            Quản lý sách
-        </a>
-        <a href="#">
-            <i class="fas fa-users menu-icon"></i>
-            Quản lý người dùng
-        </a>
-        <a href="#">
-            <i class="fas fa-shopping-cart menu-icon"></i>
-            Quản lý đơn hàng
-        </a>
-        <a href="#">
-            <i class="fas fa-ticket-alt menu-icon"></i>
-            Quản lý voucher
-        </a>
-        <a href="#">
-            <i class="fas fa-chart-bar menu-icon"></i>
-            Dashboard
-        </a>
+</aside>
+
+<!-- Main Content -->
+<main class="ml-72 min-h-screen">
+    <div class="p-10">
+        <!-- Content Area - Ready for your fragments -->
+        <div class="bg-white rounded-2xl shadow-lg p-10">
+            <!-- Your Thymeleaf content will be inserted here -->
+            <div id="content-placeholder">
+                <main th:replace="${section} :: ${section}"></main>
+                <!-- This is where your manage_book fragment or other content will appear -->
+            </div>
+        </div>
     </div>
-</div>
-
-<main>
-    <div th:replace="overview:: overview"></div>
-
 </main>
 
-<!-- Scripts -->
 <script>
-    // Handle menu item clicks to close sidebar
-    document.querySelectorAll('#offcanvasWithBothOptions .offcanvas-body a').forEach(link => {
-        link.addEventListener('click', () => {
-            const offcanvasEl = document.getElementById('offcanvasWithBothOptions');
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-            if (bsOffcanvas) {
-                bsOffcanvas.hide();
-            }
-        });
+    // Profile dropdown toggle
+    const profileToggle = document.getElementById('profileToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    profileToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('hidden');
     });
 
-    // Handle menu button visibility when sidebar opens/closes
-    document.addEventListener('DOMContentLoaded', function() {
-        const offcanvasEl = document.getElementById('offcanvasWithBothOptions');
-        const toggleBtn = document.querySelector('.menu-toggle');
-
-        if (offcanvasEl && toggleBtn) {
-            // When sidebar starts to open
-            offcanvasEl.addEventListener('show.bs.offcanvas', function () {
-                toggleBtn.style.opacity = '0';
-                toggleBtn.style.pointerEvents = 'none';
-            });
-
-            // When sidebar is fully closed
-            offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
-                toggleBtn.style.opacity = '1';
-                toggleBtn.style.pointerEvents = 'auto';
-            });
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
+            profileDropdown.classList.add('hidden');
         }
     });
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1ERo0BZlK" crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d6e805431e84ca',t:'MTc1NDkwNjY0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    // Additional functionality can be added here as needed
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96dc4cf1b62be69a',t:'MTc1NDk2MzIwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

@@ -11,9 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -146,6 +148,7 @@ public class ManagerBookController {
         model.addAttribute("nameCategory",category);
         model.addAttribute("nameAuthor",nameAuthor);
         model.addAttribute("nameTopic",nameTopic);
+        model.addAttribute("isFindBook",!pageResult.isEmpty());
 
         return"home_after_login";
     }
@@ -240,6 +243,15 @@ public class ManagerBookController {
         }
         model.addAttribute("is_review_book", isReviewBook);
         return "product_detail";
+    }
+
+    //Xóa Sách
+    @PostMapping("/admin/remove")
+    public String deleteBookById(@RequestParam("bookId") Integer bookId,Model model){
+        Book book = managerBookService.getBookById(bookId);
+        book.setDeleted(true);
+        model.addAttribute("section","manage_book");
+        return "admin_home";
     }
 
 

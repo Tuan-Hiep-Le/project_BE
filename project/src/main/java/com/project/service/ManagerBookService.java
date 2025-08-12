@@ -48,6 +48,9 @@ public interface ManagerBookService {
     //Lấy ra tổng số sách
     public long getCountBook();
 
+    //Lấy ra tổng số sách đã hết hàng
+    public int totalBookQuantity0();
+
 
 
 
