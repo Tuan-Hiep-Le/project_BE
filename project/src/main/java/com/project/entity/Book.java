@@ -35,4 +35,6 @@ public class Book {
     private int quantity;
     @Column(name = "book_detail")
     private String bookDetail;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }

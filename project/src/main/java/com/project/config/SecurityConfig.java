@@ -21,7 +21,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/images/**","/css/**", "/js/**","/favicon.ico").permitAll()
                 .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","/admin/sync-shipcost","/input_email_reset","/send_link",
-                        "/forget_password","/homepage/information_book","/homepage/search").permitAll()
+                        "/forget_password","/homepage/information_book","/homepage/search","/overview").permitAll()
                 .requestMatchers(HttpMethod.POST,"/login","/register","/input_new_password").permitAll()
                 .requestMatchers(HttpMethod.GET,"/homepage/switch_buy_now","/homepage/add_cart_item",
                         "/homepage/switch_buy_now","/homepage/switch_buy_now").hasRole("USER")

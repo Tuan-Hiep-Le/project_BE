@@ -27,7 +27,7 @@ public class ManagerAdminController {
     @Autowired
     private ManagerOrderServiceImpl managerOrderService;
     @GetMapping("/admin")
-    public String adminHome(Model model){
+    public String adminHome(Model model,@RequestParam(defaultValue = "overview") String section){
         long totalBook = managerBookService.getCountBook();
         long totalUser = userService.countUser();
         long totalOrder = managerOrderService.countOrder();
@@ -36,28 +36,22 @@ public class ManagerAdminController {
         model.addAttribute("totalUser",totalUser);
         model.addAttribute("totalOrder",totalOrder);
         model.addAttribute("totalRevenue",totalRevenue);
+        model.addAttribute("section",section);
         return "admin_home";
     }
-//    @GetMapping("/admin")
-//    public String adminHome(Model model,  @RequestParam(value = "valuePage", defaultValue = "0") int valuePage,@RequestParam(value = "openMenu", defaultValue = "false") boolean openMenu){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = (User) authentication.getPrincipal();
-//        if (user.getAvatar() != null) {
-//            model.addAttribute("hasAvatar",true);
-//        } else {
-//            model.addAttribute("hasAvatar",false);
-//        }
-//
-//        Pageable pageable = PageRequest.of(valuePage,10);
-//        Page<Book> books = managerBookService.getAllBook(pageable);
-//        model.addAttribute("valuePage", valuePage);
-//        model.addAttribute("books", books);
-//        model.addAttribute("totalPage", books.getTotalPages());
-//        model.addAttribute("content", "manage_book :: content");
-//        model.addAttribute("openMenu", openMenu); // ✅ truyền trạng thái
-//        return "admin_home";
-//    }
 
+    @GetMapping("/overview")
+    public String moveOverview(Model model){
+        long totalBook = managerBookService.getCountBook();
+        long totalUser = userService.countUser();
+        long totalOrder = managerOrderService.countOrder();
+        BigDecimal totalRevenue = managerOrderService.getTotalRevenue();
+        model.addAttribute("totalBook",totalBook);
+        model.addAttribute("totalUser",totalUser);
+        model.addAttribute("totalOrder",totalOrder);
+        model.addAttribute("totalRevenue",totalRevenue);
+        return "overview";
+    }
 
     @GetMapping("/admin/manage_book")
     public String managerBook(Model model, @RequestParam(value = "valuePage",defaultValue = "0") int valuePage ){
@@ -66,7 +60,7 @@ public class ManagerAdminController {
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("books",books);
         model.addAttribute("totalPage",(books.getTotalPages()));
-
+        model.addAttribute("section","manage_book");
         return "admin_home";
     }
 }

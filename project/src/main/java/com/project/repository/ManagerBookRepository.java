@@ -36,6 +36,10 @@ public interface ManagerBookRepository extends JpaRepository<Book,Integer> {
 
     @Query("SELECT DISTINCT b.nameTopic FROM Book b")
     public List<String> listTopic();
+    @Query("SELECT COUNT(b) FROM Book b WHERE b.quantity = 0")
+    public int getCountBookQuantity0();
+
+    public Page<Book> findByIsDeletedFalse(Pageable pageable);
 
 
 

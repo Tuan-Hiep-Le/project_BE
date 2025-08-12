@@ -1,0 +1,251 @@
+ body.manage_book {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-title i {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+
+        .controls-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 1rem 0.75rem;
+            text-align: center;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+            transform: scale(1.01);
+        }
+
+        .table tbody td, .table tbody th {
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
+            text-align: center;
+            border: none;
+        }
+
+        .table tbody th {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .table tbody td {
+            color: #718096;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #e53e3e, #fc8181);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+            color: white;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #38a169, #68d391);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .pagination-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .pagination {
+            margin: 0;
+        }
+        .pagination {
+            display: flex !important;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .page-link {
+            border: none;
+            color: #667eea;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .page-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+        }
+
+        .page-item.disabled .page-link {
+            color: #a0aec0;
+            background: #f7fafc;
+        }
+
+        .price-cell {
+            font-weight: 600;
+            color: #38a169;
+        }
+
+        .quantity-cell {
+            font-weight: 600;
+            color: #3182ce;
+        }
+
+        .id-cell {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table tbody tr {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .table tbody tr:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            animation-delay: 0.05s;
+        }

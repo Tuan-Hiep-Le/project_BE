@@ -23,7 +23,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
 
     @Override
     public Page<Book> getAllBook(Pageable pageable) {
-        return managerBookRepository.findAll(pageable);
+        return managerBookRepository.findByIsDeletedFalse(pageable);
 
     }
 
@@ -154,5 +154,10 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     @Override
     public long getCountBook() {
         return managerBookRepository.count();
+    }
+
+    @Override
+    public int totalBookQuantity0() {
+        return managerBookRepository.getCountBookQuantity0();
     }
 }
