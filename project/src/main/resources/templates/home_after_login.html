@@ -41,7 +41,7 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
-                            <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/move_edit_personal}">👤 Trang cá nhân</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/homepage/move_edit_personal}">👤 Trang cá nhân</a></li>
                             <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
                             <li>
                                 <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">
@@ -51,7 +51,7 @@
                                 </span>
                                 </a>
                             </li>
-                            <li><a class="dropdown-item py-2" th:href="@{/home_after_user_login/history_buy}">🧾 Lịch sử mua hàng</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/homepage/history_buy}">🧾 Lịch sử mua hàng</a></li>
                             <li><a class="dropdown-item py-2" th:href="@{/histories_login}">🧾 Lịch sử đăng nhập</a></li>
                             <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
                             <li><hr class="dropdown-divider my-2"></li>
@@ -131,7 +131,14 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${book.nameBook}">Tên sách</h5>
                         <p class="card-text mb-2">👤 <strong>Tác giả:</strong> <span th:text="${book.nameAuthor}"></span></p>
-                        <p class="card-text mb-2">🌐 <strong>Ngôn ngữ:</strong> <span th:text="${book.language}"></span></p>
+                        <p class="card-text mb-2">📚 <strong>Ngôn ngữ:</strong>
+                            <span th:switch="${book.language}">
+                                <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>
+                                <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
+                            </span>
+
+                        </p>
+
                         <p class="card-text mb-2">💡 <strong>Chủ đề:</strong> <span th:text="${book.nameTopic}"></span></p>
                         <p class="card-text mb-2">📚 <strong>Thể loại:</strong> <span th:text="${book.nameCategory}"></span></p>
                         <p class="card-text mb-0">📦 <strong>Số lượng:</strong> <span th:text="${book.quantity}" class="fw-bold"></span></p>

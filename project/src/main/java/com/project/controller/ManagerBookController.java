@@ -5,6 +5,7 @@ import com.project.entity.*;
 import com.project.entity.elastic.BookDocument;
 import com.project.service.impl.*;
 import com.project.service.impl.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +16,15 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -44,72 +51,6 @@ public class ManagerBookController {
         model.addAttribute("message", "Đã đồng bộ dữ liệu lên Elasticsearch thành công!");
         return "redirect:/homepage";
     }
-    //Trang Chủ Trước Khi Đăng Nhập
-//    @GetMapping("/homepage")
-//    public String getAllBookInStore(Pageable pageable, Model model,@RequestParam(value = "nameCategory",required = false) String category, @RequestParam(value = "nameAuthor", required = false) String nameAuthor,@RequestParam(value = "nameTopic",required = false) String nameTopic){
-//        boolean isFiltering = (category != null && !category.isEmpty()) || (nameAuthor != null && !nameAuthor.isEmpty()) || (nameTopic != null && !nameTopic.isEmpty());
-//        Page<Book> pageResult = isFiltering ? managerBookService.filterBooks(category, nameAuthor, nameTopic, pageable) : managerBookService.getAllBook(pageable);
-//        List<String> listAuthor = managerBookService.getAllAuthor();
-//        List<String> listCategory = managerBookService.getAllCategory();
-//        List<String> listTopic = managerBookService.getAllTopic();
-//        model.addAttribute("nameCategory",category);
-//        model.addAttribute("nameAuthor",nameAuthor);
-//        model.addAttribute("nameTopic",nameTopic);
-//        model.addAttribute("books",pageResult);
-//        model.addAttribute("authors",listAuthor);
-//        model.addAttribute("categories",listCategory);
-//        model.addAttribute("topics",listTopic);
-//
-//        return "home";
-//    }
-
-//    //Tìm kiếm sách
-//    @GetMapping("/homepage/search")
-//    public String searchBookByKeyword(@RequestParam(value = "keyword",required = false) String key,@RequestParam(value = "valuePage", defaultValue = "0") int valuePage,@RequestParam(value = "valueSize",defaultValue = "10") int valueSize,Model model){
-//        Pageable pageable = PageRequest.of(valuePage,valueSize);
-//        Page<BookDocument> bookDocuments = searchBookService.searchBookByNameBookAndAuthorAndCategoryAndTopic(key,pageable);
-//        if(bookDocuments.isEmpty()){
-//            model.addAttribute("notFound",true);
-//        }else {
-//            model.addAttribute("notFound",false);
-//        }
-//        model.addAttribute("books",bookDocuments);
-//        model.addAttribute("keyword",key);
-//        model.addAttribute("valuePage",valuePage);
-//        model.addAttribute("valueSize",valuePage);
-//        return "home";
-//    }
-
-//    //Phân loại sách theo thể loại
-//    @GetMapping("/homepage/category")
-//    public String classifyBookByCategory(@RequestParam("category") String nameCategory, Pageable pageable,Model model){
-//        Page<Book> listBook = managerBookService.findByCategory(nameCategory,pageable);
-//        List<String> listCategory = managerBookService.getAllCategory();
-//        model.addAttribute("books",listBook);
-//        model.addAttribute("category",nameCategory);
-//        model.addAttribute("categories", listCategory);
-//        return "home";
-//    }
-    //Phân loại sách theo tác giả
-//    @GetMapping("/homepage/author")
-//    public String classifyBookByAuthor(@RequestParam("name_author") String nameAuthor, Pageable pageable, Model model){
-//        Page<Book> listBook = managerBookService.findByAuthor(nameAuthor,pageable);
-//        List<String> listAuthor = managerBookService.getAllAuthor();
-//        model.addAttribute("books",listBook);
-//        model.addAttribute("name_author",nameAuthor);
-//        model.addAttribute("authors",listAuthor);
-//        return "home";
-//    }
-    //Phân loại sách theo chủ đề
-//    @GetMapping("/homepage/topic")
-//    public String classifyBookByTopic(@RequestParam("name_topic") String nameTopic, Pageable pageable, Model model){
-//        Page<Book> listBook = managerBookService.findByTopic(nameTopic,pageable);
-//        List<String> listTopic = managerBookService.getAllTopic();
-//        model.addAttribute("books",listBook);
-//        model.addAttribute("name_topic",nameTopic);
-//        model.addAttribute("topics",listTopic);
-//        return "home";
-//    }
 
     //Trang Chủ Sau Khi Đăng Nhập
     @GetMapping("/homepage")
@@ -247,12 +188,60 @@ public class ManagerBookController {
 
     //Xóa Sách
     @PostMapping("/admin/remove")
-    public String deleteBookById(@RequestParam("bookId") Integer bookId,Model model){
+    public String deleteBookById(@RequestParam("bookId") Integer bookId,Model model, @RequestParam(value = "valuePage",defaultValue = "0") int valuePage ){
         Book book = managerBookService.getBookById(bookId);
         book.setDeleted(true);
+        managerBookService.updateBook(book);
+        Pageable pageable = PageRequest.of(valuePage,10);
+        Page<Book> books = managerBookService.getAllBook(pageable);
+        model.addAttribute("books",books);
         model.addAttribute("section","manage_book");
+        model.addAttribute("totalPage",(books.getTotalPages()));
+        model.addAttribute("valuePage",valuePage);
         return "admin_home";
     }
+
+    @GetMapping("/admin/move_edit")
+    public String moveEditBook(@RequestParam("bookId")Integer id,Model model){
+        model.addAttribute("bookId",id);
+        Book book = managerBookService.getBookById(id);
+        model.addAttribute("bookId",id);
+        model.addAttribute("book",book);
+        return "edit_book";
+    }
+
+    //Sửa sách
+    @PostMapping("/admin/edit_book")
+    public String updateBookOnWebsite(@RequestParam("bookId") Integer bookId, @ModelAttribute("book") Book book){
+        Book currentBook = managerBookService.getBookById(bookId); // Lấy bản gốc
+        managerBookService.updateBook(book);
+        return "redirect:/admin/manage_book";
+    }
+
+    @PostMapping("/admin/upload_book")
+    public String uploadImgBook(@RequestParam("avatar") MultipartFile multipartFile, HttpServletRequest request,@RequestParam("bookId") Integer bookId){
+        Path projectPath = Paths.get("").toAbsolutePath();
+        Book book = managerBookService.getBookById(bookId);
+        Path uploadPath = projectPath.resolve("project").resolve("uploads").resolve("book");
+        if (!multipartFile.isEmpty()){
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String fileName = "imageBook" + book.getBookId() + "_" + System.currentTimeMillis() + ".jpg";
+                Path filePath = uploadPath.resolve(fileName);
+                Files.write(filePath,multipartFile.getBytes());
+                book.setBookImage("/uploads/book/" + fileName);
+                managerBookService.updateBook(book);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+
 
 
 

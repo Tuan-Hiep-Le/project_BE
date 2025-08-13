@@ -42,7 +42,13 @@
                 <th th:text="${book.bookId}" class="id-cell"></th>
                 <td th:text="${book.nameBook}"></td>
                 <td th:text="${book.nameAuthor}"></td>
-                <td th:text="${book.language}"></td>
+                <!--<td th:text="${book.language}"></td> -->
+                <td>
+                    <span th:switch="${book.language}">
+                        <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>
+                        <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
+                    </span>
+                </td>
                 <td th:text="${book.price}" class="price-cell"></td>
                 <td th:text="${book.quantity}" class="quantity-cell"></td>
                 <td>
@@ -53,7 +59,7 @@
                                 Xóa
                             </button>
                         </form>
-                        <a href="#" class="btn-edit">
+                        <a th:href="@{/admin/move_edit(bookId = ${book.bookId})}" class="btn-edit">
                             <i class="fas fa-edit"></i>
                             Sửa
                         </a>

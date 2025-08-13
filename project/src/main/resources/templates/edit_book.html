@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<form th:action="@{/admin/edit_book}" method="post" th:object="${book}">
+    <input type="hidden" th:field="*{bookId}">
+    <div>
+        <label for="nameBook">Tên sách:</label>
+        <input type="text" id="nameBook" th:field="*{nameBook}" required>
+    </div>
+
+    <div>
+        <label for="nameAuthor">Tên tác giả:</label>
+        <input type="text" id="nameAuthor" th:field="*{nameAuthor}" required>
+    </div>
+
+    <div>
+        <select th:field="*{language}" required>
+            <option value="ENGLISH">Tiếng Anh</option>
+            <option value="VIETNAMESE">Tiếng Việt</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="nameCategory">Thể loại:</label>
+        <input type="text" id="nameCategory" th:field="*{nameCategory}" required>
+    </div>
+
+    <div>
+        <label for="nameTopic">Chủ đề:</label>
+        <input type="text" id="nameTopic" th:field="*{nameTopic}" required>
+    </div>
+
+    <div>
+        <label for="price">Giá:</label>
+        <input type="number" id="price" th:field="*{price}" required>
+    </div>
+
+    <div>
+        <label for="quantity">Số lượng:</label>
+        <input type="number" id="quantity" th:field="*{quantity}" required>
+    </div>
+    <div>
+        <button type="submit">Cập nhật sách</button>
+    </div>
+
+</form>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import com.project.entity.User;
 import com.project.service.impl.ManagerBookServiceImpl;
 import com.project.service.impl.ManagerOrderServiceImpl;
 import com.project.service.impl.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -27,7 +30,14 @@ public class ManagerAdminController {
     @Autowired
     private ManagerOrderServiceImpl managerOrderService;
     @GetMapping("/admin")
-    public String adminHome(Model model,@RequestParam(defaultValue = "overview") String section){
+    public String adminHome(Model model, @RequestParam(defaultValue = "overview") String section, HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if (user.getAvatar() != null) {
+            model.addAttribute("hasAvatar",true);
+            model.addAttribute("avatar",user.getAvatar());
+        } else {
+            model.addAttribute("hasAvatar",false);
+        }
         long totalBook = managerBookService.getCountBook();
         long totalUser = userService.countUser();
         long totalOrder = managerOrderService.countOrder();
@@ -63,4 +73,5 @@ public class ManagerAdminController {
         model.addAttribute("section","manage_book");
         return "admin_home";
     }
+
 }

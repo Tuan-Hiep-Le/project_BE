@@ -26,10 +26,10 @@
             <!-- User Profile -->
             <div class="relative">
                 <button id="profileToggle" class="flex items-center space-x-4 bg-white bg-opacity-20 rounded-full p-3 hover:bg-opacity-30 transition-all duration-300">
-                    <img th:src="@{/images/sach-anh-dep3.jpg}"
+                    <img th:src="${hasAvatar} ? @{${avatar}} : @{/images/sach-anh-dep3.jpg}"
                          alt="Avatar"
                          class="w-14 h-14 rounded-full border-2 border-white object-cover">
-                    <span class="text-white font-medium text-lg">Admin</span>
+                    <span class="text-white font-medium text-lg" th:text="${username}">Admin</span>
                     <i class="fas fa-chevron-down text-white"></i>
                 </button>
 
@@ -38,7 +38,7 @@
                     <div class="px-4 py-3 border-b border-gray-100">
                         <p class="text-sm font-medium text-gray-900">Xin chào, Admin!</p>
                     </div>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                    <a th:href="@{/homepage/move_edit_personal}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                         <i class="fas fa-user mr-3 text-blue-500"></i>
                         Trang cá nhân
                     </a>
