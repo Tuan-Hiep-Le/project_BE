@@ -53,7 +53,10 @@
                                 <span class="text-2xl mr-3">🌐</span>
                                 <div>
                                     <p class="text-sm text-gray-600 font-medium">Ngôn ngữ</p>
-                                    <p class="text-lg font-semibold text-gray-800" th:text="*{language}"></p>
+                                    <span th:switch="*{language}">
+                                        <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>
+                                        <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>

@@ -68,7 +68,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     @Override
     @Transactional
     public Book updateBook(Book book) {
-        Book bookExist = managerBookRepository.findByNameBookAndNameAuthorAndLanguage(book.getNameBook(), book.getNameAuthor(), book.getLanguage());
+        Book bookExist = managerBookRepository.findByBookId(book.getBookId());
         if (bookExist == null){
             throw new RuntimeException("Sách không tồn tại");
         }

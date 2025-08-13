@@ -127,18 +127,23 @@ public class ManagerUserController {
 
     @PostMapping("/homepage/edit_personal")
     public String editPersonalInformation(@ModelAttribute User user, HttpServletRequest request){
+        User curentUser = (User) request.getSession().getAttribute("loggedUser");
+        user.setAvatar(curentUser.getAvatar());
         User userUpdate = userService.updateUser(user);
         request.getSession().setAttribute("loggedUser",userUpdate);
-        return "redirect:/home_after_user_login/move_edit_personal";
+        return "redirect:/homepage/move_edit_personal";
     }
 
     @PostMapping("/upload_avatar")
     public String uploadAvatar(@RequestParam("avatar")MultipartFile multipartFile, HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("loggedUser");
         Path projectPath = Paths.get("").toAbsolutePath();
-        Path uploadPath = projectPath.resolve("project").resolve("uploads");
-
-        System.out.println("Đường dẫn upload: " + uploadPath.toAbsolutePath());
+        Path uploadPath;
+        if (user.getRole() == Role.USER) {
+            uploadPath = projectPath.resolve("project").resolve("uploads").resolve("user");
+        } else {
+            uploadPath = projectPath.resolve("project").resolve("uploads").resolve("admin");
+        }
 
         if (!multipartFile.isEmpty()) {
             try {
@@ -146,22 +151,35 @@ public class ManagerUserController {
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
-                String fileName = "avatar_"+user.getUserId()+"_"+System.currentTimeMillis()+".jpg";
+                String fileName;
+                if (user.getRole() == Role.USER) {
+                    fileName = "avatar_user" + user.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
+                } else {
+                    fileName = "avatar_admin" + user.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
+                }
                 Path filePath = uploadPath.resolve(fileName);
                 Files.write(filePath,multipartFile.getBytes());
-                user.setAvatar("/uploads/"+fileName);
+                if (user.getRole() == Role.USER) {
+                    user.setAvatar("/uploads/user/" + fileName);
+                } else {
+                    user.setAvatar("/uploads/admin/" + fileName);
+                }
                 User userUpdate = userService.updateUser(user);
                 request.getSession().setAttribute("loggedUser",userUpdate);
             }catch (IOException e){
                 e.printStackTrace();
             }
         }
-        return "redirect:/home_after_user_login/move_edit_personal";
+        return "redirect:/homepage/move_edit_personal";
     }
 
     @GetMapping("/return_home")
-    public String returnHome(){
-        return "redirect:/home_user_after_login";
+    public String returnHome(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if (user.getRole() == Role.USER) {
+            return "redirect:/homepage";
+        }
+        return "redirect:/admin";
     }
 
     @GetMapping("/histories_login")
