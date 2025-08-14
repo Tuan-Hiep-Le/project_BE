@@ -223,6 +223,10 @@ ta fi/* FONT & ROOT COLOR */
             color: #6c757d;
         }
 
+        a {
+            text-decoration: none;
+        }
+
         /* Footer */
         footer {
             background: white;
@@ -344,6 +348,10 @@ body.product-detail {
         }
 
         .book-image {
+            width: 100%;
+            height: 350px; /* hoặc giá trị bạn muốn */
+            object-fit: cover;
+            border-radius: 12px;
             transition: transform 0.3s ease-in-out;
         }
 

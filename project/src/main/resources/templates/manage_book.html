@@ -18,10 +18,10 @@
     </div>
 
     <div class="controls-section">
-        <button type="submit" class="btn-add">
+        <a th:href="@{/admin/move_add}" type="submit" class="btn-add">
             <i class="fas fa-plus"></i>
             Thêm sản phẩm
-        </button>
+        </a>
     </div>
 
     <div class="table-container">
@@ -42,7 +42,6 @@
                 <th th:text="${book.bookId}" class="id-cell"></th>
                 <td th:text="${book.nameBook}"></td>
                 <td th:text="${book.nameAuthor}"></td>
-                <!--<td th:text="${book.language}"></td> -->
                 <td>
                     <span th:switch="${book.language}">
                         <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>

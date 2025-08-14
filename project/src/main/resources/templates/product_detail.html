@@ -23,13 +23,12 @@
         <!-- Book Image -->
         <div class="lg:col-span-4">
             <div class="glass-effect rounded-2xl p-6 shadow-xl hover-lift transition-all duration-300">
-                <div class="text-center">
-                    <img th:src="@{/images/sach-anh-dep3.jpg}"
-                         alt="Ảnh sách"
-                         class="book-image w-full max-w-sm mx-auto rounded-xl shadow-lg">
-                </div>
+                <img th:src="${hasImageBook} ? ${imageBook} : '/images/sach-anh-dep3.jpg'"
+                     alt="Ảnh sách"
+                     class="book-image w-full max-w-sm mx-auto rounded-xl shadow-lg">
             </div>
         </div>
+
 
         <!-- Book Information -->
         <div class="lg:col-span-8">

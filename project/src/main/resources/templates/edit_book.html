@@ -3,52 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chỉnh sửa thông tin sách</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
-<body>
-<form th:action="@{/admin/edit_book}" method="post" th:object="${book}">
-    <input type="hidden" th:field="*{bookId}">
-    <div>
-        <label for="nameBook">Tên sách:</label>
-        <input type="text" id="nameBook" th:field="*{nameBook}" required>
+<body class="form-container min-h-screen py-8">
+<div class="max-w-4xl mx-auto glass-effect rounded-2xl shadow-2xl p-8">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-book-open text-indigo-600 mr-3"></i>
+            Chỉnh sửa thông tin sách
+        </h1>
+        <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
     </div>
 
-    <div>
-        <label for="nameAuthor">Tên tác giả:</label>
-        <input type="text" id="nameAuthor" th:field="*{nameAuthor}" required>
-    </div>
+    <form th:action="@{/admin/edit_book}" method="post" th:object="${book}" enctype="multipart/form-data" class="space-y-6">
+        <input type="hidden" th:field="*{bookId}">
 
-    <div>
-        <select th:field="*{language}" required>
-            <option value="ENGLISH">Tiếng Anh</option>
-            <option value="VIETNAMESE">Tiếng Việt</option>
-        </select>
-    </div>
+        <!-- Avatar Section -->
+        <div class="text-center mb-8">
+            <div class="avatar-container cursor-pointer inline-block relative group transition-all duration-300 hover:scale-105" onclick="document.getElementById('avatar').click()">
+                <div th:if="${hasAvatar}" class="relative">
+                    <img th:src="@{${book.bookImage}}" width="150" height="150"
+                         style="border-radius: 50%; object-fit: cover; border: 4px solid #667eea;"
+                         alt="Avatar" class="mx-auto shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-300 flex items-center justify-center">
+                        <i class="fas fa-camera text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </div>
+                </div>
+                <div th:unless="${hasAvatar}" class="relative">
+                    <img th:src="@{/images/sach-anh-dep3.jpg}" width="150" height="150"
+                         style="border-radius: 50%; object-fit: cover; border: 4px solid #667eea;"
+                         alt="Avatar" class="mx-auto shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-300 flex items-center justify-center">
+                        <i class="fas fa-camera text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </div>
+                </div>
+            </div>
 
-    <div>
-        <label for="nameCategory">Thể loại:</label>
-        <input type="text" id="nameCategory" th:field="*{nameCategory}" required>
-    </div>
+            <div class="input-group mb-6 mt-6">
+                <label for="avatar" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer">
+                    <i class="fas fa-image mr-2"></i>
+                    Chọn ảnh mới
+                </label>
+                <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
 
-    <div>
-        <label for="nameTopic">Chủ đề:</label>
-        <input type="text" id="nameTopic" th:field="*{nameTopic}" required>
-    </div>
+                <div id="file-info" class="text-sm text-green-600 mt-3 bg-green-50 p-3 rounded-lg border border-green-200" style="display: none;">
+                    <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                    <span id="file-name"></span>
+                </div>
 
-    <div>
-        <label for="price">Giá:</label>
-        <input type="number" id="price" th:field="*{price}" required>
-    </div>
+                <div id="file-error" class="text-sm text-red-600 mt-3 bg-red-50 p-3 rounded-lg border border-red-200" style="display: none;">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    <span id="error-message"></span>
+                </div>
+            </div>
+        </div>
 
-    <div>
-        <label for="quantity">Số lượng:</label>
-        <input type="number" id="quantity" th:field="*{quantity}" required>
-    </div>
-    <div>
-        <button type="submit">Cập nhật sách</button>
-    </div>
+        <!-- Form Fields Grid -->
+        <div class="grid grid-cols-2 gap-6">
+            <!-- Tên sách -->
+            <div class="space-y-2">
+                <label for="nameBook" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-book text-indigo-600 mr-2"></i>
+                    Tên sách:
+                </label>
+                <input type="text" id="nameBook" th:field="*{nameBook}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
 
-</form>
+            <!-- Tác giả -->
+            <div class="space-y-2">
+                <label for="nameAuthor" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-user-edit text-indigo-600 mr-2"></i>
+                    Tên tác giả:
+                </label>
+                <input type="text" id="nameAuthor" th:field="*{nameAuthor}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
 
-</body>
+            <!-- Ngôn ngữ -->
+            <div class="space-y-2">
+                <label for="language" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-language text-indigo-600 mr-2" id="language"> </i>
+                    Ngôn ngữ:
+                </label>
+                <select th:field="*{language}" required
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+                    <option value="ENGLISH">Tiếng Anh</option>
+                    <option value="VIETNAMESE">Tiếng Việt</option>
+                </select>
+            </div>
+
+            <!-- Thể loại -->
+            <div class="space-y-2">
+                <label for="nameCategory" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-tags text-indigo-600 mr-2"></i>
+                    Thể loại:
+                </label>
+                <input type="text" id="nameCategory" th:field="*{nameCategory}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
+
+            <!-- Chủ đề -->
+            <div class="space-y-2">
+                <label for="nameTopic" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-bookmark text-indigo-600 mr-2"></i>
+                    Chủ đề:
+                </label>
+                <input type="text" id="nameTopic" th:field="*{nameTopic}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
+
+            <!-- Giá -->
+            <div class="space-y-2">
+                <label for="price" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-dollar-sign text-indigo-600 mr-2"></i>
+                    Giá:
+                </label>
+                <input type="number" id="price" th:field="*{price}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
+
+            <!-- Số lượng -->
+            <div class="space-y-2 col-span-2">
+                <label for="quantity" class="block text-sm font-semibold text-gray-700">
+                    <i class="fas fa-boxes text-indigo-600 mr-2"></i>
+                    Số lượng:
+                </label>
+                <input type="number" id="quantity" th:field="*{quantity}" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm">
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center pt-6">
+            <button type="submit" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl">
+                <i class="fas fa-save mr-2"></i>
+                Cập nhật sách
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Preview selected avatar image
+    function previewAvatar(input) {
+        const file = input.files[0];
+        const fileInfo = document.getElementById('file-info');
+        const fileError = document.getElementById('file-error');
+        const fileName = document.getElementById('file-name');
+        const errorMessage = document.getElementById('error-message');
+
+        // Reset displays
+        fileInfo.style.display = 'none';
+        fileError.style.display = 'none';
+
+        if (file) {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                errorMessage.textContent = 'Vui lòng chọn file ảnh hợp lệ (JPG, PNG, GIF, WebP)';
+                fileError.style.display = 'block';
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                errorMessage.textContent = 'Kích thước file không được vượt quá 5MB';
+                fileError.style.display = 'block';
+                input.value = '';
+                return;
+            }
+
+            // Show file info
+            fileName.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            fileInfo.style.display = 'block';
+
+            // Preview image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarImages = document.querySelectorAll('.avatar-container img');
+                avatarImages.forEach(img => {
+                    img.src = e.target.result;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Form validation for personal info
+    document.querySelector('form[th\\:object]').addEventListener('submit', function(e) {
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+
+        // Only validate if these fields exist
+        if (firstName && lastName && email) {
+            const firstNameValue = firstName.value.trim();
+            const lastNameValue = lastName.value.trim();
+            const emailValue = email.value.trim();
+
+            if (!firstNameValue || !lastNameValue || !emailValue) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+            }
+        }
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ed6fa4d5930901',t:'MTc1NTE0Mjg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

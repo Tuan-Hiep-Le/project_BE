@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sách Mới</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px;
+        }
+
+        .form-wrapper {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .avatar-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-container img {
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .avatar-container img:hover {
+            transform: scale(1.05);
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .file-info,
+        .file-error {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .file-info {
+            color: #28a745;
+        }
+
+        .file-error {
+            color: #dc3545;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+<div class="form-wrapper">
+    <form th:action="@{/admin/add_book}" method="post" th:object="${book}" enctype="multipart/form-data">
+        <div class="avatar-container" onclick="document.getElementById('avatar').click()">
+            <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar">
+        </div>
+
+        <div class="input-group">
+            <label for="avatar"><i class="fas fa-image mr-2"></i> Chọn ảnh mới</label>
+            <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
+            <div id="file-info" class="file-info" style="display: none;">
+                <i class="fas fa-check-circle"></i> <span id="file-name"></span>
+            </div>
+            <div id="file-error" class="file-error" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> <span id="error-message"></span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="nameBook">Tên sách:</label>
+            <input type="text" id="nameBook" th:field="*{nameBook}" required>
+        </div>
+
+        <div class="input-group">
+            <label for="nameAuthor">Tên tác giả:</label>
+            <input type="text" id="nameAuthor" th:field="*{nameAuthor}" required>
+        </div>
+
+        <div class="input-group">
+            <label for="language"><i class="fas fa-language text-indigo-600 mr-2"></i> Ngôn ngữ:</label>
+            <select th:field="*{language}" id="language" required>
+                <option value="ENGLISH">Tiếng Anh</option>
+                <option value="VIETNAMESE">Tiếng Việt</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="nameCategory"><i class="fas fa-tags text-indigo-600 mr-2"></i> Thể loại:</label>
+            <input type="text" id="nameCategory" th:field="*{nameCategory}" required>
+        </div>
+
+        <div class="input-group">
+            <label for="nameTopic"><i class="fas fa-bookmark text-indigo-600 mr-2"></i> Chủ đề:</label>
+            <input type="text" id="nameTopic" th:field="*{nameTopic}" required>
+        </div>
+
+        <div class="input-group">
+            <label for="price"><i class="fas fa-dollar-sign text-indigo-600 mr-2"></i> Giá:</label>
+            <input type="number" id="price" th:field="*{price}" required>
+        </div>
+
+        <div class="input-group">
+            <label for="quantity"><i class="fas fa-boxes text-indigo-600 mr-2"></i> Số lượng:</label>
+            <input type="number" id="quantity" th:field="*{quantity}" required>
+        </div>
+
+        <button type="submit">Thêm Sản Phẩm</button>
+    </form>
+</div>
+
+<script>
+    function previewAvatar(input) {
+        const file = input.files[0];
+        const fileInfo = document.getElementById('file-info');
+        const fileError = document.getElementById('file-error');
+        const fileName = document.getElementById('file-name');
+        const errorMessage = document.getElementById('error-message');
+
+        fileInfo.style.display = 'none';
+        fileError.style.display = 'none';
+
+        if (file) {
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                errorMessage.textContent = 'Vui lòng chọn file ảnh hợp lệ (JPG, PNG, GIF, WebP)';
+                fileError.style.display = 'block';
+                input.value = '';
+                return;
+            }
+
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                errorMessage.textContent = 'Kích thước file không được vượt quá 5MB';
+                fileError.style.display = 'block';
+                input.value = '';
+                return;
+            }
+
+            fileName.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            fileInfo.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarImages = document.querySelectorAll('.avatar-container img');
+                avatarImages.forEach(img => {
+                    img.src = e.target.result;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.querySelector('form[th\\:object]').addEventListener('submit', function(e) {
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+
+        if (firstName && lastName && email) {
+            const firstNameValue = firstName.value.trim();
+            const lastNameValue = lastName.value.trim();
+            const emailValue = email.value.trim();
+
+            if (!firstNameValue || !lastNameValue || !emailValue) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -26,11 +26,20 @@
             <!-- User Profile -->
             <div class="relative">
                 <button id="profileToggle" class="flex items-center space-x-4 bg-white bg-opacity-20 rounded-full p-3 hover:bg-opacity-30 transition-all duration-300">
-                    <img th:src="${hasAvatar} ? @{${avatar}} : @{/images/sach-anh-dep3.jpg}"
-                         alt="Avatar"
-                         class="w-14 h-14 rounded-full border-2 border-white object-cover">
-                    <span class="text-white font-medium text-lg" th:text="${username}">Admin</span>
-                    <i class="fas fa-chevron-down text-white"></i>
+                        <div th:if="${hasAvatar}">
+                            <img th:src="@{${avatar}}"
+                                alt="Avatar"
+                                class="w-14 h-14 rounded-full border-2 border-white object-cover">
+                            <span class="text-white font-medium text-lg" th:text="${username}">Admin</span>
+                        </div>
+
+                        <div th:unless="${hasAvatar}">
+                            <img th:src="@{/images/sach-anh-dep3.jpg}"
+                                 alt="Avatar"
+                                class="w-14 h-14 rounded-full border-2 border-white object-cover">
+                            <span class="text-white font-medium text-lg" th:text="${username}">Admin</span>
+                        </div>
+
                 </button>
 
                 <!-- Dropdown Menu -->
