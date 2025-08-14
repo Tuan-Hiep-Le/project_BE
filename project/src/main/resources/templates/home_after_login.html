@@ -126,30 +126,35 @@
             <div class="col-md-4" th:each="book : ${books.content}">
                 <div class="card shadow-sm h-100 book-card">
                     <a th:href="@{/homepage/information_book(bookid=${book.bookId})}">
-                        <img th:src="@{/images/sach-anh-dep3.jpg}" th:alt="${book.nameBook}" class="card-img-top rounded-top">
+                        <div th:if="${book.bookImage == null or book.bookImage == ''}">
+                            <img th:src="@{/images/sach-anh-dep3.jpg}" class="card-img-top rounded-top">
+                        </div>
+                        <div th:if="${book.bookImage != null and book.bookImage != ''}" >
+                            <img th:src="@{${book.bookImage}}" class="card-img-top rounded-top">
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${book.nameBook}">Tên sách</h5>
+                            <p class="card-text mb-2">👤 <strong>Tác giả:</strong> <span th:text="${book.nameAuthor}"></span></p>
+                            <p class="card-text mb-2">📚 <strong>Ngôn ngữ:</strong>
+                                <span th:switch="${book.language}">
+                                    <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>
+                                    <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
+                                </span>
+                            </p>
+
+                            <p class="card-text mb-2">💡 <strong>Chủ đề:</strong> <span th:text="${book.nameTopic}"></span></p>
+                            <p class="card-text mb-2">📚 <strong>Thể loại:</strong> <span th:text="${book.nameCategory}"></span></p>
+                            <p class="card-text mb-0">📦 <strong>Số lượng:</strong> <span th:text="${book.quantity}" class="fw-bold"></span></p>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
+                            <form method="post" th:action="@{/homepage/add_cart_item(bookBuyId=${book.bookId})}">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" th:disabled="${book.quantity==0}">🛒 Thêm vào giỏ</button>
+                            </form>
+                            <a th:if="${book.quantity} > 0" th:href="@{/homepage/switch_buy_now(bookId=${book.bookId})}" class="btn btn-success btn-sm">💳 Mua ngay</a>
+                            <span th:if="${book.quantity == 0}" class="btn btn-secondary btn-sm disabled">💳 Hết hàng</span>
+                        </div>
                     </a>
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${book.nameBook}">Tên sách</h5>
-                        <p class="card-text mb-2">👤 <strong>Tác giả:</strong> <span th:text="${book.nameAuthor}"></span></p>
-                        <p class="card-text mb-2">📚 <strong>Ngôn ngữ:</strong>
-                            <span th:switch="${book.language}">
-                                <span th:case="${T(com.project.entity.enum_entity.Language).ENGLISH}">Tiếng Anh</span>
-                                <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
-                            </span>
-
-                        </p>
-
-                        <p class="card-text mb-2">💡 <strong>Chủ đề:</strong> <span th:text="${book.nameTopic}"></span></p>
-                        <p class="card-text mb-2">📚 <strong>Thể loại:</strong> <span th:text="${book.nameCategory}"></span></p>
-                        <p class="card-text mb-0">📦 <strong>Số lượng:</strong> <span th:text="${book.quantity}" class="fw-bold"></span></p>
-                    </div>
-                    <div class="card-footer bg-white d-flex justify-content-center gap-2 py-3">
-                        <form method="post" th:action="@{/homepage/add_cart_item(bookBuyId=${book.bookId})}">
-                            <button type="submit" class="btn btn-outline-primary btn-sm" th:disabled="${book.quantity==0}">🛒 Thêm vào giỏ</button>
-                        </form>
-                        <a th:if="${book.quantity} > 0" th:href="@{/homepage/switch_buy_now(bookId=${book.bookId})}" class="btn btn-success btn-sm">💳 Mua ngay</a>
-                        <span th:if="${book.quantity == 0}" class="btn btn-secondary btn-sm disabled">💳 Hết hàng</span>
-                    </div>
                 </div>
             </div>
         </div>

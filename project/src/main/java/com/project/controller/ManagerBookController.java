@@ -161,6 +161,12 @@ public class ManagerBookController {
     public String informationBook(@RequestParam("bookid") Integer idBook, Model model){
         Book book = managerBookService.getBookById(idBook);
         model.addAttribute("product",book);
+        if (book.getBookImage() == null || book.getBookImage().isEmpty()){
+            model.addAttribute("hasImageBook",false);
+        }else {
+            model.addAttribute("hasImageBook",true);
+            model.addAttribute("imageBook",book.getBookImage());
+        }
         List<Review> list = managerReviewService.getUserAndCommentBook(idBook);
         if(list.isEmpty()){
             model.addAttribute("noReview",true);
@@ -207,47 +213,48 @@ public class ManagerBookController {
         Book book = managerBookService.getBookById(id);
         model.addAttribute("bookId",id);
         model.addAttribute("book",book);
+        if(book.getBookImage() == null || book.getBookImage().trim().isEmpty()){
+            model.addAttribute("hasAvatar",false);
+        }else {
+            model.addAttribute("hasAvatar",true);
+        }
         return "edit_book";
     }
 
     //Sửa sách
     @PostMapping("/admin/edit_book")
-    public String updateBookOnWebsite(@RequestParam("bookId") Integer bookId, @ModelAttribute("book") Book book){
-        Book currentBook = managerBookService.getBookById(bookId); // Lấy bản gốc
-        managerBookService.updateBook(book);
-        return "redirect:/admin/manage_book";
-    }
-
-    @PostMapping("/admin/upload_book")
-    public String uploadImgBook(@RequestParam("avatar") MultipartFile multipartFile, HttpServletRequest request,@RequestParam("bookId") Integer bookId){
+    public String updateBookOnWebsite(@RequestParam("avatar")MultipartFile multipartFile,HttpServletRequest request,@RequestParam("bookId") Integer bookId, @ModelAttribute("book") Book book){
         Path projectPath = Paths.get("").toAbsolutePath();
-        Book book = managerBookService.getBookById(bookId);
         Path uploadPath = projectPath.resolve("project").resolve("uploads").resolve("book");
-        if (!multipartFile.isEmpty()){
+        if (!multipartFile.isEmpty()) {
             try {
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
                 String fileName = "imageBook" + book.getBookId() + "_" + System.currentTimeMillis() + ".jpg";
                 Path filePath = uploadPath.resolve(fileName);
-                Files.write(filePath,multipartFile.getBytes());
+                Files.write(filePath, multipartFile.getBytes());
                 book.setBookImage("/uploads/book/" + fileName);
                 managerBookService.updateBook(book);
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
+
+        return "redirect:/admin/manage_book";
     }
 
+    // Thêm sách
+    @GetMapping("/admin/move_add")
+    public String moveAddBook(Model model){
+        model.addAttribute("book",new Book());
+        return "add_book";
+    }
 
-
-
-
-
-
-
-
-
+    @PostMapping("/admin/add_book")
+    public String addBook(@ModelAttribute("book") Book book){
+        managerBookService.addBook(book);
+        return "redirect:/admin/manage_book";
+    }
 
 }

@@ -64,13 +64,20 @@ public class ManagerAdminController {
     }
 
     @GetMapping("/admin/manage_book")
-    public String managerBook(Model model, @RequestParam(value = "valuePage",defaultValue = "0") int valuePage ){
+    public String managerBook(Model model, @RequestParam(value = "valuePage",defaultValue = "0") int valuePage,HttpServletRequest request ){
         Pageable pageable = PageRequest.of(valuePage,10);
         Page<Book> books = managerBookService.getAllBook(pageable);
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("books",books);
         model.addAttribute("totalPage",(books.getTotalPages()));
         model.addAttribute("section","manage_book");
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if (user.getAvatar() != null) {
+            model.addAttribute("hasAvatar",true);
+            model.addAttribute("avatar",user.getAvatar());
+        } else {
+            model.addAttribute("hasAvatar",false);
+        }
         return "admin_home";
     }
 

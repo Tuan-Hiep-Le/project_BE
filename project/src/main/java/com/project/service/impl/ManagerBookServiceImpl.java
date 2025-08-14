@@ -79,6 +79,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         bookExist.setNameCategory(book.getNameCategory());
         bookExist.setPrice(book.getPrice());
         bookExist.setNameTopic(book.getNameTopic());
+        bookExist.setBookImage(book.getBookImage());
         return managerBookRepository.saveAndFlush(bookExist);
     }
 

@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/images/**","/css/**", "/js/**","/favicon.ico").permitAll()
+                .requestMatchers("/images/**","/css/**", "/js/**","/favicon.ico","/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/login","/register","/homepage","/admin/sync-shipcost","/input_email_reset","/send_link",
                         "/forget_password","/homepage/information_book","/homepage/search","/overview").permitAll()
                 .requestMatchers(HttpMethod.POST,"/login","/register","/input_new_password").permitAll()
