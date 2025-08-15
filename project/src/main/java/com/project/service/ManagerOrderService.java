@@ -25,5 +25,10 @@ public interface ManagerOrderService {
     //Lấy ra tổng doanh thu
     public BigDecimal getTotalRevenue();
 
+    //Lấy ra các thông tin cần thiết của đơn hàng
+    public List<Object[]> getInformationOrder();
+
+    //Lấy ra đơn hàng bằng Id
+    public Order getOrderById(Integer orderId);
 
 }

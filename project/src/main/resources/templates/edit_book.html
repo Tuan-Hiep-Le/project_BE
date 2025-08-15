@@ -15,6 +15,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        .avatar-container {
+            width: 158px;
+            height: 158px;
+            margin: 0 auto;
+        }
+        .avatar-container img {
+            width: 150px !important;
+            height: 150px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+        }
     </style>
 </head>
 <body class="form-container min-h-screen py-8">
@@ -32,19 +44,15 @@
 
         <!-- Avatar Section -->
         <div class="text-center mb-8">
-            <div class="avatar-container cursor-pointer inline-block relative group transition-all duration-300 hover:scale-105" onclick="document.getElementById('avatar').click()">
-                <div th:if="${hasAvatar}" class="relative">
-                    <img th:src="@{${book.bookImage}}" width="150" height="150"
-                         style="border-radius: 50%; object-fit: cover; border: 4px solid #667eea;"
-                         alt="Avatar" class="mx-auto shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+            <div class="avatar-container cursor-pointer relative group" onclick="document.getElementById('avatar').click()">
+                <div th:if="${hasAvatar}" class="relative w-full h-full">
+                    <img th:src="@{${book.bookImage}}" alt="Avatar" class="mx-auto shadow-xl transition-shadow duration-300 group-hover:shadow-2xl">
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-300 flex items-center justify-center">
                         <i class="fas fa-camera text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </div>
                 </div>
-                <div th:unless="${hasAvatar}" class="relative">
-                    <img th:src="@{/images/sach-anh-dep3.jpg}" width="150" height="150"
-                         style="border-radius: 50%; object-fit: cover; border: 4px solid #667eea;"
-                         alt="Avatar" class="mx-auto shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                <div th:unless="${hasAvatar}" class="relative w-full h-full">
+                    <img th:src="@{/images/sach-anh-dep3.jpg}" alt="Avatar" class="mx-auto shadow-xl transition-shadow duration-300 group-hover:shadow-2xl">
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-300 flex items-center justify-center">
                         <i class="fas fa-camera text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </div>
@@ -223,5 +231,5 @@
         }
     });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ed6fa4d5930901',t:'MTc1NTE0Mjg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f69f73945a06b9',t:'MTc1NTIzOTIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

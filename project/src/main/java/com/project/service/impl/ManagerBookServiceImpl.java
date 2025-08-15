@@ -161,4 +161,6 @@ public class ManagerBookServiceImpl implements ManagerBookService {
     public int totalBookQuantity0() {
         return managerBookRepository.getCountBookQuantity0();
     }
+
+
 }

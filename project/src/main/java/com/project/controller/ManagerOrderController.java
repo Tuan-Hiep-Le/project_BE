@@ -331,4 +331,19 @@ public class ManagerOrderController {
         return "page_history_buy";
     }
 
+    @PostMapping("/admin/manage_order/save")
+    public String saveOrder(@RequestParam("orderId") List<String> listOrder, @RequestParam("handlerOrder") List<String> listHandlerOrder){
+        for (int i = 0; i < listOrder.size(); i++){
+            Order order = managerOrderService.getOrderById(Integer.parseInt(listOrder.get(i)));
+            if (listHandlerOrder.get(i) != null && !listHandlerOrder.get(i).isEmpty()) {
+                order.setHandlerOrder(HandlerOrder.valueOf(listHandlerOrder.get(i)));
+                order.setStatusOrder(StatusOrder.APPROVED);
+            }else {
+                order.setHandlerOrder(null);
+            }
+            managerOrderService.updateOrder(order);
+        }
+        return "redirect:/admin/move_manage_order";
+
+    }
 }
