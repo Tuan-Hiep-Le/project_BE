@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class ManagerAdminController {
@@ -80,5 +81,21 @@ public class ManagerAdminController {
         }
         return "admin_home";
     }
+
+    @GetMapping("/admin/move_manage_order")
+    public String moveManageUser(Model model, HttpServletRequest request){
+        User user =  (User) request.getSession().getAttribute("loggedUser");
+        if (user.getAvatar() != null){
+            model.addAttribute("hasAvatar",true);
+            model.addAttribute("avatar",user.getAvatar());
+        }else {
+            model.addAttribute("hasAvatar",false);
+        }
+        List<Object[]> listOrder = managerOrderService.getInformationOrder();
+        model.addAttribute("listOrder",listOrder);
+        model.addAttribute("section","manage_order");
+        return "admin_home";
+    }
+
 
 }

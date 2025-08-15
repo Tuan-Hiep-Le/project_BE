@@ -28,7 +28,13 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
     public List<Object[]> findHistoryBuyProduct(@Param("user") User user);
 
     //Lấy ra tổng doanh thu
-    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.statusOrder != 'CANCELED' AND o.statusOrder != 'APPROVING' ")
+    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.handlerOrder = 'ACCEPT' ")
     public BigDecimal totalRevenue();
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o")
+    public List<Object[]> getAllInformationOrder();
+
+    public Order findByOrderId(Integer orderId);
 
 }

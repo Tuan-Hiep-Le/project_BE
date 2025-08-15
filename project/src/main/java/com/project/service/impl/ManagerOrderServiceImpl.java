@@ -57,4 +57,14 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
     public BigDecimal getTotalRevenue() {
         return managerOrderRepository.totalRevenue();
     }
+
+    @Override
+    public List<Object[]> getInformationOrder() {
+        return managerOrderRepository.getAllInformationOrder();
+    }
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        return managerOrderRepository.findByOrderId(orderId);
+    }
 }
