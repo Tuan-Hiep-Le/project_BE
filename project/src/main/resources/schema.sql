@@ -23,6 +23,7 @@ CREATE TABLE users(
      price DECIMAL(10,2) NOT NULL,
      quantity int NOT NULL,
      book_detail TEXT NOT NULL
+     is_deleted BOOLEAN NOT NULL
      )
 
  // Tạo bảng orders: Đơn hàng

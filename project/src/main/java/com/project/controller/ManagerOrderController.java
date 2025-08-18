@@ -13,6 +13,11 @@ import com.project.service.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -63,9 +68,8 @@ public class ManagerOrderController {
         model.addAttribute("bookId",id);
         BigDecimal initialTotalPrice = book.getPrice().multiply(BigDecimal.valueOf(defaultQuantity));
         model.addAttribute("totalPrice",initialTotalPrice);
-        model.addAttribute("moneyShip", 0);
+        model.addAttribute("moneyShip", BigDecimal.ZERO);
         model.addAttribute("payment", initialTotalPrice);
-        model.addAttribute("bookId", id);
         model.addAttribute("bookBuy", book);
         model.addAttribute("quantityBuy", defaultQuantity);
         List<Object[]> listVoucherTransfer = managerUserVoucherService.getAllVoucherTransfer(user.getUserId());
@@ -78,16 +82,34 @@ public class ManagerOrderController {
     @PostMapping("/homepage/buy_now")
     public String createOrderItem(@RequestParam("bookId") Integer id, @RequestParam(value = "quantityBuy") int quantityBuy, @RequestParam("where") String address, @RequestParam(value = "valueVoucherTransfer",required = false) Integer idTransfer, @RequestParam(value = "valueVoucherDiscount",required = false) Integer idDiscount,
                                   @RequestParam(value = "paymentMethod")PaymentMethod paymentMethod, Model model, HttpServletRequest request, HttpSession httpSession){
+
         Book book = managerBookService.getBookById(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
         BigDecimal totalPrice = book.getPrice().multiply(BigDecimal.valueOf(quantityBuy));
         model.addAttribute("totalPrice",totalPrice);
-
+        model.addAttribute("quantityBuy", quantityBuy);
+        model.addAttribute("bookId",id);
         String[] addressSplit = address.split("-");
         String addressShip = addressSplit[addressSplit.length - 1];
-        ShipCostDocument shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
+        model.addAttribute("bookBuy", book);
+        ShipCostDocument shipCostDocument;
+        try {
+            shipCostDocument = searchShipCostService.getShipCostByCity(addressShip);
+            if (shipCostDocument == null) {
+                model.addAttribute("errorMessage", "Không tìm thấy phí vận chuyển cho địa chỉ: " + addressShip);
+                model.addAttribute("moneyShip",BigDecimal.ZERO);
+                return "buy_book_now";
+            }
+        } catch (Exception e) {
+
+            model.addAttribute("errorMessage", "Có lỗi xảy ra khi tính phí vận chuyển. Vui lòng thử lại sau.");
+            model.addAttribute("moneyShip",BigDecimal.ZERO);
+
+            return "buy_book_now";
+        }
+
         String addressDelivery = shipCostDocument.getNameCity();
 
         StringBuilder addressBuilder = new StringBuilder();
@@ -149,14 +171,14 @@ public class ManagerOrderController {
             return "redirect:"+paymentURL;
         }
 
-        model.addAttribute("bookId",id);
+
         model.addAttribute("valueVoucherTransfer",idTransfer);
         model.addAttribute("valueVoucherDiscount",idDiscount);
         model.addAttribute("where",addressDelivery);
         model.addAttribute("bookBuy",book);
         model.addAttribute("paymentMethod",paymentMethod);
         model.addAttribute("payment",payment);
-        model.addAttribute("quantityBuy", quantityBuy);
+
 
         return "page_browsing";
     }
@@ -332,7 +354,7 @@ public class ManagerOrderController {
     }
 
     @PostMapping("/admin/manage_order/save")
-    public String saveOrder(@RequestParam("orderId") List<String> listOrder, @RequestParam("handlerOrder") List<String> listHandlerOrder){
+    public String saveOrder(@RequestParam("valuePage") int valuePage,@RequestParam("orderId") List<String> listOrder, @RequestParam("handlerOrder") List<String> listHandlerOrder,@RequestParam("filterOrder") String filterOrder){
         for (int i = 0; i < listOrder.size(); i++){
             Order order = managerOrderService.getOrderById(Integer.parseInt(listOrder.get(i)));
             if (listHandlerOrder.get(i) != null && !listHandlerOrder.get(i).isEmpty()) {
@@ -343,7 +365,54 @@ public class ManagerOrderController {
             }
             managerOrderService.updateOrder(order);
         }
-        return "redirect:/admin/move_manage_order";
+
+        return "redirect:/admin/manage_order/filter_order?filterOrder=" +  filterOrder
+                + "&valuePage=" + valuePage;
+
+    }
+    @RequestMapping(value = "/admin/manage_order/filter_order", method = {RequestMethod.GET, RequestMethod.POST})
+    public String filterOrder(@RequestParam("filterOrder") String filterOrder, @RequestParam(value = "valuePage",defaultValue = "0") int valuePage ,Model model){
+        Pageable pageable = PageRequest.of(valuePage,10);
+        Page<Object[]> pageOrder = null;
+        if (filterOrder.equals("pending")){
+            pageOrder = managerOrderService.getOrderNull(pageable);
+        }else if (filterOrder.equals("accepted")){
+            pageOrder = managerOrderService.getOrderAccept(pageable);
+        }else if (filterOrder.equals("refused")){
+            pageOrder = managerOrderService.getOrderRefuse(pageable);
+        } else {
+            pageOrder = managerOrderService.getInformationOrder(pageable);
+        }
+
+
+        model.addAttribute("valuePage",valuePage);
+        model.addAttribute("totalPage", pageOrder.getTotalPages());
+        model.addAttribute("listOrder",pageOrder);
+        model.addAttribute("section","manage_order");
+        model.addAttribute("filterOrder",filterOrder);
+        return "admin_home";
+
+    }
+
+    @PostMapping("/admin/manage_order/filter_payment")
+    public String filterPaymentByOrder(@RequestParam("filterMethod") String filterMethod, Model model,@RequestParam(value = "valuePage",defaultValue = "0") int valuePage){
+        Pageable pageable = PageRequest.of(valuePage,10);
+        if (filterMethod.equals("cash")){
+            Page<Object[]> listOrderCash = managerOrderService.getOrderCash(pageable);
+            model.addAttribute("listOrder",listOrderCash);
+            model.addAttribute("totalPage", listOrderCash.getTotalPages());
+
+        }else {
+            Page<Object[]> listOrderTransfer = managerOrderService.getOrderTransfer(pageable);
+            model.addAttribute("listOrder",listOrderTransfer);
+            model.addAttribute("totalPage", listOrderTransfer.getTotalPages());
+
+        }
+
+        model.addAttribute("valuePage",valuePage);
+        model.addAttribute("section","manage_order");
+        model.addAttribute("filterMethod",filterMethod);
+        return "admin_home";
 
     }
 }

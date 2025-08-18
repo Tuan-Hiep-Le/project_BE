@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ManagerAdminController {
@@ -46,7 +47,7 @@ public class ManagerAdminController {
         model.addAttribute("totalBook",totalBook);
         model.addAttribute("totalUser",totalUser);
         model.addAttribute("totalOrder",totalOrder);
-        model.addAttribute("totalRevenue",totalRevenue);
+        model.addAttribute("totalRevenue", Objects.requireNonNullElse(totalRevenue, BigDecimal.ZERO));
         model.addAttribute("section",section);
         return "admin_home";
     }
@@ -57,10 +58,12 @@ public class ManagerAdminController {
         long totalUser = userService.countUser();
         long totalOrder = managerOrderService.countOrder();
         BigDecimal totalRevenue = managerOrderService.getTotalRevenue();
+        System.out.println(totalRevenue);
         model.addAttribute("totalBook",totalBook);
         model.addAttribute("totalUser",totalUser);
         model.addAttribute("totalOrder",totalOrder);
-        model.addAttribute("totalRevenue",totalRevenue);
+        model.addAttribute("totalRevenue", Objects.requireNonNullElse(totalRevenue, BigDecimal.ZERO));
+
         return "overview";
     }
 
@@ -83,7 +86,7 @@ public class ManagerAdminController {
     }
 
     @GetMapping("/admin/move_manage_order")
-    public String moveManageUser(Model model, HttpServletRequest request){
+    public String moveManageUser(@RequestParam(value = "valuePage", defaultValue = "0") int valuePage, Model model, HttpServletRequest request){
         User user =  (User) request.getSession().getAttribute("loggedUser");
         if (user.getAvatar() != null){
             model.addAttribute("hasAvatar",true);
@@ -91,7 +94,10 @@ public class ManagerAdminController {
         }else {
             model.addAttribute("hasAvatar",false);
         }
-        List<Object[]> listOrder = managerOrderService.getInformationOrder();
+        Pageable pageable = PageRequest.of(valuePage,10);
+        Page<Object[]> listOrder = managerOrderService.getInformationOrder(pageable);
+        model.addAttribute("valuePage",valuePage);
+        model.addAttribute("totalPage",listOrder.getTotalPages());
         model.addAttribute("listOrder",listOrder);
         model.addAttribute("section","manage_order");
         return "admin_home";

@@ -226,6 +226,7 @@
                 </label>
                 <input th:type="text" name="where" placeholder="Số nhà - Tên đường - Tên xã - Tên tỉnh" id="addressUser" th:value="${where}" class="form-control">
             </div>
+            <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; font-size:14px;"></p>
 
             <hr class="section-divider">
 

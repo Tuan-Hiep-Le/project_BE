@@ -5,6 +5,8 @@ import com.project.entity.User;
 import com.project.repository.ManagerOrderRepository;
 import com.project.service.ManagerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -59,12 +61,37 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
     }
 
     @Override
-    public List<Object[]> getInformationOrder() {
-        return managerOrderRepository.getAllInformationOrder();
+    public Page<Object[]> getInformationOrder(Pageable pageable) {
+        return managerOrderRepository.getAllInformationOrder(pageable);
     }
 
     @Override
     public Order getOrderById(Integer orderId) {
         return managerOrderRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public Page<Object[]> getOrderNull(Pageable pageable) {
+        return managerOrderRepository.getAllOrderNull(pageable);
+    }
+
+    @Override
+    public Page<Object[]> getOrderAccept(Pageable pageable) {
+        return managerOrderRepository.getAllOrderAccept(pageable);
+    }
+
+    @Override
+    public Page<Object[]> getOrderRefuse(Pageable pageable) {
+        return managerOrderRepository.getAllOrderRefuse(pageable);
+    }
+
+    @Override
+    public Page<Object[]> getOrderCash(Pageable pageable) {
+        return managerOrderRepository.getAllOrderCash(pageable);
+    }
+
+    @Override
+    public Page<Object[]> getOrderTransfer(Pageable pageable) {
+        return managerOrderRepository.getAllOrderTransfer(pageable);
     }
 }
