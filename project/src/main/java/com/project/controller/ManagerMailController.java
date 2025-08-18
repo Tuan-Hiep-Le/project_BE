@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class ManagerMailController {
     @Autowired
@@ -39,7 +41,12 @@ public class ManagerMailController {
             model.addAttribute("userVerified",true);
             return "verify_email";
         }
+
         VerifyEmail tokenVerify = managerEmailService.latestToken(user.getUserId());
+        if (tokenVerify == null){
+            model.addAttribute("isExpiry",true);
+            return "verify_email";
+        }
         if ( !token.equals(tokenVerify.getVerificationTokenEmail())){
             model.addAttribute("isVerify",false);
             return "verify_email";

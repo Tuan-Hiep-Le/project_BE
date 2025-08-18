@@ -2,6 +2,8 @@ package com.project.repository;
 
 import com.project.entity.Order;
 import com.project.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,13 +30,35 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
     public List<Object[]> findHistoryBuyProduct(@Param("user") User user);
 
     //Lấy ra tổng doanh thu
-    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.handlerOrder = 'ACCEPT' ")
+    @Query("SELECT COALESCE(SUM(o.payment)) FROM Order o WHERE o.handlerOrder = 'ACCEPT' ")
     public BigDecimal totalRevenue();
 
     @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
             "o.paymentMethod, o.address, o.handlerOrder FROM Order o")
-    public List<Object[]> getAllInformationOrder();
+    public Page<Object[]> getAllInformationOrder(Pageable pageable);
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o WHERE o.handlerOrder IS  NULL")
+    public Page<Object[]> getAllOrderNull(Pageable pageable);
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o WHERE o.handlerOrder = 'ACCEPT'")
+    public Page<Object[]> getAllOrderAccept(Pageable pageable);
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o WHERE o.handlerOrder = 'REFUSE'")
+    public Page<Object[]> getAllOrderRefuse(Pageable pageable);
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o WHERE o.paymentMethod = 'CASH'")
+    public Page<Object[]> getAllOrderCash(Pageable pageable);
+
+    @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
+            "o.paymentMethod, o.address, o.handlerOrder FROM Order o WHERE o.paymentMethod = 'TRANSFER'")
+    public Page<Object[]> getAllOrderTransfer(Pageable pageable);
 
     public Order findByOrderId(Integer orderId);
+
+
 
 }

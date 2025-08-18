@@ -2,6 +2,8 @@ package com.project.service;
 
 import com.project.entity.Order;
 import com.project.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,9 +28,21 @@ public interface ManagerOrderService {
     public BigDecimal getTotalRevenue();
 
     //Lấy ra các thông tin cần thiết của đơn hàng
-    public List<Object[]> getInformationOrder();
+    public Page<Object[]> getInformationOrder(Pageable pageable);
+
+    public Page<Object[]> getOrderNull(Pageable pageable);
+
+    public Page<Object[]> getOrderAccept(Pageable pageable);
+
+    public Page<Object[]> getOrderRefuse(Pageable pageable);
+
+    public Page<Object[]> getOrderCash(Pageable pageable);
+
+    public Page<Object[]> getOrderTransfer(Pageable pageable);
+
 
     //Lấy ra đơn hàng bằng Id
     public Order getOrderById(Integer orderId);
+
 
 }

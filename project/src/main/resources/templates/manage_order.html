@@ -8,10 +8,43 @@
 </head>
 <body>
 <main th:fragment="manage_order" class="container my-4">
+    <div>
+        <form th:action="@{/admin/manage_order/filter_order}" method="post" >
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Trạng thái:</label>
+            <select id="statusFilter" name="filterOrder" class="form-select" onchange="this.form.submit()">
+                <option value="all" th:selected="${filterOrder == 'all'}">Tất cả đơn hàng</option>
+                <option value="pending" th:selected="${filterOrder == 'pending'}">Đang chờ xử lý</option>
+                <option value="accepted" th:selected="${filterOrder == 'accepted'}">Đã chấp nhận</option>
+                <option value="refused" th:selected="${filterOrder == 'refused'}">Đã hủy</option>
+            </select>
+        </div>
+        </form>
 
-    <h2 class="mb-4 text-center">Quản lý đơn hàng</h2>
+        <form th:action="@{/admin/manage_order/filter_payment}" method="post" >
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Phương thức thanh toán:</label>
+                <select id="methodPaymentFilter" name="filterMethod" class="form-select" onchange="this.form.submit()">
+                    <option value="all" th:selected="${filterMethod == 'all'}">Tất cả</option>
+                    <option value="cash" th:selected="${filterMethod == 'cash'}">Tiền mặt</option>
+                    <option value="transfer" th:selected="${filterMethod == 'transfer'}">Chuyển khoản</option>
+
+                </select>
+            </div>
+        </form>
+
+
+
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <input type="text" id="searchFilter" name="findOrder" class="form-control" placeholder="🔍 Tìm kiếm theo tên khách hàng, mã đơn hàng...">
+            </div>
+        </div>
+    </div>
     <div class="mb-3">
         <form th:action="@{/admin/manage_order/save}" method="post" class="mb-4">
+            <input type="hidden" name="filterOrder" th:value="${filterOrder}">
+            <input type="hidden" name="valuePage" th:value="${valuePage}">
             <div class="table-responsive shadow-sm rounded">
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
@@ -58,6 +91,25 @@
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
+    </div>
+    <div class="pagination-container">
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/move_manage_order(valuePage=${valuePage-1} , openMenu=${true})}">
+                        <i class="fas fa-chevron-left me-1"></i>Previous
+                    </a>
+                </li>
+                <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/move_manage_order(valuePage=${p} , openMenu = ${true})}" th:text="${p+1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/move_manage_order(valuePage=${valuePage+1}, openMenu = ${true})}">
+                        Next<i class="fas fa-chevron-right ms-1"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </main>
 
