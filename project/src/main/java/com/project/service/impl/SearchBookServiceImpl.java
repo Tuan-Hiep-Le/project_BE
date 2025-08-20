@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Objects;
 
@@ -113,6 +114,7 @@ public class SearchBookServiceImpl implements SearchBookService {
                 .nameCategory(book.getNameCategory())
                 .nameTopic(book.getNameTopic())
                 .quantity(book.getQuantity())
+                .bookImage(book.getBookImage())
                 .build();
     }
 
@@ -120,15 +122,28 @@ public class SearchBookServiceImpl implements SearchBookService {
     public void syncAllBooksToES() {
         List<Book> allBooks = managerBookService.getAllBookList(); //
         for (Book book : allBooks) {
-            BookDocument doc = toDocument(book);
-            try {
-                elasticsearchClient.index(i -> i
-                        .index("book_document")
-                        .id(String.valueOf(doc.getBookId()))
-                        .document(doc));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            addBookInElasticSearch(book);
+        }
+    }
+
+    public void addBookInElasticSearch(Book book){
+        BookDocument doc = toDocument(book);
+        try {
+            elasticsearchClient.index(i -> i
+                    .index("book_document")
+                    .id(String.valueOf(doc.getBookId()))
+                    .document(doc));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void removeDataElasticSearch(){
+        try {
+            elasticsearchClient.deleteByQuery(d->d.index("book_document").query(q-> q.matchAll(m -> m)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

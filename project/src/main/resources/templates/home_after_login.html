@@ -44,7 +44,7 @@
                             <li><a class="dropdown-item py-2" th:href="@{/homepage/move_edit_personal}">👤 Trang cá nhân</a></li>
                             <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
                             <li>
-                                <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{home_after_user_login/move_cart}">
+                                <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{homepage/move_cart}">
                                 🛒 Giỏ hàng
                                 <span class="badge bg-danger rounded-pill ms-1" th:text="${countCartItem}">
                                     <span class="visually-hidden">unread messages</span>
@@ -160,19 +160,23 @@
         </div>
     </main>
 
-    <nav aria-label="Pagination">
+    <nav aria-label="Pagination" th:if="${totalPage > 0}" >
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
-                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage-1}, valueSize=${valueSize}, nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Previous</a>
+            <li class="page-item" th:class="${valuePage == 0} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage - 1}, valueSize=${valueSize}, ...)}">Previous</a>
             </li>
-            <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
-                <a class="page-link" th:href="@{/homepage(valuePage=${p}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}" th:text="${p+1}"></a>
+
+            <li class="page-item" th:each="p : ${#numbers.sequence(0, totalPage - 1)}"
+                th:class="${p == valuePage} ? 'active' : ''">
+                <a class="page-link" th:href="@{/homepage(valuePage=${p}, valueSize=${valueSize},...)}" th:text="${p + 1}"></a>
             </li>
-            <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
-                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage+1}, valueSize=${valueSize},nameCategory=${nameCategory}, nameAuthor=${nameAuthor}, nameTopic=${nameTopic})}">Next</a>
+
+            <li class="page-item" th:class="${valuePage == totalPage - 1} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{/homepage(valuePage=${valuePage + 1},  valueSize=${valueSize},...)}">Next</a>
             </li>
         </ul>
     </nav>
+
 
     <!-- 📌 FOOTER -->
     <footer>
