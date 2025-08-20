@@ -32,7 +32,7 @@ public class ManagerCartController {
     public String removeCartItem(@RequestParam("itemId") Integer cartItemId, Model model){
         cartItemService.removeCartItem(cartItemId);
         model.addAttribute("itemId",cartItemId);
-        return "redirect:/home_after_user_login/move_cart";
+        return "redirect:/homepage/move_cart";
 
     }
 

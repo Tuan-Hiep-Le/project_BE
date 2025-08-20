@@ -17,7 +17,7 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
             "FROM orders o\n" +
             "JOIN order_items oi ON o.order_id = oi.id_order\n" +
             "LEFT JOIN reviews r ON o.order_id = r.order_id AND r.id_book = oi.id_book\n" +
-            "WHERE o.id_user = :userId AND oi.id_book =:idBook AND o.handle_order = 'ACCEPT' AND o.status_order = 'DELIVERED' \n" +
+            "WHERE o.id_user = :userId AND oi.id_book =:idBook AND o.handle_order = 'ACCEPT'  \n" +
             "ORDER BY o.order_at DESC\n" +
             "LIMIT 1\n",nativeQuery = true)
     public Order getOrderBuyBookLates(@Param("userId")Integer userId, @Param("idBook")Integer idBook);

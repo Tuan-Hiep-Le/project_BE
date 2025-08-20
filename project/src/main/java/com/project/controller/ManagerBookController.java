@@ -47,8 +47,8 @@ public class ManagerBookController {
     //Đồng bộ data của Book cho BookDocument
     @GetMapping("/admin/sync-book")
     public String syncDataToElasticsearch(Model model) {
+        searchBookService.removeDataElasticSearch();
         searchBookService.syncAllBooksToES();
-        model.addAttribute("message", "Đã đồng bộ dữ liệu lên Elasticsearch thành công!");
         return "redirect:/homepage";
     }
 
@@ -103,11 +103,18 @@ public class ManagerBookController {
         }else {
             model.addAttribute("notFound",false);
         }
+        List<String> listAuthor = managerBookService.getAllAuthor();
+        List<String> listCategory = managerBookService.getAllCategory();
+        List<String> listTopic = managerBookService.getAllTopic();
+        model.addAttribute("authors",listAuthor);
+        model.addAttribute("categories",listCategory);
+        model.addAttribute("topics",listTopic);
         model.addAttribute("books",bookDocuments);
         model.addAttribute("keyword",key);
         model.addAttribute("valuePage",valuePage);
         model.addAttribute("valueSize",valueSize);
         model.addAttribute("totalPage",bookDocuments.getTotalPages());
+
         return "home_after_login";
     }
     //Phân loại sách theo thể loại sau login
@@ -252,8 +259,26 @@ public class ManagerBookController {
     }
 
     @PostMapping("/admin/add_book")
-    public String addBook(@ModelAttribute("book") Book book){
+    public String addBook(@RequestParam("avatar")MultipartFile multipartFile,@ModelAttribute("book") Book book){
         managerBookService.addBook(book);
+        Path projectPath = Paths.get("").toAbsolutePath();
+        Path uploadPath = projectPath.resolve("project").resolve("uploads").resolve("book");
+        if (!multipartFile.isEmpty()) {
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String fileName = "imageBook" + book.getBookId() + "_" + System.currentTimeMillis() + ".jpg";
+                Path filePath = uploadPath.resolve(fileName);
+                Files.write(filePath, multipartFile.getBytes());
+                book.setBookImage("/uploads/book/" + fileName);
+                managerBookService.updateBook(book);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        searchBookService.addBookInElasticSearch(book);
+
         return "redirect:/admin/manage_book";
     }
 

@@ -186,7 +186,7 @@ public class ManagerOrderController {
     public String getCheckoutPaymentManyProduct(@RequestParam(value = "cartItemIds", required = false) List<Integer> cartItemIds, @RequestParam Map<String, String> quantityInCart, Model model, HttpServletRequest request){
         if (cartItemIds == null || cartItemIds.isEmpty()) {
             model.addAttribute("error", "Bạn chưa chọn sản phẩm nào để thanh toán.");
-            return "redirect:/home_after_user_login/move_cart";
+            return "redirect:/homepage/move_cart";
         }
         User user = (User) request.getSession().getAttribute("loggedUser");
         BigDecimal totalPrice = BigDecimal.ZERO;

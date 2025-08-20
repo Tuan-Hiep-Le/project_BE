@@ -69,25 +69,29 @@
         </table>
     </div>
 
-    <div class="pagination-container">
+    <div class="pagination-container" th:if="${totalPage > 0}">
         <nav aria-label="Pagination">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${valuePage==0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${valuePage-1} , openMenu=${true})}">
+                <li class="page-item" th:class="${valuePage == 0} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${valuePage - 1}, openMenu=${true})}">
                         <i class="fas fa-chevron-left me-1"></i>Previous
                     </a>
                 </li>
-                <li class="page-item" th:each="p : ${#numbers.sequence(0,totalPage - 1)}" th:classappend="${p == valuePage} ? 'active'">
-                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${p} , openMenu = ${true})}" th:text="${p+1}"></a>
+
+                <li class="page-item" th:each="p : ${#numbers.sequence(0, totalPage - 1)}"
+                    th:class="${p == valuePage} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${p}, openMenu=${true})}" th:text="${p + 1}"></a>
                 </li>
-                <li class="page-item" th:classappend="${valuePage== (totalPage - 1)} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${valuePage+1}, openMenu = ${true})}">
+
+                <li class="page-item" th:class="${valuePage == totalPage - 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/admin/manage_book(valuePage=${valuePage + 1}, openMenu=${true})}">
                         Next<i class="fas fa-chevron-right ms-1"></i>
                     </a>
                 </li>
             </ul>
         </nav>
     </div>
+
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
