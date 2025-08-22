@@ -23,7 +23,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
 
     @Override
     public Page<Book> getAllBook(Pageable pageable) {
-        return managerBookRepository.findByIsDeletedFalse(pageable);
+        return managerBookRepository.findByIsDeletedFalseOrderByBookIdDesc(pageable);
 
     }
 
@@ -80,6 +80,7 @@ public class ManagerBookServiceImpl implements ManagerBookService {
         bookExist.setPrice(book.getPrice());
         bookExist.setNameTopic(book.getNameTopic());
         bookExist.setBookImage(book.getBookImage());
+        bookExist.setBookDetail(book.getBookDetail());
         return managerBookRepository.saveAndFlush(bookExist);
     }
 

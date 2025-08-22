@@ -343,23 +343,27 @@ public class ManagerOrderController {
     }
 
     @GetMapping("/homepage/history_buy")
-    public String historyBuyOfUser(Model model){
-        List<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct();
+    public String historyBuyOfUser(Model model,@RequestParam(value = "valuePage",defaultValue = "0") int valuePage){
+        Pageable pageable = PageRequest.of(valuePage,5);
+        Page<Object[]> historyBuy = managerOrderService.getHistoryBuyProduct(pageable);
         Map<Integer, List<Object[]>> groupedOrders = historyBuy.stream()
                 .collect(Collectors.groupingBy(order -> (Integer) order[0]));
 
         model.addAttribute("groupedOrders", groupedOrders);
+        model.addAttribute("valuePage",valuePage);
+        model.addAttribute("totalPage",historyBuy.getTotalPages());
 
         return "page_history_buy";
     }
 
     @PostMapping("/admin/manage_order/save")
-    public String saveOrder(@RequestParam("valuePage") int valuePage,@RequestParam("orderId") List<String> listOrder, @RequestParam("handlerOrder") List<String> listHandlerOrder,@RequestParam("filterOrder") String filterOrder){
+    public String saveOrder(@RequestParam("valuePage") int valuePage,@RequestParam("orderId") List<String> listOrder, @RequestParam("handlerOrder") List<String> listHandlerOrder,@RequestParam("statusOrder") List<String> listStatusOrder,@RequestParam("filterOrder") String filterOrder){
         for (int i = 0; i < listOrder.size(); i++){
             Order order = managerOrderService.getOrderById(Integer.parseInt(listOrder.get(i)));
             if (listHandlerOrder.get(i) != null && !listHandlerOrder.get(i).isEmpty()) {
                 order.setHandlerOrder(HandlerOrder.valueOf(listHandlerOrder.get(i)));
-                order.setStatusOrder(StatusOrder.APPROVED);
+                order.setStatusOrder(StatusOrder.valueOf(listStatusOrder.get(i)));
+
             }else {
                 order.setHandlerOrder(null);
             }

@@ -44,10 +44,10 @@ public class ManagerOrderServiceImpl implements ManagerOrderService {
     }
 
     @Override
-    public List<Object[]> getHistoryBuyProduct() {
+    public Page<Object[]> getHistoryBuyProduct(Pageable pageable) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        return managerOrderRepository.findHistoryBuyProduct(user);
+        return managerOrderRepository.findHistoryBuyProduct(user,pageable);
     }
 
     @Override

@@ -19,7 +19,7 @@ public interface ManagerOrderService {
     public Order updateOrder(Order order);
 
     //Lấy ra lịch sử mua hàng của người dùng
-    public List<Object[]> getHistoryBuyProduct();
+    public Page<Object[]> getHistoryBuyProduct(Pageable pageable);
 
     //Lấy ra tổng số đơn hàng
     public long countOrder();
