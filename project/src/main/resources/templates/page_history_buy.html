@@ -56,18 +56,16 @@
                         <div class="flex items-center space-x-3">
                             <div class="text-right">
                                 <div class="status-badge px-3 py-1.5 rounded-full text-xs font-bold bg-white/20 backdrop-blur-sm border border-white/30"
-                                     th:classappend="${firstItem[4].name() == 'DELIVERED' ? 'bg-green-500/90 text-white' :
-                                                firstItem[4].name() == 'DELIVERING' ? 'bg-yellow-500/90 text-white' :
-                                                firstItem[4].name() == 'APPROVED' ? 'bg-blue-500/90 text-white' :
-                                                firstItem[4].name() == 'APPROVING' ? 'bg-orange-500/90 text-white' : 'bg-red-500/90 text-white'}">
-                                <span th:switch="${firstItem[4].name()}">
-                                    <span th:case="'APPROVING'">🔄 Đang duyệt</span>
-                                    <span th:case="'APPROVED'">✅ Đã duyệt</span>
-                                    <span th:case="'DELIVERING'">🚚 Đang giao hàng</span>
-                                    <span th:case="'DELIVERED'">📦 Đã giao hàng</span>
-                                    <span th:case="'CANCELED'">❌ Đã hủy</span>
-                                </span>
+                                     th:classappend="${firstItem[5]  == null ? 'bg-green-500/90 text-white' :
+                                                firstItem[5].name() == 'ACCEPT' ? 'bg-yellow-500/90 text-white' :
+                                                firstItem[5].name() == 'REFUSE' ? 'bg-blue-500/90 text-white' : 'bg-red-500/90 text-white'}">
+                                    <span th:switch="${firstItem[5]}">
+                                        <span th:case="null">🔄 Đang duyệt</span>
+                                        <span th:case="${T(com.project.entity.enum_entity.HandlerOrder).ACCEPT}">✅ Đã duyệt</span>
+                                        <span th:case="${T(com.project.entity.enum_entity.HandlerOrder).REFUSE}">❌ Đã hủy</span>
+                                    </span>
                                 </div>
+
                                 <div class="text-lg font-bold mt-1">
                                     <span th:text="${#numbers.formatDecimal(firstItem[6], 0, 'POINT', 2, 'COMMA')}"></span>₫
                                 </div>
@@ -114,6 +112,19 @@
                                         Địa chỉ giao hàng
                                     </h4>
                                     <p class="text-white/90 leading-relaxed text-sm" th:text="${firstItem[8]}"></p>
+                                    <div class="status-badge px-3 py-1.5 rounded-full text-xs font-bold bg-white/20 backdrop-blur-sm border border-white/30"
+                                         th:classappend="${firstItem[4].name() == 'DELIVERED' ? 'bg-green-500/90 text-white' :
+                                                firstItem[4].name() == 'DELIVERING' ? 'bg-yellow-500/90 text-white' :
+                                                firstItem[4].name() == 'APPROVED' ? 'bg-blue-500/90 text-white' :
+                                                firstItem[4].name() == 'APPROVING' ? 'bg-orange-500/90 text-white' : 'bg-red-500/90 text-white'}">
+                                    <span th:switch="${firstItem[4].name()}">
+                                        <span th:case="'APPROVING'">🔄 Đang duyệt</span>
+                                        <span th:case="'APPROVED'">✅ Đã duyệt</span>
+                                        <span th:case="'DELIVERING'">🚚 Đang giao hàng</span>
+                                        <span th:case="'DELIVERED'">📦 Đã giao hàng</span>
+                                        <span th:case="'CANCELED'">❌ Đã hủy</span>
+                                    </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -149,6 +160,38 @@
         </div>
     </div>
 </div>
+
+<nav th:if="${totalPage > 0}" class="flex justify-center mt-6">
+    <ul class="inline-flex items-center -space-x-px">
+        <!-- Previous -->
+        <li>
+            <a th:href="@{/homepage/history_buy(valuePage=${valuePage - 1})}"
+               th:class="${valuePage == 0 ? 'pointer-events-none text-gray-400 bg-gray-100' : 'hover:bg-gray-200'}"
+               class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg">
+                Previous
+            </a>
+        </li>
+
+        <!-- Page numbers -->
+        <li th:each="p : ${#numbers.sequence(0, totalPage - 1)}">
+            <a th:href="@{/homepage/history_buy(valuePage=${p})}"
+               th:text="${p + 1}"
+               th:class="${p == valuePage ? 'z-10 px-3 py-2 leading-tight text-white bg-blue-600 border border-blue-600' :
+                         'px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-200'}">
+            </a>
+        </li>
+
+        <!-- Next -->
+        <li>
+            <a th:href="@{/homepage/history_buy(valuePage=${valuePage + 1})}"
+               th:class="${valuePage == totalPage - 1 ? 'pointer-events-none text-gray-400 bg-gray-100' : 'hover:bg-gray-200'}"
+               class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
+
 
 <script>
     function toggleOrder(element) {

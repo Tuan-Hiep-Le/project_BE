@@ -26,15 +26,15 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
     @Query("SELECT o.orderId, oi.book, oi.quantityBuy, o.paymentMethod, o.statusOrder, o.handlerOrder, o.payment, o.buyAt, o.address\n" +
             "FROM Order o\n" +
             "JOIN o.orderItems oi ON o.orderId = oi.order.orderId\n" +
-            "WHERE o.user = :user")
-    public List<Object[]> findHistoryBuyProduct(@Param("user") User user);
+            "WHERE o.user = :user ORDER BY o.buyAt DESC")
+    public Page<Object[]> findHistoryBuyProduct(@Param("user") User user, Pageable pageable);
 
     //Lấy ra tổng doanh thu
     @Query("SELECT COALESCE(SUM(o.payment)) FROM Order o WHERE o.handlerOrder = 'ACCEPT' ")
     public BigDecimal totalRevenue();
 
     @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
-            "o.paymentMethod, o.address, o.handlerOrder FROM Order o")
+            "o.paymentMethod, o.address, o.handlerOrder,o.statusOrder  FROM Order o")
     public Page<Object[]> getAllInformationOrder(Pageable pageable);
 
     @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +

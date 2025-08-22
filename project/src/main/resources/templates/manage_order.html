@@ -48,6 +48,7 @@
                         <th>Tổng tiền</th>
                         <th>Phương thức thanh toán</th>
                         <th>Địa chỉ giao hàng</th>
+                        <th>Ghi chú</th>
                         <th>Trạng thái</th>
                     </tr>
 
@@ -68,11 +69,20 @@
 
                         <td th:text="${order[6]}"></td>
                         <td>
+                            <select name="statusOrder" class="form-select form-select-sm">
+                                <option th:selected="${order[8] != null and order[8].name() == 'APPROVING'}" value="ACCEPT">Đang duyệt</option>
+                                <option th:selected="${order[8] != null and order[8].name() == 'APPROVED'}" value="REFUSE">Đã duyệt</option>
+                                <option th:selected="${order[8] != null and order[8].name() == 'DELIVERING'}" value="ACCEPT">Đang giao</option>
+                                <option th:selected="${order[8] != null and order[8].name() == 'DELIVERED'}" value="REFUSE">Đã giao</option>
+                                <option th:selected="${order[8] != null and order[8].name() == 'CANCELED'}" value="REFUSE">Đã hủy</option>
+                            </select>
+                        </td>
+                        <td>
                             <input type="hidden" name="orderId" th:value="${order[0]}">
                             <select name="handlerOrder" class="form-select form-select-sm">
                                 <option th:selected="${order[7] == null}" value="">Đang chờ xử lý</option>
                                 <option th:selected="${order[7] != null and order[7].name() == 'ACCEPT'}" value="ACCEPT">Chấp nhận</option>
-                                <option th:selected="${order[7] != null and order[7].name() == 'REFUSE'}" value="REFUSE">Đã hủy</option>
+                                <option th:selected="${order[7] != null and order[7].name() == 'REFUSE'}" value="REFUSE">Hủy</option>
                             </select>
                         </td>
                     </tr>

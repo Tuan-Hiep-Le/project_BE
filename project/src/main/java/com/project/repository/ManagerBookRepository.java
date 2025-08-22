@@ -38,8 +38,8 @@ public interface ManagerBookRepository extends JpaRepository<Book,Integer> {
     public List<String> listTopic();
     @Query("SELECT COUNT(b) FROM Book b WHERE b.quantity = 0")
     public int getCountBookQuantity0();
-
-    public Page<Book> findByIsDeletedFalse(Pageable pageable);
+    @Query("SELECT b FROM Book b WHERE b.isDeleted = false ORDER BY b.bookId DESC")
+    public Page<Book> findByIsDeletedFalseOrderByBookIdDesc(Pageable pageable);
 
 
 
