@@ -48,7 +48,7 @@
                         <span th:case="${T(com.project.entity.enum_entity.Language).VIETNAMESE}">Tiếng Việt</span>
                     </span>
                 </td>
-                <td th:text="${book.price}" class="price-cell"></td>
+                <td th:text="${#numbers.formatDecimal(book.price, 1, 'POINT', 0, 'COMMA')}" class="price-cell"></td>
                 <td th:text="${book.quantity}" class="quantity-cell"></td>
                 <td>
                     <div class="action-buttons">

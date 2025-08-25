@@ -10,15 +10,15 @@
 <main th:fragment="manage_order" class="container my-4">
     <div>
         <form th:action="@{/admin/manage_order/filter_order}" method="post" >
-        <div class="col-md-3">
-            <label class="form-label fw-semibold">Trạng thái:</label>
-            <select id="statusFilter" name="filterOrder" class="form-select" onchange="this.form.submit()">
-                <option value="all" th:selected="${filterOrder == 'all'}">Tất cả đơn hàng</option>
-                <option value="pending" th:selected="${filterOrder == 'pending'}">Đang chờ xử lý</option>
-                <option value="accepted" th:selected="${filterOrder == 'accepted'}">Đã chấp nhận</option>
-                <option value="refused" th:selected="${filterOrder == 'refused'}">Đã hủy</option>
-            </select>
-        </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Trạng thái:</label>
+                <select id="statusFilter" name="filterOrder" class="form-select" onchange="this.form.submit()">
+                    <option value="all" th:selected="${filterOrder == 'all'}">Tất cả đơn hàng</option>
+                    <option value="pending" th:selected="${filterOrder == 'pending'}">Đang chờ xử lý</option>
+                    <option value="accepted" th:selected="${filterOrder == 'accepted'}">Đã chấp nhận</option>
+                    <option value="refused" th:selected="${filterOrder == 'refused'}">Đã hủy</option>
+                </select>
+            </div>
         </form>
 
         <form th:action="@{/admin/manage_order/filter_payment}" method="post" >
@@ -47,7 +47,6 @@
                         <th>Tên khách hàng</th>
                         <th>Tổng tiền</th>
                         <th>Phương thức thanh toán</th>
-                        <th>Địa chỉ giao hàng</th>
                         <th>Ghi chú</th>
                         <th>Trạng thái</th>
                     </tr>
@@ -59,7 +58,7 @@
                         <td th:text="${#temporals.format(order[1], 'dd/MM/yyyy')}"></td>
                         <td th:text="${order[2]}"></td>
                         <td th:text="${order[3]}"></td>
-                        <td th:text="${order[4]}"></td>
+                        <td th:text="${#numbers.formatDecimal(order[4], 1, 'POINT', 0, 'COMMA')}"></td>
                         <td>
                             <span th:switch="${order[5]}">
                                 <span th:case="${T(com.project.entity.enum_entity.PaymentMethod).CASH}">Tiền mặt</span>
@@ -67,7 +66,6 @@
                             </span>
                         </td>
 
-                        <td th:text="${order[6]}"></td>
                         <td>
                             <select name="statusOrder" class="form-select form-select-sm">
                                 <option th:selected="${order[8] != null and order[8].name() == 'APPROVING'}" value="ACCEPT">Đang duyệt</option>

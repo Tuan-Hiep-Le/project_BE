@@ -240,7 +240,7 @@
                             <p><strong><i class="fas fa-book me-2"></i>Tên sách:</strong> <span th:text="${bookBuy.nameBook}"></span></p>
                             <p><strong><i class="fas fa-user-edit me-2"></i>Tác giả:</strong> <span th:text="${bookBuy.nameAuthor}"></span></p>
                             <p><strong><i class="fas fa-language me-2"></i>Ngôn ngữ:</strong> <span th:text="${bookBuy.language}"></span></p>
-                            <p><strong><i class="fas fa-tag me-2"></i>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 0, 'POINT', 2, 'COMMA')}" th:value="${bookBuy.price}" id="price"></span></p>
+                            <p><strong><i class="fas fa-tag me-2"></i>Giá:</strong> <span th:text="${#numbers.formatDecimal(bookBuy.price, 1, 'POINT', 0, 'COMMA')}" th:value="${bookBuy.price}" id="price"></span></p>
 
                             <div class="mb-3">
                                 <label for="quantityBuy" class="form-label">
@@ -268,7 +268,7 @@
             <div class="price-section">
                 <div class="price-item">
                     <span class="price-label"><i class="fas fa-calculator me-2"></i>Tổng tiền sách:</span>
-                    <span class="price-value" id="totalPrice" th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')}"></span>
+                    <span class="price-value" id="totalPrice" th:text="${#numbers.formatDecimal(totalPrice, 1, 'POINT', 0, 'COMMA')} + '₫'"></span>
                 </div>
                 <div class="price-item">
                     <span class="price-label"><i class="fas fa-shipping-fast me-2"></i>Phí vận chuyển:</span>
@@ -322,7 +322,7 @@
                     <span class="price-label fs-4">
                         <i class="fas fa-money-check-alt me-2"></i>Tổng thanh toán:
                     </span>
-                    <div class="price-value" id="lastPayment" th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')}"></div>
+                    <div class="price-value" id="lastPayment" th:text="${#numbers.formatDecimal(payment, 1, 'POINT', 0, 'COMMA')} + 'VNĐ'"></div>
                 </div>
             </div>
 
@@ -392,17 +392,17 @@
         // Hiển thị tổng tiền sách
         const totalBookPriceAfterUseVoucher = totalBookPrice - discountAmount;
         document.getElementById("totalPrice").textContent = totalBookPriceAfterUseVoucher.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
+            minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' VND';
 
         // Hiển thị tiền ship
         const shipCostAfterUseVoucher = currentShipCost - transferDiscountAmount;
         document.getElementById("moneyShip").textContent = shipCostAfterUseVoucher.toLocaleString('vi-VN', {
-                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+                minimumFractionDigits: 0, maximumFractionDigits: 0 })  + ' VND';
 
         // Hiển thị tổng tiền cần thanh toán
         const finalPayment = totalBookPriceAfterUseVoucher + shipCostAfterUseVoucher ;
         document.getElementById("lastPayment").textContent = finalPayment.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' VND';
+            minimumFractionDigits: 0,maximumFractionDigits: 0 }) + ' VND';
 
 
     }

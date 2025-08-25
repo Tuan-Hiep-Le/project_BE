@@ -326,7 +326,7 @@
           Gmail có đuôi @gmail.com!
         </div>
       </div>
-      <div class="form-text text-danger" th:if="${isEmailExist}">
+      <div class="form-text text-danger" id="emailError" th:if="${isEmailExist}">
         Email đã được sử dụng. Vui lòng thử email khác.
       </div>
 
@@ -337,7 +337,7 @@
           Có 10 chữ số và bắt đầu bằng số 0!
         </div>
       </div>
-      <div class="form-text text-danger" th:if="${isNumberPhoneValid == false}">
+      <div class="form-text text-danger"  id="phoneError" th:attr="style=${isNumberPhoneValid == false} ? 'display:block;' : 'display:none;'">
         Số điện thoại không hợp lệ.
       </div>
 
@@ -350,7 +350,7 @@
         <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
         <input type="password" name="rePassword" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
       </div>
-      <div class="form-text text-danger" th:if="${isValidPassword == false}">
+      <div class="form-text text-danger" id="passwordError"   th:attr="style=${isValidPassword == false} ? 'display:block;' : 'display:none;'">
         Mật khẩu không trùng khớp.
       </div>
 
@@ -364,6 +364,60 @@
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+
+    const emailError = document.getElementById("emailError");
+    const phoneError = document.getElementById("phoneError");
+    const passwordError = document.getElementById("passwordError");
+
+    // Kiểm tra email
+    emailInput.addEventListener("input", function () {
+      const email = emailInput.value;
+      const isValid = /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
+      emailError.style.display = isValid ? "none" : "block";
+    });
+
+    // Kiểm tra số điện thoại
+    phoneInput.addEventListener("input", function () {
+      const phone = phoneInput.value;
+      const isValid = /^0\d{9}$/.test(phone);
+      phoneError.style.display = isValid ? "none" : "block";
+    });
+
+    // Kiểm tra mật khẩu trùng khớp
+    confirmPasswordInput.addEventListener("input", function () {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      passwordError.style.display = password === confirmPassword ? "none" : "block";
+    });
+    // Kiểm tra email khi rời khỏi ô
+  emailInput.addEventListener("blur", function () {
+    const email = emailInput.value;
+    const isValid = /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
+    emailError.style.display = isValid ? "none" : "block";
+   });
+
+  // Kiểm tra số điện thoại khi rời khỏi ô
+  phoneInput.addEventListener("blur", function () {
+    const phone = phoneInput.value;
+    const isValid = /^0\d{9}$/.test(phone);
+    phoneError.style.display = isValid ? "none" : "block";
+  });
+
+  // Kiểm tra mật khẩu xác nhận khi rời khỏi ô
+  confirmPasswordInput.addEventListener("blur", function () {
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    passwordError.style.display = password === confirmPassword ? "none" : "block";
+  });
+});
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>

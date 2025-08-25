@@ -342,7 +342,7 @@
               </label>
             </div>
             <div id="totalPrice">
-              <i class="bi bi-currency-dollar me-2"></i>Tổng tiền: <span th:text="${totalPrice}"></span> VNĐ
+              <i class="bi bi-currency-dollar me-2"></i>Tổng tiền: <span th:text="${#numbers.formatDecimal(totalPrice, 1, 'POINT', 0, 'COMMA')} + 'VNĐ' "></span>
             </div>
             <button type="submit" class="btn btn-checkout" id="checkoutBtn" disabled>
               <i class="bi bi-credit-card me-2"></i>Thanh toán ngay
@@ -395,7 +395,7 @@
                   </p>
                   <p class="book-price">
                     <i class="bi bi-tag me-2"></i>
-                    <span th:text="${item.book.price}"></span> VNĐ
+                    <span th:text="${#numbers.formatDecimal(item.book.price, 1, 'POINT', 0, 'COMMA')}"></span> VNĐ
                   </p>
 
                   <!-- Input số lượng -->
@@ -513,9 +513,9 @@
       const totalPriceSpan = document.querySelector("#totalPrice span");
       if (totalPriceSpan) {
         totalPriceSpan.textContent = totalPrice.toLocaleString('vi-VN', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }) + " VND";
       }
 
       // Disable nút thanh toán nếu không chọn sản phẩm nào

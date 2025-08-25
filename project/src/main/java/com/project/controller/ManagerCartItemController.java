@@ -48,7 +48,7 @@ public class ManagerCartItemController {
             listBook.add(cartItem.getBook());
         }
         if(listBook.contains(book)){
-            CartItem cartItem = managerCartItemService.getCartItemByBook(book);
+            CartItem cartItem = managerCartItemService.getCartItemByBookAndCart(book,cart);
             cartItem.setQuantity(cartItem.getQuantity() + 1);
             managerCartItemService.addCartItem(cartItem);
         } else {

@@ -139,10 +139,12 @@ ta fi/* FONT & ROOT COLOR */
         }
 
         .book-card img {
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+            width: 100%;          /* chiếm hết chiều ngang khung */
+            height: 250px;        /* cố định chiều cao */
+            object-fit: cover;    /* phóng to/thu nhỏ và crop cho vừa khung */
+            border-radius: 10px;  /* tuỳ chọn bo góc */
         }
+
 
         .book-card:hover img {
             transform: scale(1.05);
