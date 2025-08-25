@@ -62,7 +62,7 @@
                                     <span class="font-semibold text-red-600"
                                           th:attr="data-price=${cartItem.book.price}"
                                           th:id="'price_' + ${cartItem.cartItemId}">
-                                        <span th:text="${#numbers.formatDecimal(cartItem.book.price, 0, 'POINT', 2, 'COMMA')} + ' VND'"></span>
+                                        <span th:text="${#numbers.formatDecimal(cartItem.book.price, 1, 'POINT', 0, 'COMMA')} + ' VND'"></span>
                                     </span>
                                 </p>
                             </div>
@@ -99,7 +99,7 @@
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <p class="text-sm text-gray-600 mb-1">Tổng tiền sách</p>
                     <p class="text-xl font-bold text-blue-600">
-                        <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 2, 'COMMA')} + ' VND'" id="totalPrice"></span>
+                        <span th:text="${#numbers.formatDecimal(totalPrice, 1, 'POINT', 0, 'COMMA')} + ' VND'" id="totalPrice"></span>
                     </p>
                 </div>
                 <div class="bg-green-50 p-4 rounded-lg">
@@ -165,7 +165,7 @@
                     <i class="fas fa-money-bill-wave text-2xl mr-4"></i>
                     <span class="text-xl font-semibold">Tổng thanh toán:</span>
                 </div>
-                <span class="text-3xl font-bold" th:text="${#numbers.formatDecimal(payment, 0, 'POINT', 2, 'COMMA')} + ' VND'" id="lastPayment"></span>
+                <span class="text-3xl font-bold" th:text="${#numbers.formatDecimal(payment, 1, 'POINT', 0, 'COMMA')} + ' VND'" id="lastPayment"></span>
             </div>
         </div>
 
@@ -196,7 +196,7 @@
             currentShipCost = parseFloat(data.cost);
             if(!isNaN(currentShipCost)){
                 document.getElementById("moneyShip").textContent = currentShipCost.toLocaleString('vi-VN', {
-                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+                minimumFractionDigits: 0, maximumFractionDigits: 0 })  + ' VND';
             }else{
                 document.getElementById("moneyShip").textContent = "Chưa hỗ trợ chi phí ship ở tỉnh này";
                 currentShipCost = 0;
@@ -253,17 +253,17 @@
         // Hiển thị tổng tiền sách
         const totalBookPriceAfterUseVoucher = totalBookPrice - discountAmount;
         document.getElementById("totalPrice").textContent = totalBookPriceAfterUseVoucher.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' VND';
+            minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' VND';
 
         // Hiển thị tiền ship
         const shipCostAfterUseVoucher = currentShipCost - transferDiscountAmount;
         document.getElementById("moneyShip").textContent = shipCostAfterUseVoucher.toLocaleString('vi-VN', {
-                minimumFractionDigits: 2, maximumFractionDigits: 2 })  + ' VND';
+                minimumFractionDigits: 0, maximumFractionDigits: 0 })  + ' VND';
 
         // Hiển thị tổng tiền cần thanh toán
         const finalPayment = totalBookPriceAfterUseVoucher + shipCostAfterUseVoucher ;
         document.getElementById("lastPayment").textContent = finalPayment.toLocaleString('vi-VN', {
-            minimumFractionDigits: 2,maximumFractionDigits: 2 }) + ' VND';
+            minimumFractionDigits: 0,maximumFractionDigits: 0 }) + ' VND';
     }
 
     // Gọi tính toán lần đầu khi load trang

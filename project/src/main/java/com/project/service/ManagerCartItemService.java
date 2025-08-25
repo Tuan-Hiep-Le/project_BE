@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.entity.Book;
+import com.project.entity.Cart;
 import com.project.entity.CartItem;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface ManagerCartItemService {
     public List<CartItem> getAllCTByUserId(Integer id);
 
     //.Lấy ra CartItem bằng Book
-    public CartItem getCartItemByBook(Book book);
+    public CartItem getCartItemByBookAndCart(Book book, Cart cart);
 
     //Xóa sản phẩm ra khỏi giỏ hàng
     public void removeCartItem(Integer cartItemId);

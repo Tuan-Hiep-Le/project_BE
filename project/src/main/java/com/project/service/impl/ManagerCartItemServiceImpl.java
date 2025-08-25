@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.project.entity.Book;
+import com.project.entity.Cart;
 import com.project.entity.CartItem;
 import com.project.repository.ManagerCartItemRepository;
 import com.project.service.ManagerCartItemService;
@@ -28,8 +29,8 @@ public class ManagerCartItemServiceImpl implements ManagerCartItemService {
     }
 
     @Override
-    public CartItem getCartItemByBook(Book book) {
-        return managerCartItemRepository.findByBook(book);
+    public CartItem getCartItemByBookAndCart(Book book, Cart cart) {
+        return managerCartItemRepository.findByBookAndCart(book,cart);
     }
 
     @Transactional

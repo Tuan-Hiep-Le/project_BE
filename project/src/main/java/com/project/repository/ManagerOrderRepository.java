@@ -34,7 +34,7 @@ public interface ManagerOrderRepository extends JpaRepository<Order,Integer> {
     public BigDecimal totalRevenue();
 
     @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +
-            "o.paymentMethod, o.address, o.handlerOrder,o.statusOrder  FROM Order o")
+            "o.paymentMethod, o.address, o.handlerOrder,o.statusOrder  FROM Order o ORDER BY o.buyAt DESC")
     public Page<Object[]> getAllInformationOrder(Pageable pageable);
 
     @Query("SELECT o.orderId,o.buyAt, o.user.userId, o.user.firstName, o.payment, " +

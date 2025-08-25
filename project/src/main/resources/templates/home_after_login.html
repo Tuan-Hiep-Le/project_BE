@@ -42,20 +42,19 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 border-0 px-2 py-3">
                             <li><a class="dropdown-item py-2" th:href="@{/homepage/move_edit_personal}">👤 Trang cá nhân</a></li>
-                            <li><a class="dropdown-item py-2" th:href="@{/send_email}">📧 Xác thực Email</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/send_email}">Xác thực Email</a></li>
                             <li>
                                 <a class="dropdown-item position-relative d-inline-flex align-items-center gap-1" th:href="@{homepage/move_cart}">
-                                🛒 Giỏ hàng
+                                Giỏ hàng
                                 <span class="badge bg-danger rounded-pill ms-1" th:text="${countCartItem}">
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                                 </a>
                             </li>
-                            <li><a class="dropdown-item py-2" th:href="@{/homepage/history_buy}">🧾 Lịch sử mua hàng</a></li>
-                            <li><a class="dropdown-item py-2" th:href="@{/histories_login}">🧾 Lịch sử đăng nhập</a></li>
-                            <li><a class="dropdown-item py-2" href="#">⚙️ Cài đặt</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/homepage/history_buy}">Lịch sử mua hàng</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/histories_login}">Lịch sử đăng nhập</a></li>
                             <li><hr class="dropdown-divider my-2"></li>
-                            <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">🚪 Đăng xuất</a></li>
+                            <li><a class="dropdown-item text-danger py-2" th:href="@{/logout}">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </div>
@@ -126,11 +125,13 @@
             <div class="col-md-4" th:each="book : ${books.content}">
                 <div class="card shadow-sm h-100 book-card">
                     <a th:href="@{/homepage/information_book(bookid=${book.bookId})}">
-                        <div th:if="${book.bookImage == null or book.bookImage == ''}">
-                            <img th:src="@{/images/sach-anh-dep3.jpg}" class="card-img-top rounded-top">
-                        </div>
-                        <div th:if="${book.bookImage != null and book.bookImage != ''}" >
-                            <img th:src="@{${book.bookImage}}" class="card-img-top rounded-top">
+                        <div class="img-wrapper">
+                            <div th:if="${book.bookImage == null or book.bookImage == ''}">
+                                <img th:src="@{/images/sach-anh-dep3.jpg}" class="card-img-top rounded-top">
+                            </div>
+                            <div th:if="${book.bookImage != null and book.bookImage != ''}" >
+                                <img th:src="@{${book.bookImage}}" class="card-img-top rounded-top">
+                            </div>
                         </div>
 
                         <div class="card-body">
